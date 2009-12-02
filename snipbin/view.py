@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
+import hashlib
 import os.path
+import random
 
 from google.appengine.ext import db
 from google.appengine.api import users
@@ -62,12 +64,21 @@ class ViewHandler(BaseViewHandler):
     snippage, key = self.get_snippage(template_values)
     if not snippage:
       return
+      
+    user = users.get_current_user();
+    if user and user == snippage.owner:
+      xsrf_token = hashlib.md5('%s-%s' % (user.user_id(), random.random())).hexdigest()
+      self.response.headers.add_header('Set-Cookie', 'xsrf_token=%s' % xsrf_token)
+      template_values['is_owner'] = True
+      template_values['xsrf_token'] = xsrf_token
+    else:
+      template_values['is_owner'] = False
     
     db.run_in_transaction(self.increment_views, key)
-    template_values = {
+    template_values.update({
       'error': False,
       'snippage': vo.SnipPageVO(snippage),
-    }
+    })
     path = os.path.join(os.path.dirname(__file__), 'templates/view.html')
     self.response.out.write(template.render(path, template_values))
 
