@@ -1,11 +1,41 @@
 var is_animating = false;
 var div;
+var tooltip_div;
 var cur_enclosing_block;
 $(document).ready(function() {
+    tooltip_div = $("<div id='snippy-tooltip-div'></div>").
+        css({'background-color': 'white',
+             'border': '1px solid #444',
+             '-webkit-border-radius': '5px',
+             '-webkit-box-shadow': '5px 5px 5px #aaa',
+             'z-index': -20000,
+             'position': 'fixed',
+             'visibility': 'hidden',
+             'top': 5,
+             'right': 5,
+             'width': '150px',
+             'height': '150px',
+             'padding': '0.5em'
+          });
+    $("<div style='font-size: 11px; font-family: sans-serif'>Move your mouse over the page and click on interesting elements to save them as snippets. Click Done once finished.</div>").appendTo(tooltip_div);
+    var tooltip_button = $("<button style='width: 100px'></button>").
+        html("<img src='" + chrome.extension.getURL("snipit.png") + "' style='vertical-align: bottom-text'><span>Done</span>");
+    tooltip_button.appendTo(tooltip_div);
+    tooltip_button.click(function() {
+        chrome.extension.sendRequest({'toggle': true}, function(response) {});
+    });
+    $("<br />").appendTo(tooltip_div);
+    $("<a href='#' style='font-size: 11px; font-family: sans-serif'>Show current snippets</a>").click(function() {
+        chrome.extension.sendRequest({'showdump': true}, function(response) {});
+    }).appendTo(tooltip_div);
+
+    tooltip_div = tooltip_div.get(0);
+    document.body.appendChild(tooltip_div);
+
     div = document.createElement("DIV");
-    div.style.backgroundColor = 'red';
+    div.style.backgroundColor = 'blue';
     div.style.opacity = 0.1;
-    div.style.border = '1px solid blue';
+    div.style.border = '1px solid black';
     div.style.position = 'absolute';
     div.id = 'snippy-overlay';
     div.style.zIndex = -10000;
@@ -45,8 +75,12 @@ $(document).ready(function() {
 });
 
 chrome.extension.onRequest.addListener(
-  function(request, sender, sendResponse) {
+    function(request, sender, sendResponse) {
     if (request.activate) {
+      debugger;
+      tooltip_div.style.zIndex = 20000;
+      tooltip_div.style.visibility = 'visible';
+
       div.style.zIndex = 10000;
       div.style.visibility = 'visible';
       $("p").addClass('snippy-block');
@@ -113,6 +147,9 @@ chrome.extension.onRequest.addListener(
       $("table").removeClass('snippy-block');
       div.style.visibility = 'hidden';
       div.style.zIndex = -10000;
+
+      tooltip_div.style.visibility = 'hidden';
+      tooltip_div.style.zIndex = -20000;
     }
     sendResponse({});
   }

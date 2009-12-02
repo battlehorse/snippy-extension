@@ -10,6 +10,10 @@
       border-top: 1px solid black;
       padding-top: 0.2em;
     }
+
+    IMG {
+      vertical-align: text-bottom;
+    }
   </style>
   <script>
     function toggle() {
@@ -23,10 +27,8 @@
       return false;
     }
     function clearCopy() {
-      if (confirm("Delete all the snippets collected so far?")) {
-        chrome.extension.getBackgroundPage().clearCopy();
-        window.close();
-      }
+      chrome.extension.getBackgroundPage().clearCopy();
+      window.close();
       return false;
     }
 
@@ -45,8 +47,8 @@
 </head>
 <body>
   <button onclick="toggle()" style="width: 100px"><img src="snipit.png"><span id="snip_text">Snip it!</span></button>
+  <a href="#" onclick="showDump()"><img src="showdump.png" style="border: 0">Show snippets</a>
   <p>
-    <a href="#" onclick="showDump()"><img src="showdump.png" style="border: 0">Show snippets</a><br />
     <a href="#" onclick="clearCopy()"><img src="clearsnippets.png" style="border: 0">Clear snippets</a><br />
   </p>
   <p>

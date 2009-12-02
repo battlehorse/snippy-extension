@@ -91,13 +91,20 @@ chrome.tabs.onSelectionChanged.addListener(function(tab_id) {
 
 chrome.extension.onRequest.addListener(
   function(request, sender, sendResponse) {
-    snippet = {
-      content: request.content,
-      url: request.url
-    };
-    snippage.snippets[snippage.snippets.length] = snippet;
-    localStorage.setItem('snippage', $.toJSON(snippage));
-    updateBadgeText();
+    if (request.toggle) {
+      toggle();
+    } else if (request.showdump) {
+      toggleOff();
+      showDump();
+    } else {
+      snippet = {
+        content: request.content,
+        url: request.url
+      };
+      snippage.snippets[snippage.snippets.length] = snippet;
+      localStorage.setItem('snippage', $.toJSON(snippage));
+      updateBadgeText();
+    }
     sendResponse({});
   }
 );
