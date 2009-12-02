@@ -15,7 +15,7 @@
       {{ error }}
     </p>
   {% else %}
-    <h1>{{ snippage.m.title }}</h1>
+    <h1>{{ snippage.m.title|escape }}</h1>
     <p class="abstract">
       <b>SnipBin</b> is a repository of snippets collected and shared by
       web users, for web users.

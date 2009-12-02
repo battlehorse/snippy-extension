@@ -31,7 +31,7 @@
       {% for snippage in snippages %}
         <li>
             <div id="{{ snippage.key }}">
-            {{ snippage.m.title }}<br />
+            {{ snippage.m.title|escape }}<br />
             Key: <a href="/view?key={{ snippage.key }}">{{ snippage.key }}</a><br />
             Created on: {{ snippage.m.created }}<br />
             Public? <span class='page-public'>{{ snippage.m.public }}</span><br />
