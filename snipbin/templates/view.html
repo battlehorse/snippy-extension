@@ -1,0 +1,16 @@
+<html>
+<head>
+</head>
+<body>
+  {% if error %}
+    <h1>Error!</h1>
+    <p> 
+      There was a problem accessing this snippet:<br />
+      {{ error }}
+    </p>
+  {% else %}
+    <h1>Viewing {{ snippage.m.title }}</h1>
+    <iframe src="/inc?key={{ snippage.key }}" width="100%" height="100%" style="border: 0" >
+  {% endif %}
+</body>
+</html>

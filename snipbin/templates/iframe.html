@@ -1,0 +1,23 @@
+<html>
+<body>
+  {% if error %}
+    <h1>Error!</h1>
+    <p> 
+      There was a problem accessing this snippet:<br />
+      {{ error }}
+    </p>
+  {% else %}
+    {% for snippet in snippage.m.snippets %}
+      <div style="border: 1px solid black">
+        <div>
+          {{ snippet.content }}
+        </div>
+        <div>
+          Url: <a href="{{ snippet.url }}">{{ snippet.url }}</a><br />
+          Comment: {{ snippet.comment }}
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
+</body>
+</html>
