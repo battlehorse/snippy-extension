@@ -2,79 +2,83 @@
 <head>
   <script src="/js/jquery-1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
   <script src="/js/jquery.json-2.2.min.js" type="text/javascript" charset="utf-8"></script>
+  <link rel="stylesheet" href="/stylesheets/snipbin.css" type="text/css" media="screen" title="no title" charset="utf-8">
 </head>
 <body>
-  <h1>Your Snippets</h1>
-  <p>
-    <a href="{{logout_url}}">Logout</a> <a href="/">View public snippets</a>
-  </p>
-  {% include "ordering.inc.html" %}
-  {% if snippages %}
-    <ul>
-    {% for snippage in snippages %}
-      <li>
-          <div id="{{ snippage.key }}">
-          {{ snippage.m.title }}<br />
-          Key: <a href="/view?key={{ snippage.key }}">{{ snippage.key }}</a><br />
-          Created on: {{ snippage.m.created }}<br />
-          Public? <span class='page-public'>{{ snippage.m.public }}</span><br />
-          Flagged? {{ snippage.m.flagged }}<br />
-          Views: {{ snippage.m.views }}<br />
-          Owner: {{ snippage.m.owner }}<br />
-          Snippets: {{ snippage.snippets_count }}<br />
-          Abuses: {{ snippage.abuses_count }}<br />
-          <form class="public-form">
-            <input type="hidden" name="key" value="{{ snippage.key }}">
-            <input type="hidden" name="public" value="{{ snippage.m.public }}">
-            <input type="submit" value="Toggle public">
-          </form>
-          <form class="delete-form">
-            <input type="hidden" name="key" value="{{ snippage.key }}">
-            <input type="submit" value="Delete">
-          </form>
-          </div>
-        </li>
-    {% endfor %}
-    </ul>
-    {% include "pagination.inc.html" %}
-  {% else %}
-    You have no snippets!
-  {% endif %}
-  <input type="hidden" id="xsrf_token" value="{{ xsrf_token }}">
-  <script>
-    $(document).ready(function() {
-      $(".public-form").submit(function() {
-        var key = $("input[name='key']", this).val();
-        var pub = $("input[name='public']", this).val() == 'True';
-        var data = {
-          'key': key,
-          'public': !pub,
-          'xsrf_token': $('#xsrf_token').val()
-        };
-        $.post('/api/togglepublic', {'payload': $.toJSON(data)}, function(data, textStatus) {
-          if (data.status == 'ok') {
-            $('#' + key).find('.page-public').text(pub ? "False" : "True");
-            $('#' + key).find("input[name='public']").val(pub ? "False" : "True")
-          }
-        }, 'json');
-        return false;
-      });
-      $(".delete-form").submit(function() {
-        var key = $("input[name='key']", this).val();
-        var data = {
-          'key': key,
-          'xsrf_token': $('#xsrf_token').val()
-        }
-        if (confirm('Do you want to delete this item?')) {
-          $.post('/api/delete', {'payload': $.toJSON(data)}, function(data, textStatus) {
+  <div class="logo"></div>  
+  <div class="vertical-column">
+    <h1>Your Snippets</h1>
+    <p>
+      <a href="{{logout_url}}">Logout</a> <a href="/">View public snippets</a>
+    </p>
+    {% include "ordering.inc.html" %}
+    {% if snippages %}
+      <ul>
+      {% for snippage in snippages %}
+        <li>
+            <div id="{{ snippage.key }}">
+            {{ snippage.m.title }}<br />
+            Key: <a href="/view?key={{ snippage.key }}">{{ snippage.key }}</a><br />
+            Created on: {{ snippage.m.created }}<br />
+            Public? <span class='page-public'>{{ snippage.m.public }}</span><br />
+            Flagged? {{ snippage.m.flagged }}<br />
+            Views: {{ snippage.m.views }}<br />
+            Owner: {{ snippage.m.owner }}<br />
+            Snippets: {{ snippage.snippets_count }}<br />
+            Abuses: {{ snippage.abuses_count }}<br />
+            <form class="public-form">
+              <input type="hidden" name="key" value="{{ snippage.key }}">
+              <input type="hidden" name="public" value="{{ snippage.m.public }}">
+              <input type="submit" value="Toggle public">
+            </form>
+            <form class="delete-form">
+              <input type="hidden" name="key" value="{{ snippage.key }}">
+              <input type="submit" value="Delete">
+            </form>
+            </div>
+          </li>
+      {% endfor %}
+      </ul>
+      {% include "pagination.inc.html" %}
+    {% else %}
+      You have no snippets!
+    {% endif %}
+    <input type="hidden" id="xsrf_token" value="{{ xsrf_token }}">
+    <script>
+      $(document).ready(function() {
+        $(".public-form").submit(function() {
+          var key = $("input[name='key']", this).val();
+          var pub = $("input[name='public']", this).val() == 'True';
+          var data = {
+            'key': key,
+            'public': !pub,
+            'xsrf_token': $('#xsrf_token').val()
+          };
+          $.post('/api/togglepublic', {'payload': $.toJSON(data)}, function(data, textStatus) {
             if (data.status == 'ok') {
-              $('#' + key).closest('li').remove();
+              $('#' + key).find('.page-public').text(pub ? "False" : "True");
+              $('#' + key).find("input[name='public']").val(pub ? "False" : "True")
             }
           }, 'json');
-        }
-        return false;
+          return false;
+        });
+        $(".delete-form").submit(function() {
+          var key = $("input[name='key']", this).val();
+          var data = {
+            'key': key,
+            'xsrf_token': $('#xsrf_token').val()
+          }
+          if (confirm('Do you want to delete this item?')) {
+            $.post('/api/delete', {'payload': $.toJSON(data)}, function(data, textStatus) {
+              if (data.status == 'ok') {
+                $('#' + key).closest('li').remove();
+              }
+            }, 'json');
+          }
+          return false;
+        });
       });
-    });
-  </script>
+    </script>
+  </div>
 </body>
 </html>

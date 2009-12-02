@@ -1,32 +1,42 @@
 <html>
 <head>
+  <link rel="stylesheet" href="/stylesheets/snipbin.css" type="text/css" media="screen" title="no title" charset="utf-8">
 </head>
 <body>
-  <h1>Public Snippets</h1>
-  <p>
-    <a href="/my">My Snippets</a>
-  </p>
-  {% include "ordering.inc.html" %}
-  {% if snippages %}
-    <ul>
-    {% for snippage in snippages %}
-      <li>
-          <div id="{{ snippage.key }}">
-          {{ snippage.m.title }}<br />
-          Key: <a href="/view?key={{ snippage.key }}">{{ snippage.key }}</a><br />
-          Created on: {{ snippage.m.created }}<br />
-          Public? <span class='page-public'>{{ snippage.m.public }}</span><br />
-          Views: {{ snippage.m.views }}<br />
-          Owner: {{ snippage.m.owner }}<br />
-          Snippets: {{ snippage.snippets_count }}<br />
-          Abuses: {{ snippage.abuses_count }}<br />
-          </div>
-        </li>
-    {% endfor %}
-    </ul>
-    {% include "pagination.inc.html" %}
-  {% else %}
-    No public snippets ?!
-  {% endif %}
+  <div class="logo"></div>
+  <div class="vertical-column">
+    <h1>Welcome to SnipBin</h1>
+    <p>
+      <b>Note:</b> This website is absolutely temporary! It exists for the
+      purpose of hosting snippets uploaded via the Snippy Chrome Extension... 
+      Everything works fine, I'm just lacking posh stylesheets and images!
+    </p>
+  
+    <p>
+      <a href="/my">My Snippets</a>
+    </p>
+    {% include "ordering.inc.html" %}
+    {% if snippages %}
+      <ul>
+      {% for snippage in snippages %}
+        <li>
+            <div id="{{ snippage.key }}">
+            {{ snippage.m.title }}<br />
+            Key: <a href="/view?key={{ snippage.key }}">{{ snippage.key }}</a><br />
+            Created on: {{ snippage.m.created }}<br />
+            Public? <span class='page-public'>{{ snippage.m.public }}</span><br />
+            Views: {{ snippage.m.views }}<br />
+            Owner: {{ snippage.m.owner }}<br />
+            Snippets: {{ snippage.snippets_count }}<br />
+            Abuses: {{ snippage.abuses_count }}<br />
+            </div>
+          </li>
+      {% endfor %}
+      </ul>
+      {% include "pagination.inc.html" %}
+    {% else %}
+      No public snippets ?!
+    {% endif %}
+  </div>
 </body>
 </html>
