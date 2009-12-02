@@ -5,20 +5,34 @@
   <style>
     .snippet-container {
       border: 1px solid black;
+      -webkit-border-radius: 5px;
+      -webkit-box-shadow: 5px 5px 5px #aaa;
+      padding: 0.3em;
+      margin: 0.3em;
     }
 
-    h1 {
+    h1.snipbin-title {
       font-size: 20px;
       margin: 0.5em;
       padding: 0.2em;
       border: 1px solid white;
       width: 90%;
+      font-family: sans-serif;
     }
 
-    h1:hover, .snippet-comment:hover {
+    .snippet-comment {
+      font-size: 12px;
+      font-family: sans-serif;
+      width: 90%;
+      margin: 0.2em 0;
+      border: 1px solid #eee;
+    }
+
+    h1.snipbin-title:hover, .snippet-comment:hover {
       cursor: pointer;
-      background-color: yellow;
-      border: 1px solid orange;
+      background-color: #e3e9ff;
+      border: 1px solid #68e;
+      -webkit-border-radius: 3px;
     }
 
     .snipbin-title-input {
@@ -28,12 +42,54 @@
       border: 1px solid black;
       width: 90%;
     }
+
+    .snipbin-paragraph {
+      font-size: 11px;
+      font-family: sans-serif;
+    }
+
+    .snipbin-share {
+      background-color: #e3e9ff;
+      border: 1px solid #68e;
+      -webkit-border-radius: 3px;
+      padding: 0 0.2em;
+    }
+
+    .snipbin-controls {
+      background-color: #eee;
+      border: 1px solid #999;
+      -webkit-border-radius: 2px;
+      padding: 0 0.2em;
+      font-size: 11px;
+      font-family: sans-serif;
+    }
+    
   </style>
 </head>
 <body>
 <div id="snipbin-header">
-  <button id="snipbin-share">Share</button>
-  <span id="snipbin-message"></span>
+  <p class="snipbin-paragraph">
+    This page contains all the snippets you have collected so far.
+    From this page you can remove snippets you no longer want and add comments to them.
+  <br />
+    You can safely close the browser and you'll find all the information saved here the next
+    time you start Chrome.
+  </p>
+
+  <div class="snipbin-share">
+  <p class="snipbin-paragraph">
+    Have you collected some useful snippets and you want to have them ready wherever you are?
+    Do you want to share the snippets you collected with other people in the world?
+  <br />
+    You can store your snippets online and (if you want to) make them public to the world, by clicking
+    the <b>Save Online</b> button. Snippets are sent to <a href="http://snipbin.appspot.com">SnipBin</a>,
+    where you can browse, delete and share them.
+  </p>
+  <p class="snipbin-paragraph">
+    <button id="snipbin-share">Save this snippet online on <b>SnipBin</b></button>
+    <span id="snipbin-message" class="snipbin-paragraph"></span>
+  </p>
+  </div>
 </div>
 <h1 class="snipbin-title"></h1>
 <div id="snipbin-dump">
@@ -63,20 +119,32 @@
       var comment_text = textarea.val();
       var snippet_container = $(this).closest('.snippet-container');
       var idx = $('.snippet-container').index(snippet_container);
-      var new_comment_box = $("<span class='snippet-comment'></span>").text(comment_text);
+
+      // TODO(battlehorse): comment text should have an nl2br applied to it.
+      var new_comment_box = $("<div class='snippet-comment'></div>").text(comment_text);
       comment_box.replaceWith(new_comment_box);
       snippage.snippets[idx].comment = comment_text;
       chrome.extension.getBackgroundPage().updateLocalStorage();
     });
+    return false;
   }
 
   function createSnippetBox(snippage, snippet) {
     var snippet_container = $("<div class='snippet-container'></div>");
     $("<div></div>").html(snippet.content).appendTo(snippet_container);
-    $("<span>From:</span>").appendTo(snippet_container);
-    $("<a></a>").attr('href', snippet.url).text(snippet.url).
-      appendTo(snippet_container);
-    $("<button>Remove</button>").appendTo(snippet_container).click(function() {
+
+    var snippet_controls = $("<div class='snipbin-controls'></div>");
+    snippet_controls.appendTo(snippet_container);
+
+    var snippet_controls_comment = $("<div></div>").appendTo(snippet_controls);
+    if (snippet.comment && snippet.comment.length) { 
+      $("<div class='snippet-comment'></div>").text(snippet.comment).
+        appendTo(snippet_controls_comment);
+    } else {
+      $("<a href='#'>Add a comment</a>").click(doComment).appendTo(snippet_controls_comment);
+    }
+
+    $("<button>Discard</button>").appendTo(snippet_controls).click(function() {
       var idx = $('.snippet-container').index(snippet_container);
       debugger;
       snippet_container.remove();
@@ -84,12 +152,9 @@
       chrome.extension.getBackgroundPage().updateBadgeText();
       chrome.extension.getBackgroundPage().updateLocalStorage();
     });
-    if (snippet.comment && snippet.comment.length) { 
-      $("<span class='snippet-comment'></span>").text(snippet.comment).
-        appendTo(snippet_container);
-    } else {
-      $("<a>Add a comment</a>").click(doComment).appendTo(snippet_container);
-    }
+    $("<span style='margin-left: 0.2em'>This snippet comes from:</span>").appendTo(snippet_controls);
+    $("<a></a>").attr('href', snippet.url).attr('target', '_blank').text(snippet.url).
+      appendTo(snippet_controls);
     snippet_container.appendTo('#snipbin-dump');
   }
 
@@ -119,7 +184,7 @@
              alert('Communication problem with the remote server:' + textStatus);         
            } else {
              if (data.status == 'not_logged_in') {
-               $('#snipbin-message').html("Please <a href='http://snipbin.appspot.com/my' target='_blank'>login</a> first and then try again.");
+               $('#snipbin-message').html("Please <a href='http://snipbin.appspot.com' target='_blank'>login on SnipBin</a> first and then try again.");
              } else {
                $('#snipbin-message').html("Uploading...");
                var payload = snippage;
@@ -146,7 +211,7 @@
  
   function doLayout() {
     snippage = chrome.extension.getBackgroundPage().getSnipPage();
-    $('.snipbin-title').text(snippage.title || 'No Title');
+    $('.snipbin-title').text(snippage.title || 'Click here to add a title to your snippet');
     
 
     for (var i = 0; i < snippage.snippets.length; i++) {
