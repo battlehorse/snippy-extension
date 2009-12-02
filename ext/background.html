@@ -10,6 +10,7 @@ var snippage = {
 var stored_snippage = localStorage.getItem('snippage');
 if (stored_snippage) {
   snippage = $.evalJSON(stored_snippage);
+  updateBadgeText();
 }
 
 var dump_tab_id;
@@ -51,9 +52,14 @@ function getSnipPage() {
   return snippage;
 }
 
+function updateLocalStorage() {
+  localStorage.setItem('snippage', $.toJSON(snippage));
+}
+
 function clearCopy() {
   snippage.title = '';
   snippage.snippets = [];
+  localStorage.removeItem('snippage');
   updateBadgeText();
   if (dump_tab_id) {
     chrome.tabs.remove(dump_tab_id);

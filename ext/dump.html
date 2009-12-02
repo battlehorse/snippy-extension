@@ -66,6 +66,7 @@
       var new_comment_box = $("<span class='snippet-comment'></span>").text(comment_text);
       comment_box.replaceWith(new_comment_box);
       snippage.snippets[idx].comment = comment_text;
+      chrome.extension.getBackgroundPage().updateLocalStorage();
     });
   }
 
@@ -81,6 +82,7 @@
       snippet_container.remove();
       snippage.snippets.splice(idx, 1);
       chrome.extension.getBackgroundPage().updateBadgeText();
+      chrome.extension.getBackgroundPage().updateLocalStorage();
     });
     if (snippet.comment && snippet.comment.length) { 
       $("<span class='snippet-comment'></span>").text(snippet.comment).
@@ -103,6 +105,7 @@
           var new_title = $("<h1 class='snipbin-title'></h1>").text($(this).val());
           $(this).replaceWith(new_title);
           snippage.title = $(this).val();
+          chrome.extension.getBackgroundPage().updateLocalStorage();
         }
       });
     });
