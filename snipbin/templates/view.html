@@ -9,12 +9,23 @@
   <div class="vertical-column">
   {% if error %}
     <h1>Error!</h1>
+    <div class="clear-right"></div>
     <p> 
       There was a problem accessing this snippet:<br />
       {{ error }}
     </p>
   {% else %}
-    <h1>Viewing {{ snippage.m.title }}</h1>
+    <h1>{{ snippage.m.title }}</h1>
+    <p class="abstract">
+      <b>SnipBin</b> is a repository of snippets collected and shared by
+      web users, for web users.
+    </p>    
+    <div class="clear-right clear-left"></div>
+    {% if is_owner %}
+      <a href="/my">Go to My Snippets</a>
+    {% else %}
+      <a href="/">Public Snippets</a>
+    {% endif %}
     <div id="{{ snippage.key }}">
       Public? <span class='page-public'>{{ snippage.m.public }}</span><br />
       {% if is_owner %}

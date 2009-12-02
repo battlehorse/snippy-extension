@@ -5,15 +5,25 @@
 <body>
   <div class="logo"></div>
   <div class="vertical-column">
-    <h1>Welcome to SnipBin</h1>
+    <h1>SnipBin :: bits of knowledge</h1>
+    <p class="abstract">
+      <b>SnipBin</b> is a repository of snippets collected and shared by
+      web users, for web users.
+    </p>
+    <div class="clear-right"></div>
     <p>
       <b>Note:</b> This website is absolutely temporary! It exists for the
       purpose of hosting snippets uploaded via the Snippy Chrome Extension... 
-      Everything works fine, I'm just lacking posh stylesheets and images!
+      Everything works fine, It's just lacking posh stylesheets and images!
     </p>
   
     <p>
-      <a href="/my">My Snippets</a>
+      {% if logged_in %}
+        <a href="/my">My Snippets</a>
+        <a href="{{logout_url}}">Logout</a>
+      {% else %}
+        <a href="/my">Login</a>
+      {% endif %}
     </p>
     {% include "ordering.inc.html" %}
     {% if snippages %}

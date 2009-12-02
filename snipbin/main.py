@@ -95,6 +95,11 @@ class PublicHandler(BaseHandler):
     
     snippages, more, more_offset = self.get_public_snippets(
       order, offset, limit)
+      
+    user = users.get_current_user()
+    logged_in = True
+    if not user:
+      logged_in = False
     
     template_values = {
       'snippages': snippages,
@@ -105,7 +110,11 @@ class PublicHandler(BaseHandler):
       'limit': limit,
       'order': order,
       'pagination_uri': '/',
+      'logged_in' : logged_in,
     }
+    
+    if logged_in:
+      template_values['logout_url'] = users.create_logout_url('/')
     
     path = os.path.join(os.path.dirname(__file__), 'templates/public.html')
     self.response.out.write(template.render(path, template_values))
