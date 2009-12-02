@@ -1,0 +1,103 @@
+<html>
+<script src="jquery-1.3.2.min.js"></script>
+<script src="jquery.json-2.2.min.js"></script>
+<script>
+var snippage = {
+ title: '',
+ snippets: []
+};
+
+var stored_snippage = localStorage.getItem('snippage');
+if (stored_snippage) {
+  snippage = $.evalJSON(stored_snippage);
+}
+
+var dump_tab_id;
+
+var activation = {}
+function toggle() {
+  chrome.tabs.getSelected(null, function(tab) {
+    if (activation[tab.id]) {
+      activation[tab.id] = false;
+      chrome.tabs.sendRequest(tab.id, {'activate': false}, function(response) {});
+    } else {
+      activation[tab.id] = true;
+      chrome.tabs.sendRequest(tab.id, {'activate': true}, function(response) {});
+    }
+  });
+}
+
+function toggleOff() {
+  chrome.tabs.getSelected(null, function(tab) {
+    if (activation[tab.id]) {
+      activation[tab.id] = false;
+      chrome.tabs.sendRequest(tab.id, {'activate': false}, function(response) {});
+    }
+  });
+}
+
+function showDump() {
+  if (dump_tab_id) {
+    chrome.tabs.update(dump_tab_id, { selected: true });
+  } else {
+    chrome.tabs.create({"url": "dump.html"}, function(tab) {
+      tab.title = "Your snippets";
+      dump_tab_id = tab.id;
+    });
+  }
+}
+
+function getSnipPage() {
+  return snippage;
+}
+
+function clearCopy() {
+  snippage.title = '';
+  snippage.snippets = [];
+  updateBadgeText();
+  if (dump_tab_id) {
+    chrome.tabs.remove(dump_tab_id);
+  }
+}
+
+function docs() {
+  chrome.tabs.create({"url": "docs_test.html"});
+}
+
+function updateBadgeText() {
+  if (snippage.snippets.length == 0) {
+    chrome.browserAction.setBadgeText({'text': ''});
+  } else {
+    chrome.browserAction.setBadgeText({'text': '' + snippage.snippets.length});
+  }
+
+}
+
+chrome.tabs.onRemoved.addListener(function(tab_id) {
+  if (dump_tab_id == tab_id) {
+    dump_tab_id = null;
+  }
+});
+
+chrome.tabs.onSelectionChanged.addListener(function(tab_id) {
+  if (dump_tab_id == tab_id) {
+    chrome.tabs.sendRequest(tab_id, {'reload': true}, function(response){});
+  }
+});
+
+chrome.extension.onRequest.addListener(
+  function(request, sender, sendResponse) {
+    snippet = {
+      content: request.content,
+      url: request.url
+    };
+    snippage.snippets[snippage.snippets.length] = snippet;
+    localStorage.setItem('snippage', $.toJSON(snippage));
+    updateBadgeText();
+    sendResponse({});
+  }
+);
+</script>
+<body>
+</body>
+</html>

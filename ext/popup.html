@@ -1,0 +1,27 @@
+<html>
+<script>
+  function toggle() {
+    chrome.extension.getBackgroundPage().toggle();
+    window.close();
+  }
+  function showDump() {
+    chrome.extension.getBackgroundPage().toggleOff();
+    chrome.extension.getBackgroundPage().showDump();
+    window.close();
+  }
+  function clearCopy() {
+    chrome.extension.getBackgroundPage().clearCopy();
+    window.close();
+  }
+  function docs() {
+    chrome.extension.getBackgroundPage().docs();
+    window.close();
+  }
+</script>
+<body>
+  <input type="button" onclick="toggle()" value="Toggle">
+  <input type="button" onclick="showDump()" value="Show">
+  <input type="button" onclick="clearCopy()" value="Clear">
+  <input type="button" onclick="docs()" value="Docs">
+</body>
+</html>
