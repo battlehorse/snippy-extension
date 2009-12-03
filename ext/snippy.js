@@ -77,7 +77,6 @@ $(document).ready(function() {
 chrome.extension.onRequest.addListener(
     function(request, sender, sendResponse) {
     if (request.activate) {
-      debugger;
       tooltip_div.style.zIndex = 20000;
       tooltip_div.style.visibility = 'visible';
 
@@ -218,7 +217,7 @@ function recursiveRebaseStyles(base, clone) {
   var computedStyle = window.getComputedStyle(base);
   var props = {}
   jQuery.each(computedStyle, function(k,v) {
-      if (!/^-webkit/.test(v)) {  // exclude all the non-standard styles.
+      if (!/^-webkit/.test(v) && !/position|bottom|top|left|right/.test(v)) {  // exclude all the non-standard styles.
         props[v] = computedStyle[v];
       }
     });
