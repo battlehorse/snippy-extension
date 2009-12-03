@@ -1,0 +1,239 @@
+<html>
+<head>
+  <title>Snipbin test console</title>
+  <script src="/js/jquery-1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="/js/jquery.json-2.2.min.js" type="text/javascript" charset="utf-8"></script>
+  <script>
+    function json_callback(data, textStatus, callback) {
+      $('#ajax_result').text(textStatus);
+      if (data && data.status) {
+        $('#command_result').text(data.status);
+        if (data.key) {
+          $('#generated_key').text(data.key);
+        }
+      } else {
+        $('#command_result').text('none');
+      }
+      if (callback) {
+        callback(data, textStatus);
+      }      
+    }
+  
+    function json_call(method, url, json, callback) {
+      var payload = null;
+      if (json) {
+        $('#json_payload').text(json);
+        payload = {'payload': json}
+      }
+      if (method == 'GET') {
+        $.getJSON(url, payload, function(data, textStatus) {
+          json_callback(data, textStatus, callback);
+        });        
+      } else {
+        $.post(url, payload, function(data, textStatus) {
+          json_callback(data, textStatus, callback);
+        }, 'json');
+      }
+    }
+  </script> 
+  <style>
+    .section {
+      border: 1px solid black;
+      padding: 2px;
+      margin: 2px;
+    }
+    
+    .section H3 {
+      margin: 0;
+    }
+    
+    .tip {
+      background-color: #CAFDFF;
+      font-size: 10px;
+    }
+    
+    #ajax_result, #command_result {
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="section">
+    Ajax result: <span id="ajax_result">none</span>
+    Command result: <span id="command_result">none</span>
+                    <span id="generated_key"></span><br />
+    Json payload: <textarea id="json_payload" rows="10" cols="80"></textarea>
+  </div>
+  
+  <div class="section">
+    <h3>Log in</h3>
+    <button id="logged_in_button">Am I logged in?</button>
+    <a id="logout_url" href="{{ logout_url }}">Logout</a>
+    <ol class="tip">
+      <li>Should return 'ok' when logged in, or 'not_logged_in' otherwise.</li>
+    </ol>
+  </div>
+  <script>
+    $(document).ready(function() {
+      $('#logged_in_button').click(function () {
+        json_call('GET', '/api/loginstatus');
+      });
+    });
+  </script>
+
+  <div class="section">
+    <h3>XSRF</h3>
+    xsrf token:<input type="text" id="xsrf_token" value="{{ xsrf_token }}" size="40">
+    <button id="xsrf_button">Send invalid xsrf token</button>
+    <ol class="tip">
+      <li>Tweaking the xsrf_token should result in failed commands.</li>
+    </ol>
+  </div>
+  <script>
+    $(document).ready(function() {
+      $('#xsrf_button').click(function() {
+        var payload = {
+          'xsrf_token': 'invalid',
+          'key': 'unused',
+          'pub': true
+        };
+        json_call('POST', '/api/togglepublic', $.toJSON(payload));
+      });
+    });
+  </script>
+
+  
+  <div class="section">
+    <h3>Upload</h3>
+    <form id="upload_form">
+      <input type="submit" value="Upload"> 
+      <button id="add_snippet">Add Snippet</button>
+      <br />
+      title: <input type="text" id="upload_text"><br />
+      <div id="upload_snippets"></div>
+    </form>
+    <ol class="tip">
+      <li>Upload with no snippets and verify returned error.</li>
+      <li>Upload with no title and verify default title.</li>
+      <li>Upload with snippets and title.</li>
+    </ol>
+  </div>
+  <script>
+    $(document).ready(function() {
+      $('#add_snippet').click(function () {
+        $('<div>' +
+          'Content: <textarea rows="5" cols="40"></textarea><br />' +
+          'Url: <input type="text"><br />' +
+          'Comment: <input type="text"><br />' +
+        '</div>').appendTo($('#upload_snippets'));
+        return false;
+      });
+      
+      $('#upload_form').submit(function() {
+        var data = {}
+        data.title = $('#upload_text').val();
+        data.snippets = []
+        $('#upload_snippets DIV').each(function() {
+          var snippet = {}
+          snippet.content = $('textarea', this).val();
+          snippet.url = $('input:first', this).val();
+          snippet.comment = $('input:last', this).val();
+          data.snippets[data.snippets.length] = snippet
+        });
+        json_call('POST', '/api/upload', $.toJSON(data));
+        return false;
+      });
+    });
+  </script>
+  
+  <div class="section">
+    <h3>Upload fixtures</h3>
+    <button id="upload_good">Create a good snippet</button>
+    <button id="upload_no_title">Create a good snippet with default title</button>
+    <button id="upload_no_payload">No payload</button>
+    <button id="upload_no_snippets">No snippets</button>
+    <button id="upload_invalid_json">Invalid Json</button>
+    <button id="upload_with_javascript">Javascript code and events</button>
+    <button id="upload_with_javascript_url">Javascript url</button>
+  </div>
+  <script>
+    $(document).ready(function() {
+      $('#upload_good').click(function() {
+        var data = {
+          'title': 'A good snippet with title',
+          'snippets': [
+            {
+              'content': '<div>Good content</div>',
+              'url': 'http://www.google.com',
+              'comment': 'A good comment'
+            },
+            {
+              'content': '<div>Second content</div>',
+              'url': 'http://www.yahoo.com'
+              // no comment for this snippet
+            }
+          ]
+        };
+        json_call('POST', '/api/upload', $.toJSON(data));
+      });
+      $('#upload_no_title').click(function() {
+        var data = {
+          'title': '',  // empty title
+          'snippets': [
+            {
+              'content': '<div>Good content</div>',
+              'url': 'http://www.google.com',
+              'comment': 'A good comment'
+            }
+          ]
+        };
+        json_call('POST', '/api/upload', $.toJSON(data));
+      });
+      $('#upload_no_snippets').click(function() {
+        var data = {
+          'title': 'No snippets'
+        };
+        json_call('POST', '/api/upload', $.toJSON(data));
+      });
+      $('#upload_no_payload').click(function() {
+        json_call('POST', '/api/upload', '');  // no payload
+      }); 
+      $('#upload_invalid_json').click(function() {
+        json_call('POST', '/api/upload', 'invalid json');
+      });
+      $('#upload_with_javascript').click(function() {
+        var content = "<div><scri" + "pt>alert(\"hello\")</scri" + "pt>" +
+          "<button onClick=\"alert('hello')\">Hello</button>" +
+          "<button ONLOAD=\"alert('hello')\" class='remain'>Hello</button>" +
+          "Js content</div>";
+        var data = {
+          'title': 'Javascript and events',
+          'snippets': [
+            {
+              'content': content,
+              'url': 'http://www.google.com',
+              'comment': 'A Js comment'
+            }
+          ]
+        };
+        json_call('POST', '/api/upload', $.toJSON(data));
+      });    
+      $('#upload_with_javascript_url').click(function() {
+        var data = {
+          'title': 'Javascript and events',
+          'snippets': [
+            {
+              'content': 'Javascript url',
+              'url': '  javaScriPT:  alert(\'hello\');',
+              'comment': 'A Js comment'
+            }
+          ]
+        };
+        json_call('POST', '/api/upload', $.toJSON(data));        
+      });
+    });
+  </script>
+
+</body>
+</html>

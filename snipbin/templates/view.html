@@ -1,0 +1,85 @@
+<html>
+<head>
+  <script src="/js/jquery-1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="/js/jquery.json-2.2.min.js" type="text/javascript" charset="utf-8"></script>
+  <link rel="stylesheet" href="/stylesheets/snipbin.css" type="text/css" media="screen" title="no title" charset="utf-8">
+</head>
+<body>
+  <div class="logo"></div>  
+  <div class="vertical-column">
+  {% if error %}
+    <h1>Error!</h1>
+    <div class="clear-right"></div>
+    <p> 
+      There was a problem accessing this snippet:<br />
+      {{ error }}
+    </p>
+  {% else %}
+    <h1>{{ snippage.m.title|escape }}</h1>
+    <p class="abstract">
+      <b>SnipBin</b> is a repository of snippets collected and shared by
+      web users, for web users.
+    </p>    
+    <div class="clear-right clear-left"></div>
+    {% if is_owner %}
+      <a href="/my">Go to My Snippets</a>
+    {% else %}
+      <a href="/">Public Snippets</a>
+    {% endif %}
+    <div id="{{ snippage.key }}">
+      Public? <span class='page-public'>{{ snippage.m.public }}</span><br />
+      {% if is_owner %}
+        <form class="public-form">
+          <input type="hidden" name="key" value="{{ snippage.key }}">
+          <input type="hidden" name="public" value="{{ snippage.m.public }}">
+          <input type="submit" value="Toggle public">
+        </form>
+        <form class="delete-form">
+          <input type="hidden" name="key" value="{{ snippage.key }}">
+          <input type="submit" value="Delete">
+        </form>
+      {% endif %}
+    </div>
+    {% if is_owner %}
+      <input type="hidden" id="xsrf_token" value="{{ xsrf_token }}">
+      <script>
+        $(document).ready(function() {
+          $(".public-form").submit(function() {
+            var key = $("input[name='key']", this).val();
+            var pub = $("input[name='public']", this).val() == 'True';
+            var data = {
+              'key': key,
+              'public': !pub,
+              'xsrf_token': $('#xsrf_token').val()
+            };
+            $.post('/api/togglepublic', {'payload': $.toJSON(data)}, function(data, textStatus) {
+              if (data.status == 'ok') {
+                $('#' + key).find('.page-public').text(pub ? "False" : "True");
+                $('#' + key).find("input[name='public']").val(pub ? "False" : "True")
+              }
+            }, 'json');
+            return false;
+          });
+          $(".delete-form").submit(function() {
+            var key = $("input[name='key']", this).val();
+            var data = {
+              'key': key,
+              'xsrf_token': $('#xsrf_token').val()
+            }
+            if (confirm('Do you want to delete this item?')) {
+              $.post('/api/delete', {'payload': $.toJSON(data)}, function(data, textStatus) {
+                if (data.status == 'ok') {
+                  document.location.href = "/my"
+                }
+              }, 'json');
+            }
+            return false;
+          });
+        });
+      </script>
+    {% endif %}
+    <iframe src="/inc?key={{ snippage.key }}" width="100%" height="100%" style="border: 0" />
+  {% endif %}
+  </div>
+</body>
+</html>

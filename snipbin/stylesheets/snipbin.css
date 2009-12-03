@@ -1,0 +1,65 @@
+* {
+  font-family: sans-serif;
+}
+
+/* rgb(231, 213, 166)  */
+BODY {
+  background-color: rgb(255, 245, 219);
+}
+
+.logo {
+  background: transparent url(../snipbin_icon.png) no-repeat 10 10;
+  width: 138px;
+  height: 138px;
+  z-index: 100;
+  float: left;
+}
+
+H1 {
+  font-family: sans-serif;
+  color: #333;
+  border: 1px solid rgb(80, 150, 247);
+  -webkit-box-shadow: 5px 5px 5px #999;
+  -webkit-border-radius: 5px;
+  max-width: 80%;
+  float: right;
+  margin: 0 -40px 0 0;
+  padding: 0.3em;
+  
+  background-color: white;
+}
+
+.vertical-column {
+  background-color: white;
+  border: 2px solid rgb(80, 150, 247);
+  padding: 1em;
+  margin: 1em 3em 1em 100px;
+  -webkit-box-shadow: 5px 5px 5px #999;
+  -webkit-border-radius: 5px;
+}
+
+UL {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+LI {
+  margin: 0;
+  padding: 0.5em;
+  border: 1px dotted rgb(80, 150, 247);
+  -webkit-border-radius: 3px;
+}
+
+.abstract {
+  font-size: 12px;
+  margin-left: 40px;
+}
+
+.clear-right {
+  clear: right;
+}
+
+.clear-left {
+  clear: left;
+}
