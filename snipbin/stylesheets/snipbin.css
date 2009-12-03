@@ -8,7 +8,7 @@ BODY {
 }
 
 .logo {
-  background: transparent url(../snipbin_icon.png) no-repeat 10 10;
+  background: transparent url(../snipbin_icon.png) no-repeat 10px 10px;
   width: 138px;
   height: 138px;
   z-index: 100;
