@@ -21,6 +21,8 @@ H1 {
   border: 1px solid rgb(80, 150, 247);
   -webkit-box-shadow: 5px 5px 5px #999;
   -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -moz-box-shadow: 5px 5px 5px #999;
   max-width: 80%;
   float: right;
   margin: 0 -40px 0 0;
@@ -36,6 +38,8 @@ H1 {
   margin: 1em 3em 1em 100px;
   -webkit-box-shadow: 5px 5px 5px #999;
   -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -moz-box-shadow: 5px 5px 5px #999;
 }
 
 UL {
@@ -49,6 +53,7 @@ LI {
   padding: 0.5em;
   border: 1px dotted rgb(80, 150, 247);
   -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
 }
 
 .abstract {
