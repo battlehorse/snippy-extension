@@ -102,7 +102,7 @@ class Upload(ApiBase):
 
     snippage = models.SnipPage(owner=user, views=0, public=False, flagged=False)
     title = (payload.get('title') or 
-            '%s %s' % (user.nickname(), datetime.datetime.now()))
+            '%s %s' % (user.nickname(), datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
     snippage.title = title.encode('utf-8', 'ignore').decode('utf-8', 'ignore')
     snippage.put()
 
