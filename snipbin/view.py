@@ -78,7 +78,12 @@ class ViewHandler(BaseViewHandler):
     template_values.update({
       'error': False,
       'snippage': vo.SnipPageVO(snippage),
+      'logged_in' : users.get_current_user(),
     })
+    
+    if users.get_current_user():
+      template_values['logout_url'] = users.create_logout_url('/')
+    
     path = os.path.join(os.path.dirname(__file__), 'templates/view.html')
     self.response.out.write(template.render(path, template_values))
 
@@ -102,6 +107,7 @@ application = webapp.WSGIApplication(
   [('/view', ViewHandler), ('/inc', IncludeHandler)],
   debug=snipglobals.debug)
 
+webapp.template.register_template_library('customfilters')
 
 def main():
   run_wsgi_app(application)

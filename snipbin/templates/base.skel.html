@@ -1,0 +1,69 @@
+<html>
+<head>
+  <link rel="stylesheet" href="/stylesheets/snipbin.css" type="text/css" media="screen" charset="utf-8">
+  <script src="/js/jquery-1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="/js/jquery.json-2.2.min.js" type="text/javascript" charset="utf-8"></script>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"> </script>  
+  {% block script %}{% endblock %}
+  <title>SnipBin :: {% block title %}{% endblock %}</title>
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+</head>
+<body>
+  <div class="logo">
+     <a href="/"><img src="snipbin_icon.png"></a>
+  </div>
+  <div class="title">
+    <h1><a href="/">SnipBin :: bits of knowledge</a></h1>
+  </div>
+  <ul class="headerbar">
+      {% block headerbar %}
+        <li class="headerentry">
+          <a href="/extension">Chrome Extension</a>
+        </li>
+        <li class="headerentry">
+          <a href="/about">About</a>
+        </li>
+        <li class="headerentry last">
+          {% if logged_in %}
+            <a href="{{logout_url}}">Logout</a>
+          {% else %}
+            <a href="/my">Login</a>
+          {% endif %}
+        </li>      
+      {% endblock %}
+  </ul>
+  <div class="main">
+    <p class="abstract">
+      <b>SnipBin</b> is a repository of snippets collected and shared by
+      web users, for web users.
+      <a href="/about">Learn more</a>
+    </p>    
+    {% block main %}{% endblock %}
+  </div>
+  <div class="main footer">
+    {% block footer %}
+      <p>
+        <b>SnipBin</b> supports the following browsers:
+        <span class="shaded">
+          <img src="chrome.png"> Google Chrome
+          <img src="firefox.png"> Mozilla Firefox
+          <img src="safari.png"> Safari
+          <img src="opera.png"> Opera
+        </span><br />
+        Using Internet Explorer? Please install <a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a>.
+      </p>
+      <p>
+        <b>SnipBin</b> is open source. <a href="http://code.google.com/p/snippy-extension/">Get the code</a>.
+        <a href="/legal">Legal</a>. <a href="/about">About and Credits</a>.
+      </p>
+      <!-- <p>
+        <b>SnipBin</b> logo comes from the <a href="http://www.oxygen-icons.org/">Oxygen Icon set</a>.
+        http://www.iconarchive.com/category/people/people-disability-icons-by-anatom5.html
+      </p> -->
+    {% endblock %}
+  </div>
+  <script>
+   CFInstall.check();
+  </script>
+</body>
+</html>
