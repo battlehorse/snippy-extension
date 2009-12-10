@@ -160,6 +160,7 @@ function rebaseLinks(el) {
       if (!href) {
         return;
       }
+      $(this).attr('target', '_blank');
       if (href.charAt(0) == '/') {
         $(this).attr('href',
                      document.location.protocol + '//' +
