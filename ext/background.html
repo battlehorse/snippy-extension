@@ -16,6 +16,10 @@ if (stored_snippage) {
 var dump_tab_id;
 var cur_tab_id;
 var cur_tab_url;
+chrome.tabs.getSelected(null, function(tab) {
+  cur_tab_url = tab.url;
+  cur_tab_id = tab.id;
+});
 
 var activation = {};
 var readyness = {};
@@ -118,6 +122,9 @@ chrome.tabs.onUpdated.addListener(function(tab_id, change_info) {
   if (change_info.status == "loading") {
     readyness[tab_id] = "loading";
   }
+  chrome.tabs.get(tab_id, function(tab) {
+    cur_tab_url = tab.url;
+  });
 });
 
 chrome.extension.onRequest.addListener(
