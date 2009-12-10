@@ -318,6 +318,10 @@ IMG.bottom {
   padding: 0.2em;
 }
 
+.snippet-form {
+  margin: 0;
+  padding: 0;
+}
 
 .snippet .metaview .snippet-form {
   padding-top: 3px;
@@ -380,4 +384,10 @@ IMG.bottom {
 .getstarted A {
   color: white;
   text-decoration: none;
+}
+
+.boxy-content P, .boxy-content SPAN {
+  margin: 0;
+  padding: 0;
+  font-size: 11px;
 }

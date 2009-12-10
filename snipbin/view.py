@@ -66,13 +66,14 @@ class ViewHandler(BaseViewHandler):
       return
       
     user = users.get_current_user();
-    if user and user == snippage.owner:
+    if user:
       xsrf_token = hashlib.md5('%s-%s' % (user.user_id(), random.random())).hexdigest()
       self.response.headers.add_header('Set-Cookie', 'xsrf_token=%s' % xsrf_token)
-      template_values['is_owner'] = True
+      template_values['is_owner'] = user == snippage.owner
       template_values['xsrf_token'] = xsrf_token
     else:
       template_values['is_owner'] = False
+      template_values['xsrf_token'] = None
     
     db.run_in_transaction(self.increment_views, key)
     template_values.update({

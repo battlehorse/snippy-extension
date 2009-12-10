@@ -103,6 +103,27 @@
     });
   </script>
 
+  <div class="section">
+    <h3>Report Abuse</h3>
+    <form id="abuse_form">
+      key: <input type="text" id="abuse_key" size="40"><br />
+      report: <textarea rows="5" cols="50" id="abuse_text"></textarea><br />
+      <button id="add_abuse">Add Abuse</button>
+    </form>
+  </div>
+  <script>
+    $(document).ready(function() {
+      $('#add_abuse').click(function() {
+        var payload = {
+          'xsrf_token': $('#xsrf_token').val(),
+          'key': $('#abuse_key').val(),
+          'report': $('#abuse_text').val()
+        }
+        json_call('POST', '/api/reportabuse', $.toJSON(payload));
+        return false;
+      });
+    });
+  </script>
   
   <div class="section">
     <h3>Upload</h3>

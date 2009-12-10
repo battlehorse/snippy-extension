@@ -91,6 +91,12 @@ class PublicHandler(BaseHandler):
     return self.fetch_results(q, limit, offset)
 
   def get(self):
+    user = users.get_current_user()
+    if user:
+      xsrf_token = hashlib.md5('%s-%s' % (user.user_id(), random.random())).hexdigest()
+      self.response.headers.add_header('Set-Cookie', 'xsrf_token=%s' % xsrf_token)      
+    else:
+      xsrf_token = None
     order, offset, limit = self.get_pagination('-views')
     
     snippages, more, more_offset = self.get_public_snippets(
@@ -106,6 +112,7 @@ class PublicHandler(BaseHandler):
       'order': order,
       'pagination_uri': '/',
       'logged_in' : users.get_current_user(),
+      'xsrf_token': xsrf_token,
     }
     
     if users.get_current_user():

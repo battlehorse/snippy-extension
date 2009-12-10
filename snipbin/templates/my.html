@@ -30,6 +30,12 @@
                 {{ snippage.snippets_count }} fragments 
                 <img src="snippet_num.png" class="bottom" title="Number of snippets" alt="Number of snippets">
               </span><br />
+              {% if snippage.abuses_count %}
+                <span>
+                  {{ snippage.abuses_count }} abuse reports
+                  <img src="snippet_abuses.png" class="bottom" title="Number of abuse reports" alt="Number of abuse reports">
+                </span><br />
+              {% endif %}
             </div><div class="actions">
               <!-- Flagged? {{ snippage.m.flagged }} -->
               <!-- Abuses? {{ snippage.abuses_count }} -->
