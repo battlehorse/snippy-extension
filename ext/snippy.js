@@ -232,6 +232,7 @@ function recursiveRebaseStyles(base, clone) {
 
 function removeScripts(el) {
   $('script', el).remove();
+  //TODO(battlehorse): also remove all event handlers and links using the javascript: protocol
 }
 
 function snippymove(el, top, left, w, h, duration) {
