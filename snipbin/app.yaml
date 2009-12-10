@@ -30,6 +30,9 @@ handlers:
 - url: /js
   static_dir: js
   
-- url: /(.*\.(gif|png|jpg|ico))
+- url: /(.*\.(gif|png|jpg|ico|crx))
   static_files: static/\1
-  upload: static/(.*\.(gif|png|jpg|ico))  
+  upload: static/(.*\.(gif|png|jpg|ico|crx))  
+
+- url: /(about|legal|extension)
+  script: plainhtml.py

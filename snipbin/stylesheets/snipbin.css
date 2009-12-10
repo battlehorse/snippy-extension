@@ -210,9 +210,11 @@ BODY {
 }  
 
 .abstract {
-/*  float: right;*/
   margin: 0 0 0.2em 0;
-/*  text-align: right;*/
+}
+
+.blurb {
+  font-size: 12px;
 }
 
 .footer {
@@ -381,10 +383,30 @@ IMG.bottom {
   padding: 5px;
 }
 
-.getstarted A {
+.getstartedmono {
+  background: transparent url(../grad_mono.png) repeat-x top left;
+  height: 22px;
+  
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -webkit-box-shadow: 2px 2px 3px #aaa;
+  border-top: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  border-right: 1x solid #666;
+  border-bottom: 1x solid #666;
+  
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  padding: 5px;
+  
+}
+
+.getstarted A, .getstartedmono A {
   color: white;
   text-decoration: none;
 }
+
 
 .boxy-content P, .boxy-content SPAN {
   margin: 0;
