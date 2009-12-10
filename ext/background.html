@@ -14,8 +14,12 @@ if (stored_snippage) {
 }
 
 var dump_tab_id;
+var cur_tab_id;
+var cur_tab_url;
 
-var activation = {}
+var activation = {};
+var readyness = {};
+
 function toggle() {
   chrome.tabs.getSelected(null, function(tab) {
     if (activation[tab.id]) {
@@ -80,7 +84,18 @@ function updateBadgeText() {
   } else {
     chrome.browserAction.setBadgeText({'text': '' + snippage.snippets.length});
   }
+}
 
+function CurrentTabReadiness() {
+  if (!readyness[cur_tab_id]) {
+    return "unknown";
+  } else {
+    return readyness[cur_tab_id];
+  }
+}
+
+function CurrentTabUrl() {
+  return cur_tab_url;
 }
 
 chrome.tabs.onRemoved.addListener(function(tab_id) {
@@ -90,14 +105,27 @@ chrome.tabs.onRemoved.addListener(function(tab_id) {
 });
 
 chrome.tabs.onSelectionChanged.addListener(function(tab_id) {
+  cur_tab_id = tab_id;
   if (dump_tab_id == tab_id) {
     chrome.tabs.sendRequest(tab_id, {'reload': true}, function(response){});
+  }
+  chrome.tabs.get(tab_id, function(tab) {
+    cur_tab_url = tab.url;
+  });
+});
+
+chrome.tabs.onUpdated.addListener(function(tab_id, change_info) {
+  if (change_info.status == "loading") {
+    readyness[tab_id] = "loading";
   }
 });
 
 chrome.extension.onRequest.addListener(
   function(request, sender, sendResponse) {
-    if (request.toggle) {
+    if (request.ready) {
+      readyness[sender.tab.id] = "ready";
+    }
+    else if (request.toggle) {
       toggle();
     } else if (request.showdump) {
       toggleOff();

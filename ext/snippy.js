@@ -72,6 +72,7 @@ $(document).ready(function() {
             $(this).animate({'opacity': 0.1}, 100);
         });
     });
+    chrome.extension.sendRequest({'ready': true}, function(response) {});
 });
 
 chrome.extension.onRequest.addListener(
