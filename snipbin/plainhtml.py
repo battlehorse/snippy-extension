@@ -38,12 +38,25 @@ class ExtensionHandler(BaseHandler):
 
   def get(self):
     self.render_page('extension.html')
+    
+
+class ExtensionWelcomeHandler(BaseHandler):
+  
+  def get(self):
+    self.render_page('extension_welcome.html')
+
+class ExtensionLoginHandler(BaseHandler):
+
+  def get(self):
+    self.render_page('extension_login.html')
 
 
 application = webapp.WSGIApplication(
   [('/about', AboutHandler), 
    ('/legal', LegalHandler),
-   ('/extension', ExtensionHandler)],
+   ('/extension', ExtensionHandler),
+   ('/extwelcome', ExtensionWelcomeHandler),
+   ('/extlogin', ExtensionLoginHandler)],
   debug=snipglobals.debug)
 
 

@@ -1,0 +1,24 @@
+{% extends "base.skel.html" %}
+{% block title %}Bits of knowledge{% endblock %}
+{% block main %}
+<h2>Welcome to SnipBin</h2>
+<p class="publicprivate">
+  {% if logged_in %}
+    <a href="/my"><img src="goto.png" class="bottom" /> My Snippets</a> 
+  {% else %}
+    <a href="/my"><img src="goto.png" class="bottom" /> Login</a> 
+  {% endif %}
+</p>
+<div class="clear-both"></div>
+<div>
+  <img src="distort_snipbin_small.png" style="float:right">
+  <p class="blurb">
+    You have successfully logged in.
+  </p>
+  <p class="blurb">
+    You can now close this window and go back to upload the snippets you
+    have collected so far.
+  </p>
+</div>
+<div class="clear-right"></div>
+{% endblock %}
