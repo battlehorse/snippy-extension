@@ -66,19 +66,25 @@ class ViewHandler(BaseViewHandler):
       return
       
     user = users.get_current_user();
-    if user and user == snippage.owner:
+    if user:
       xsrf_token = hashlib.md5('%s-%s' % (user.user_id(), random.random())).hexdigest()
       self.response.headers.add_header('Set-Cookie', 'xsrf_token=%s' % xsrf_token)
-      template_values['is_owner'] = True
+      template_values['is_owner'] = user == snippage.owner
       template_values['xsrf_token'] = xsrf_token
     else:
       template_values['is_owner'] = False
+      template_values['xsrf_token'] = None
     
     db.run_in_transaction(self.increment_views, key)
     template_values.update({
       'error': False,
       'snippage': vo.SnipPageVO(snippage),
+      'logged_in' : users.get_current_user(),
     })
+    
+    if users.get_current_user():
+      template_values['logout_url'] = users.create_logout_url('/')
+    
     path = os.path.join(os.path.dirname(__file__), 'templates/view.html')
     self.response.out.write(template.render(path, template_values))
 
@@ -102,6 +108,7 @@ application = webapp.WSGIApplication(
   [('/view', ViewHandler), ('/inc', IncludeHandler)],
   debug=snipglobals.debug)
 
+webapp.template.register_template_library('customfilters')
 
 def main():
   run_wsgi_app(application)

@@ -102,7 +102,7 @@ class Upload(ApiBase):
 
     snippage = models.SnipPage(owner=user, views=0, public=False, flagged=False)
     title = (payload.get('title') or 
-            '%s %s' % (user.nickname(), datetime.datetime.now()))
+            '%s %s' % (user.nickname(), datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
     snippage.title = title.encode('utf-8', 'ignore').decode('utf-8', 'ignore')
     snippage.put()
 
@@ -169,7 +169,45 @@ class TogglePublic(ApiBase):
       snippage.public = False
     snippage.put()
     self.respond_ok()
+
+
+class ReportAbuse(ApiBase):
+
+  def post(self):
+    user = self.check_user_login()
+    if not user:
+      return
+      
+    payload = self.check_payload()
+    if not payload:
+      return
+      
+    if not self.check_xsrf_token(payload):
+      return
     
+    key = payload.get('key')
+    if not key:
+      self.respond_error('no_key')
+      return
+    
+    report = payload.get('report')
+    if not report:
+      self.respond_error('no_report')
+      return
+    
+    snippage = None
+    try:
+      snippage = db.get(key)
+    except db.BadKeyError:
+      self.respond_error('invalid_key')
+      return
+    
+    abuse = models.AbuseReport(message=report, reporter=user)
+    abuse.master = snippage
+    abuse.put()
+
+    self.respond_ok({'key': str(snippage.key())})
+
 
 class Delete(ApiBase):
 
@@ -216,6 +254,7 @@ application = webapp.WSGIApplication(
    ('/api/loginstatus', Login),  # no xsrf-token check
    ('/api/togglepublic', TogglePublic),
    ('/api/delete', Delete),
+   ('/api/reportabuse', ReportAbuse),
   ],
   debug=snipglobals.debug)
 

@@ -1,52 +1,115 @@
-<html>
-<head>
-  <link rel="stylesheet" href="/stylesheets/snipbin.css" type="text/css" media="screen" title="no title" charset="utf-8">
-</head>
-<body>
-  <div class="logo"></div>
-  <div class="vertical-column">
-    <h1>SnipBin :: bits of knowledge</h1>
-    <p class="abstract">
-      <b>SnipBin</b> is a repository of snippets collected and shared by
-      web users, for web users.
-    </p>
-    <div class="clear-right"></div>
-    <p>
-      <b>Note:</b> This website is absolutely temporary! It exists for the
-      purpose of hosting snippets uploaded via the Snippy Chrome Extension... 
-      Everything works fine, It's just lacking posh stylesheets and images!
-    </p>
-  
-    <p>
-      {% if logged_in %}
-        <a href="/my">My Snippets</a>
-        <a href="{{logout_url}}">Logout</a>
-      {% else %}
-        <a href="/my">Login</a>
-      {% endif %}
-    </p>
-    {% include "ordering.inc.html" %}
-    {% if snippages %}
-      <ul>
-      {% for snippage in snippages %}
-        <li>
-            <div id="{{ snippage.key }}">
-            {{ snippage.m.title|escape }}<br />
-            Key: <a href="/view?key={{ snippage.key }}">{{ snippage.key }}</a><br />
-            Created on: {{ snippage.m.created }}<br />
-            Public? <span class='page-public'>{{ snippage.m.public }}</span><br />
-            Views: {{ snippage.m.views }}<br />
-            Owner: {{ snippage.m.owner }}<br />
-            Snippets: {{ snippage.snippets_count }}<br />
-            Abuses: {{ snippage.abuses_count }}<br />
-            </div>
-          </li>
-      {% endfor %}
-      </ul>
-      {% include "pagination.inc.html" %}
+{% extends "base.skel.html" %}
+{% block title %}Bits of knowledge{% endblock %}
+{% block main %}
+  <h2><img src="public_icon_small.png" class="inline"> Public Snippets</h2>
+  <p class="publicprivate">
+    {% if logged_in %}
+      <a href="/my"><img src="goto.png" class="bottom" /> My Snippets</a> 
     {% else %}
-      No public snippets ?!
+      <a href="/my"><img src="goto.png" class="bottom" /> Login</a> 
     {% endif %}
-  </div>
-</body>
-</html>
+  </p>
+  <div class="clear-both"></div>
+  {% include "ordering.inc.html" %}
+  {% if snippages %}
+    <ul>
+    {% for snippage in snippages %}
+      <li>
+        <div id="{{ snippage.key }}" class="snippet">          
+          <a class="viewitem" href="/view?key={{ snippage.key }}">{{ snippage.m.title|escape }}</a>
+          <div class="meta">
+            <span>
+              <span class="views">{{ snippage.m.views }}</span> views
+              <img src="snippet_views.png" class="bottom" title="Views" alt="Views" >
+            </span><br />
+            <span>
+              {{ snippage.m.owner.nickname }}
+              <img src="snippet_owner.png" class="bottom" title="Author" alt="Author">
+            </span><br />
+            <span>
+              {{ snippage.m.created|naturalTimeDifference }}
+              <img src="snippet_created.png" class="bottom" title="Creation Date" alt="Creation Date">
+            </span><br />
+            <span>
+              {{ snippage.snippets_count }} fragments 
+              <img src="snippet_num.png" class="bottom" title="Number of snippets" alt="Number of snippets">
+            </span><br />
+            <form class="snippet-form">
+              <input type="hidden" name="key" value="{{ snippage.key }}">
+              <a href="#" class="abuse">Report abuse</a>
+            </form>
+            <!-- Flagged? {{ snippage.m.flagged }} -->
+            <!-- Abuses? {{ snippage.abuses_count }} -->
+            <!-- Public? {{ snippage.m.public }} -->
+          </div>
+          <div class="clear-both"></div>
+        </div>
+      </li>
+    {% endfor %}
+    </ul>
+    {% include "pagination.inc.html" %}
+
+    <input type="hidden" id="xsrf_token" value="{{ xsrf_token }}">
+    <script>
+      $(document).ready(function() {
+        {% if logged_in %}
+          $(".abuse").click(function () {
+            var link = this;
+            var form = $(this).closest(".snippet-form");
+            var key = $("input[name='key']", form).val();
+            var textarea = $("<textarea rows='10' cols='50'></textarea>");
+            var container = $("<div></div>");
+            $("<p>Please give us some details about this abuse report.</p>").appendTo(container);
+            textarea.appendTo(container);
+            var okButton = $("<button>Submit</button>");
+            var cancelButton = $("<button>Cancel</button>");
+            var feedback = $("<span></span>");
+            var buttonDiv = $("<div></div>");
+            buttonDiv.append(cancelButton).append(okButton).append(feedback).appendTo(container);
+            var boxy = new Boxy(container, {title: "Report Abuse", draggable: false, modal: true});
+            cancelButton.click(function() {
+              boxy.hideAndUnload();
+            });
+            okButton.click(function() {
+              var report = textarea.val();
+              if (jQuery.trim(report).length == 0) {
+                feedback.text("Please write something.");
+                return;
+              }
+              feedback.text("Submitting ...");
+              var data = {
+                'key': key,
+                'report': report,
+                'xsrf_token': $('#xsrf_token').val()
+              };
+              $.post('/api/reportabuse', {'payload': $.toJSON(data)}, function(data, textStatus) {
+                if (data.status == 'ok') {
+                  feedback.text('Thanks.');
+                  boxy.hideAndUnload();
+                } else {
+                  feedback.text(data.status);
+                }
+              }, 'json');
+            });
+            boxy.show();
+            textarea.focus();
+            return false;
+          });
+        {% else %}
+          $(".abuse").click(function() {
+            var container = $("<div></div>");
+            $("<p>You must be logged in to submit abuse reports.</p>").appendTo(container);
+            var okButton = $("<button>Ok</button>").appendTo(container);
+            var boxy = new Boxy(container, {title: "Report Abuse", draggable: false, modal: true});
+            okButton.click(function() {
+              boxy.hideAndUnload();
+            });
+            return false;
+          });
+        {% endif %}
+      });
+    </script> 
+  {% else %}
+    No public snippets ?!
+  {% endif %}
+{% endblock %}

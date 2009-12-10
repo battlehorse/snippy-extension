@@ -1,59 +1,140 @@
-* {
-  font-family: sans-serif;
+  * {
+    font-family: sans-serif;
+  }
+
+.headerbar {
+  background: transparent url(../grad.png) repeat-x top left;
+  height: 22px;
+  max-width: 1000px;
+  
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -webkit-box-shadow: 2px 2px 3px #aaa;
+  border-top: 1px solid rgb(103, 140, 255);
+  border-left: 1px solid rgb(103, 140, 255);    
+  border-right: 1x solid rgb(7, 32, 174);
+  border-bottom: 1x solid rgb(7, 32, 174);    
+  
+  font-size: 12px;
+  font-weight: bold;
+  
+  list-style-type: none;
+  margin: 0;
+  padding: 8px 0 0 0;
+  text-align: right;
 }
 
-/* rgb(231, 213, 166)  */
-BODY {
-  background-color: rgb(255, 245, 219);
+/*  79 125 254 -  51 111 246
+              16 60 222  - 7 32 174 */
+
+.headerentry {
+  display: inline;
+  padding: 5px 2px;
+  margin-right: 2px;
+  border-top: 1px solid rgb(23, 67, 207);
+  border-left: 1px solid rgb(23, 67, 207);
+  border-bottom: 1px solid rgb(71, 122, 247);
+  border-right: 1px solid rgb(71, 122, 247);
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+}
+
+.last {
+  margin-right: 1px;
+}
+
+.headerentry:hover {
+  background: transparent url(../grad_light.png) repeat-x top left;
+  text-decoration: underline;
+}
+
+.headerentry A:hover {
+  text-decoration: underline;
+}
+
+.headerentry A, .title A {
+  color: white;
+  text-decoration: none;
+  text-shadow: 1px 1px 1px rgb(23, 67, 207);
 }
 
 .logo {
-  background: transparent url(../snipbin_icon.png) no-repeat 10 10;
-  width: 138px;
-  height: 138px;
+  width: 128px;
+  height: 128px;
   z-index: 100;
   float: left;
 }
 
-H1 {
-  font-family: sans-serif;
-  color: #333;
-  border: 1px solid rgb(80, 150, 247);
-  -webkit-box-shadow: 5px 5px 5px #999;
-  -webkit-border-radius: 5px;
-  max-width: 80%;
-  float: right;
-  margin: 0 -40px 0 0;
-  padding: 0.3em;
-  
-  background-color: white;
+.logo IMG {
+  margin-top: -20px;
+  border: 0;
 }
 
-.vertical-column {
-  background-color: white;
-  border: 2px solid rgb(80, 150, 247);
-  padding: 1em;
-  margin: 1em 3em 1em 100px;
-  -webkit-box-shadow: 5px 5px 5px #999;
-  -webkit-border-radius: 5px;
+.title {
+  float: left;
 }
 
-UL {
-  list-style-type: none;
+.title H1 {
+  margin: 5px 0 0 10px;
+  font-size: 15px;
+  font-weight: bold;
+  text-shadow: 1px 1px 1px rgb(23, 67, 207);
+}
+
+.main {
+  font-size: 11px;
+  background-color: #fff;
+  border: 1px solid #bbb;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-box-shadow: 3px 3px 3px rgb(210, 210, 210);
+  -webkit-box-shadow: 3px 3px 3px rgb(210, 210, 210);
+  margin-left: 138px;
+  margin-top: 5px;
+  padding: 5px;
+  max-width: 852px;
+}
+
+.main H2 {
+  clear: right;
+  float: left;
+  font-size: 30px;
   margin: 0;
   padding: 0;
 }
 
-LI {
-  margin: 0;
+.publicprivate {
+  float: right;
+  background-color: #eee;
+  border: 1px solid #ddd;
+  border-right: 0px;
   padding: 0.5em;
-  border: 1px dotted rgb(80, 150, 247);
-  -webkit-border-radius: 3px;
+  margin: 5px -5px 0 0;
+  -moz-border-radius-topleft: 3px;
+  -moz-border-radius-bottomleft: 3px;
+  -webkit-border-top-left-radius: 3px;
+  -webkit-border-bottom-left-radius: 3px;  
 }
 
-.abstract {
-  font-size: 12px;
-  margin-left: 40px;
+.publicprivate:hover {
+  background-color: #ddd;
+  border: 1px solid #ccc;
+  border-right: 0px;
+}
+
+.publicprivate A {
+  color: #333;
+  font-size: 15px;
+  text-decoration: none;
+}
+
+.publicprivate A:hover {
+  text-decoration: underline;
+}
+
+BODY {
+  background: rgb(240, 240, 240) url(../backgrad.png) repeat-x top left;
+  margin: 5px;
 }
 
 .clear-right {
@@ -62,4 +143,251 @@ LI {
 
 .clear-left {
   clear: left;
+}
+
+.clear-both {
+  clear: both;
+}
+
+.ordering {
+  width: 100%;
+  border-bottom: 1px solid rgb(16, 60, 222);
+  font-size: 11px;
+  margin-top: 0;
+}
+
+.ordering A {
+  border: 1px solid rgb(16, 60, 222);
+  border-bottom: 0px;
+  padding: 4px 6px 0 6px;
+  -moz-border-radius-topleft: 3px;
+  -moz-border-radius-topright: 3px;
+  -webkit-border-top-right-radius: 3px;
+  -webkit-border-top-left-radius: 3px;
+
+  margin: 0;
+  background-color: white;
+  color: rgb(62, 112, 193);
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.ordering A:hover {
+  background: transparent url(../grad_light.png) repeat-x top left;
+  color: white;
+}
+
+.ordering A.current {
+  background: transparent url(../grad.png) repeat-x top left;
+  color: white;
+}
+
+.pagination {
+  width: 100%;
+  border-top: 1px solid rgb(16, 60, 222);
+  font-size: 11px;
+  text-align: right;
+}
+
+.pagination A {
+  background: transparent url(../grad.png) repeat-x top left;
+  border: 1px solid rgb(16, 60, 222);
+  padding: 0 6px 4px 6px;
+  -moz-border-radius-bottomleft: 3px;
+  -moz-border-radius-bottomright: 3px;
+  -webkit-border-bottom-right-radius: 3px;
+  -webkit-border-bottom-left-radius: 3px;
+
+  margin: 0;
+  color: white;
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.pagination A:hover {
+  background: transparent url(../grad_light.png) repeat-x top left;
+  color: white;
+}  
+
+.abstract {
+/*  float: right;*/
+  margin: 0 0 0.2em 0;
+/*  text-align: right;*/
+}
+
+.footer {
+  color: #666;
+}
+
+.footer P {
+  margin: 0 0 5px 0;
+}
+
+.main UL {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.main LI {
+  margin: 0 0 0.5em 0;
+  padding: 0.5em;
+  border: 1px solid #bbb;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  -moz-box-shadow: 1px 2px 2px rgb(230, 230, 230);
+  -webkit-box-shadow: 1px 2px 2px rgb(230, 230, 230);
+}
+
+.main LI:hover {
+  background-color: rgb(232, 242, 255);
+}
+
+.main LI:hover A.viewitem {
+  text-decoration: underline;
+}
+
+.main LI:hover .snippet .meta {
+  background-color: rgb(214, 231, 255);
+  border: 1px solid rgb(192, 218, 255);
+}
+
+IMG.inline {
+  vertical-align: middle;
+  border: 0;
+}
+
+IMG.bottom {
+  vertical-align: text-bottom;
+  border: 0;
+}
+
+.snippet A.viewitem {
+  font-size: 20px;
+  text-decoration: none;
+  color: black;
+  float: left;
+}
+
+.snippet A.viewitem:hover {
+  text-decoration: underline;
+}
+
+.snippet .views {
+  font-size: 20px;
+  font-weight: bold;
+  color: rgb(88, 15, 35);
+}
+
+.snippet {
+  padding: 0;
+}
+
+.snippet .meta {
+  float: right;
+  text-align: right;
+  max-width: 250px;
+  white-space: nowrap;
+  font-size: 10px;
+  color: #666;
+  background-color: #eee;
+  border: 1px solid #ddd;
+  padding: 0.2em;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+}
+
+.snippet .metaview {
+  white-space: nowrap;
+  font-size: 10px;
+  color: #666;
+  background-color: #eee;
+  border: 1px solid #ddd;
+  padding: 0.2em;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+}
+
+.snippet .actions {
+  margin-right: 5px;
+  float: right;
+  text-align: right;
+  max-width: 250px;
+  white-space: nowrap;
+  font-size: 10px;
+  padding: 0.2em;
+}
+
+.snippet-form {
+  margin: 0;
+  padding: 0;
+}
+
+.snippet .metaview .snippet-form {
+  padding-top: 3px;
+  float: right;
+}
+
+.snippet .public {
+  background-color: rgb(17, 110, 68);
+  border-top: 1px solid rgb(30, 174, 97);
+  border-left: 1px solid rgb(30, 174, 97);
+  border-right: 1px solid rgb(14, 60, 34);
+  border-bottom: 1px solid rgb(14, 60, 34);
+  color: white;
+  padding: 5px 3px 3px 3px;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  cursor: pointer;
+}
+
+.snippet .private {
+  background-color: rgb(146, 27, 34);
+  border-bottom: 1px solid rgb(216, 39, 51);
+  border-right: 1px solid rgb(216, 39, 51);
+  border-top: 1px solid rgb(88, 14, 20);
+  border-left: 1px solid rgb(88, 14, 20);
+  color: white;
+  padding: 5px 3px 3px 3px;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  cursor: pointer;
+}
+
+.snippet .delete {
+  padding: 5px 3px 3px 3px; 
+  cursor: pointer;
+}
+
+.snippet .delete:hover {
+  text-decoration: underline;
+}
+
+.getstarted {
+  background: transparent url(../grad.png) repeat-x top left;
+  height: 22px;
+  
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -webkit-box-shadow: 2px 2px 3px #aaa;
+  border-top: 1px solid rgb(103, 140, 255);
+  border-left: 1px solid rgb(103, 140, 255);    
+  border-right: 1x solid rgb(7, 32, 174);
+  border-bottom: 1x solid rgb(7, 32, 174);    
+  
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  padding: 5px;
+}
+
+.getstarted A {
+  color: white;
+  text-decoration: none;
+}
+
+.boxy-content P, .boxy-content SPAN {
+  margin: 0;
+  padding: 0;
+  font-size: 11px;
 }

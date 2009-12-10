@@ -91,15 +91,16 @@ class PublicHandler(BaseHandler):
     return self.fetch_results(q, limit, offset)
 
   def get(self):
+    user = users.get_current_user()
+    if user:
+      xsrf_token = hashlib.md5('%s-%s' % (user.user_id(), random.random())).hexdigest()
+      self.response.headers.add_header('Set-Cookie', 'xsrf_token=%s' % xsrf_token)      
+    else:
+      xsrf_token = None
     order, offset, limit = self.get_pagination('-views')
     
     snippages, more, more_offset = self.get_public_snippets(
       order, offset, limit)
-      
-    user = users.get_current_user()
-    logged_in = True
-    if not user:
-      logged_in = False
     
     template_values = {
       'snippages': snippages,
@@ -110,10 +111,11 @@ class PublicHandler(BaseHandler):
       'limit': limit,
       'order': order,
       'pagination_uri': '/',
-      'logged_in' : logged_in,
+      'logged_in' : users.get_current_user(),
+      'xsrf_token': xsrf_token,
     }
     
-    if logged_in:
+    if users.get_current_user():
       template_values['logout_url'] = users.create_logout_url('/')
     
     path = os.path.join(os.path.dirname(__file__), 'templates/public.html')
@@ -149,9 +151,10 @@ class PrivateHandler(BaseHandler):
       'limit': limit,
       'order': order,
       'pagination_uri': '/my',
-      'logout_url': users.create_logout_url('/'),
       'is_admin': users.is_current_user_admin(),
       'xsrf_token': xsrf_token,
+      'logged_in' : users.get_current_user(),
+      'logout_url': users.create_logout_url('/'),
     }
   
     path = os.path.join(os.path.dirname(__file__), 'templates/my.html')
@@ -162,6 +165,8 @@ class PrivateHandler(BaseHandler):
 application = webapp.WSGIApplication(
   [('/', PublicHandler), ('/my', PrivateHandler)],
   debug=snipglobals.debug)
+  
+webapp.template.register_template_library('customfilters')
 
 
 def main():

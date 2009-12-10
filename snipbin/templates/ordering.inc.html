@@ -1,8 +1,8 @@
-<p>
+<p class="ordering">
   Order by:
-  <a href="{{ paginaation_uri }}?limit={{ limit }}&order=title">Title</a>
-  [<a href="{{ paginaation_uri }}?limit={{ limit }}&order=-title">desc</a>],
-  <a href="{{ paginaation_uri }}?limit={{ limit }}&order=-created">Most recent</a>,
-  <a href="{{ paginaation_uri }}?limit={{ limit }}&order=created">Oldest</a>,
-  <a href="{{ paginaation_uri }}?limit={{ limit }}&order=-views">Most Views</a>
+  <a href="{{ paginaation_uri }}?limit={{ limit }}&order=title" {% ifequal order "title" %} class="current" {% endifequal %}>Title A-Z</a>
+  <a href="{{ paginaation_uri }}?limit={{ limit }}&order=-title" {% ifequal order "-title" %} class="current" {% endifequal %}>Title Z-A</a>
+  <a href="{{ paginaation_uri }}?limit={{ limit }}&order=-created" {% ifequal order "-created" %} class="current" {% endifequal %}>Most recent</a>
+  <a href="{{ paginaation_uri }}?limit={{ limit }}&order=created" {% ifequal order "created" %} class="current" {% endifequal %}>Oldest</a>
+  <a href="{{ paginaation_uri }}?limit={{ limit }}&order=-views" {% ifequal order "-views" %} class="current" {% endifequal %}>Most Views</a>
 </p>
