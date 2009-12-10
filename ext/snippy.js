@@ -72,6 +72,7 @@ $(document).ready(function() {
             $(this).animate({'opacity': 0.1}, 100);
         });
     });
+    chrome.extension.sendRequest({'ready': true}, function(response) {});
 });
 
 chrome.extension.onRequest.addListener(
@@ -160,6 +161,7 @@ function rebaseLinks(el) {
       if (!href) {
         return;
       }
+      $(this).attr('target', '_blank');
       if (href.charAt(0) == '/') {
         $(this).attr('href',
                      document.location.protocol + '//' +
@@ -231,6 +233,7 @@ function recursiveRebaseStyles(base, clone) {
 
 function removeScripts(el) {
   $('script', el).remove();
+  //TODO(battlehorse): also remove all event handlers and links using the javascript: protocol
 }
 
 function snippymove(el, top, left, w, h, duration) {
