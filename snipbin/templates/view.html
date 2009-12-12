@@ -2,7 +2,7 @@
 {% block script %}
   <script src="/js/autoHeight.js" type="text/javascript" charset="utf-8"></script>
 {% endblock %}
-{% block title %}Bits of knowledge{% endblock %}
+{% block title %}{% if error %}Error!{% else %}{{ snippage.m.title|escape }}{% endif %}{% endblock %}
 {% block main %}
   {% if error %}
     <h2>Error!</h2>
@@ -68,6 +68,14 @@
             <img src="snippet_abuses.png" class="bottom" title="Number of abuse reports" alt="Number of abuse reports">
             {{ snippage.abuses_count }} abuse reports
           </span>
+        {% endif %}
+        {% if snippage.unique_snippet_urls %}
+          <div class="origin">
+            Snippets originally from:
+            {% for uurl in snippage.unique_snippet_urls %}
+              <br /><a href="{{ uurl|escape }}">{{ uurl|escape }}</a>
+            {% endfor %}
+          </div>
         {% endif %}
       </div>
       <div class="clear-both"></div>
