@@ -99,6 +99,7 @@
 </body>
 <script>
   var snippage;
+  var defaultSnippageTitle = 'Click here to add a title to your snippet';
 
   chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
     if (request.reload) {
@@ -116,8 +117,8 @@
     var save_comment = $("<button>Save</button>").appendTo(comment_box);
     $(this).replaceWith(comment_box);
     textarea.focus();
+    textarea.select();
     save_comment.click(function() {
-      debugger;
       var comment_text = textarea.val();
       var snippet_container = $(this).closest('.snippet-container');
       var idx = $('.snippet-container').index(snippet_container);
@@ -148,7 +149,6 @@
 
     $("<button>Discard</button>").appendTo(snippet_controls).click(function() {
       var idx = $('.snippet-container').index(snippet_container);
-      debugger;
       snippet_container.remove();
       snippage.snippets.splice(idx, 1);
       chrome.extension.getBackgroundPage().updateBadgeText();
@@ -167,13 +167,23 @@
       $(this).replaceWith(text_input);
       text_input.val(cur_title);
       text_input.focus();
-      $(text_input).keypress(function(evt) {
+      text_input.select();
+      $(text_input).keydown(function(evt) {
         if (evt.which == 13) { 
           var new_title = $("<h1 class='snipbin-title'></h1>").text($(this).val());
           $(this).replaceWith(new_title);
           snippage.title = $(this).val();
           chrome.extension.getBackgroundPage().updateLocalStorage();
+        } else if (evt.which == 27) {
+          var new_title = $("<h1 class='snipbin-title'></h1>").text(cur_title);
+          $(this).replaceWith(new_title);
         }
+      });
+      $(text_input).blur(function() {
+        var new_title = $("<h1 class='snipbin-title'></h1>").text($(this).val());
+        $(this).replaceWith(new_title);
+        snippage.title = $(this).val();
+        chrome.extension.getBackgroundPage().updateLocalStorage();
       });
     });
     $('.snippet-comment').live('click', doComment);
@@ -213,7 +223,7 @@
  
   function doLayout() {
     snippage = chrome.extension.getBackgroundPage().getSnipPage();
-    $('.snipbin-title').text(snippage.title || 'Click here to add a title to your snippet');
+    $('.snipbin-title').text(snippage.title || defaultSnippageTitle);
     
 
     for (var i = 0; i < snippage.snippets.length; i++) {
