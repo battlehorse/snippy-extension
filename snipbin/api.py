@@ -72,7 +72,9 @@ class Upload(ApiBase):
       for attr, _ in tag.attrs:
         if attr_re.match(attr):
           del tag[attr]
-          
+    for tag in soup.findAll(attrs={'href': re.compile(r'^\s*javascript:.*', re.I)}):
+      del tag['href']
+      
     sanitized_contents = soup.renderContents()
     return sanitized_contents
     
@@ -110,10 +112,11 @@ class Upload(ApiBase):
       content = self.sanitize_contents(json_snippet.get('content', '').encode('utf-8', 'ignore'))
       url = self.sanitize_url(json_snippet.get('url', '').encode('utf-8', 'ignore'))
       comment = json_snippet.get('comment', '').encode('utf-8', 'ignore')
-      snippet = models.Snippet(
-        content=content.decode('utf-8', 'ignore'),
-        url=url.decode('utf-8', 'ignore'),
-        comment=comment.decode('utf-8', 'ignore'))
+      snippet = models.Snippet(content=content.decode('utf-8', 'ignore'))
+      if url:
+        snippet.url = url.decode('utf-8', 'ignore')
+      if comment:
+        snippet.comment = comment.decode('utf-8', 'ignore')
       snippet.master = snippage
       snippet.put()
 
