@@ -310,6 +310,10 @@ IMG.bottom {
   -webkit-border-radius: 3px;
 }
 
+.snippet .origin {
+  margin-top: 0.2em;
+}
+
 .snippet .actions {
   margin-right: 5px;
   float: right;

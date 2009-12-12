@@ -39,12 +39,11 @@
           {{ snippet.content }}
         </div>
         <div style="clear: both"></div>
-        <div class="snippet-extra">
-          Extracted from: <a href="{{ snippet.url }}">{{ snippet.url|escape }}</a>
-          {% if snippet.comment %}
-            <br />Comment: {{ snippet.comment|escape}}
-          {% endif %}
-        </div>
+        {% if snippet.comment %}
+          <div class="snippet-extra">
+            Comment: {{ snippet.comment|escape}}
+          </div>
+        {% endif %}
       </div>
     {% endfor %}
   {% endif %}

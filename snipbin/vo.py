@@ -8,3 +8,5 @@ class SnipPageVO(object):
     self.key = snippage.key()
     self.snippets_count = snippage.snippets.count()
     self.abuses_count = snippage.abuses.count()
+    self.unique_snippet_urls = set(filter(None, [snippet.url for snippet in snippage.snippets]))
+      
