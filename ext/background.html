@@ -22,7 +22,7 @@ chrome.tabs.getSelected(null, function(tab) {
 });
 
 var activation = {};
-var readyness = {};
+var readiness = {};
 
 function toggle() {
   chrome.tabs.getSelected(null, function(tab) {
@@ -91,10 +91,10 @@ function updateBadgeText() {
 }
 
 function CurrentTabReadiness() {
-  if (!readyness[cur_tab_id]) {
+  if (!readiness[cur_tab_id]) {
     return "unknown";
   } else {
-    return readyness[cur_tab_id];
+    return readiness[cur_tab_id];
   }
 }
 
@@ -120,7 +120,11 @@ chrome.tabs.onSelectionChanged.addListener(function(tab_id) {
 
 chrome.tabs.onUpdated.addListener(function(tab_id, change_info) {
   if (change_info.status == "loading") {
-    readyness[tab_id] = "loading";
+    console.log("Readiness of " + tab_id + " is 'loading'");
+    readiness[tab_id] = "loading";
+  } else if (change_info.status == "complete") {
+    console.log("Readiness of " + tab_id + " is 'complete'");
+    readiness[tab_id] = "ready";
   }
   chrome.tabs.get(tab_id, function(tab) {
     cur_tab_url = tab.url;
@@ -130,7 +134,8 @@ chrome.tabs.onUpdated.addListener(function(tab_id, change_info) {
 chrome.extension.onRequest.addListener(
   function(request, sender, sendResponse) {
     if (request.ready) {
-      readyness[sender.tab.id] = "ready";
+      console.log("Readiness of " + sender.tab.id + " is 'ready'");
+      readiness[sender.tab.id] = "ready";
     }
     else if (request.toggle) {
       toggle();
