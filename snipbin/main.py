@@ -16,10 +16,6 @@ import snipglobals
 import models
 import vo
 
-#TODO(battlehorse): public listing by views desc
-#TODO(battlehorse): pagination
-#TODO(battlehorse): personal sorted alphabetically
-#TODO(battlehorse): personal sorted by views desc
 
 class BaseHandler(webapp.RequestHandler):
   
@@ -79,18 +75,13 @@ class PublicHandler(BaseHandler):
     return self.fetch_results(q, limit, offset)
 
   def get(self):
-    user = users.get_current_user()
-    if user:
-      xsrf_token = hashlib.md5('%s-%s' % (user.user_id(), random.random())).hexdigest()
-      self.response.headers.add_header('Set-Cookie', 'xsrf_token=%s' % xsrf_token)      
-    else:
-      xsrf_token = None
-    order, offset, limit = self.get_pagination('-views')
-    
+    user, template_values = snipglobals.get_user_capabilities(self.request,
+                                                              self.response)
+    order, offset, limit = self.get_pagination('-views')    
     snippages, more, more_offset = self.get_public_snippets(
       order, offset, limit)
     
-    template_values = {
+    template_values.update({
       'snippages': snippages,
       'prev': offset > 0,
       'prev_offset': max(offset - limit, 0),
@@ -99,13 +90,7 @@ class PublicHandler(BaseHandler):
       'limit': limit,
       'order': order,
       'pagination_uri': '/',
-      'logged_in' : users.get_current_user(),
-      'xsrf_token': xsrf_token,
-    }
-    
-    if users.get_current_user():
-      template_values['logout_url'] = users.create_logout_url('/')
-    
+    })    
     path = os.path.join(os.path.dirname(__file__), 'templates/public.html')
     self.response.out.write(template.render(path, template_values))
 
@@ -119,18 +104,17 @@ class PrivateHandler(BaseHandler):
     return self.fetch_results(q, limit, offset)
 
   def get(self):
-    user = users.get_current_user()
+    user, template_values = snipglobals.get_user_capabilities(self.request,
+                                                              self.response)
     if not user:
       self.redirect(users.create_login_url(self.request.uri))
       return
 
-    xsrf_token = hashlib.md5('%s-%s' % (user.user_id(), random.random())).hexdigest()
     order, offset, limit = self.get_pagination('-created')
-    
     snippages, more, more_offset = self.get_private_snippets(
       order, offset, limit)
     
-    template_values = {
+    template_values.update({
       'snippages': snippages,
       'prev': offset > 0,
       'prev_offset': max(offset - limit, 0),
@@ -139,14 +123,8 @@ class PrivateHandler(BaseHandler):
       'limit': limit,
       'order': order,
       'pagination_uri': '/my',
-      'is_admin': users.is_current_user_admin(),
-      'xsrf_token': xsrf_token,
-      'logged_in' : users.get_current_user(),
-      'logout_url': users.create_logout_url('/'),
-    }
-  
+    })
     path = os.path.join(os.path.dirname(__file__), 'templates/my.html')
-    self.response.headers.add_header('Set-Cookie', 'xsrf_token=%s' % xsrf_token)
     self.response.out.write(template.render(path, template_values))    
     
 

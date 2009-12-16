@@ -19,7 +19,7 @@ import vo
 
 class BaseViewHandler(webapp.RequestHandler):
   
-  def get_snippage(self, template_values):
+  def get_snippage(self, user, template_values):
     key = self.request.get('key')
     if not key:
       template_values['error'] = 'Invalid snippet key.'
@@ -35,20 +35,22 @@ class BaseViewHandler(webapp.RequestHandler):
       return None, None
       
     if not snippage.public:
-      user = users.get_current_user()
       if not user or snippage.owner != user:
         template_values['error'] = 'You do not have the righs to access this snippet.'
         self.respond(template_values)
         return None, None
         
     if snippage.public and snippage.flagged:
-      user = users.get_current_user()
       if not user or snippage.owner != user:
         template_values['error'] = 'This page has been flagged as offensive and removed from public view.'
         self.respond(template_values)
         return None, None
     
     return snippage, key
+    
+  def respond(self, template_values):
+    path = os.path.join(os.path.dirname(__file__), 'templates/view.html')
+    self.response.out.write(template.render(path, template_values))
 
 
 class ViewHandler(BaseViewHandler):
@@ -57,37 +59,20 @@ class ViewHandler(BaseViewHandler):
     snippage = db.get(key)
     snippage.views += 1
     snippage.put()
-
-  def respond(self, template_values):
-    path = os.path.join(os.path.dirname(__file__), 'templates/view.html')
-    self.response.out.write(template.render(path, template_values))
   
   def get(self):
-    template_values = {}
-    snippage, key = self.get_snippage(template_values)
+    user, template_values = snipglobals.get_user_capabilities(self.request,
+                                                              self.response)
+    snippage, key = self.get_snippage(user, template_values)
     if not snippage:
       return
-      
-    user = users.get_current_user();
-    if user:
-      xsrf_token = hashlib.md5('%s-%s' % (user.user_id(), random.random())).hexdigest()
-      self.response.headers.add_header('Set-Cookie', 'xsrf_token=%s' % xsrf_token)
-      template_values['is_owner'] = user == snippage.owner
-      template_values['xsrf_token'] = xsrf_token
-    else:
-      template_values['is_owner'] = False
-      template_values['xsrf_token'] = None
+    template_values['is_owner'] = user and user == snippage.owner
     
     db.run_in_transaction(self.increment_views, key)
     template_values.update({
       'error': False,
       'snippage': vo.SnipPageVO(snippage),
-      'logged_in' : users.get_current_user(),
-    })
-    
-    if users.get_current_user():
-      template_values['logout_url'] = users.create_logout_url('/')
-    
+    })    
     path = os.path.join(os.path.dirname(__file__), 'templates/view.html')
     self.response.out.write(template.render(path, template_values))
 
@@ -95,17 +80,19 @@ class ViewHandler(BaseViewHandler):
 class IncludeHandler(BaseViewHandler):
   
   def get(self):
-    template_values = {}
-    snippage, key = self.get_snippage(template_values)
+    user, template_values = snipglobals.get_user_capabilities(
+        self.request, self.response, generate_xsrf=False)
+    snippage, key = self.get_snippage(user, template_values)
     if not snippage:
       return
       
-    template_values = {
+    template_values.update({
       'error': False,
       'snippage': vo.SnipPageVO(snippage),
-    }
+    })
     path = os.path.join(os.path.dirname(__file__), 'templates/iframe.html')
     self.response.out.write(template.render(path, template_values))
+
 
 application = webapp.WSGIApplication(
   [('/view', ViewHandler), ('/inc', IncludeHandler)],

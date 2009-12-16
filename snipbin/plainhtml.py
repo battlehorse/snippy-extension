@@ -15,12 +15,8 @@ import snipglobals
 class BaseHandler(webapp.RequestHandler):
   
   def render_page(self, html_page):
-    template_values = {}
-    user = users.get_current_user()
-    template_values['logged_in'] = user
-    if user:
-      template_values['logout_url'] = users.create_logout_url('/')
-      
+    user, template_values = snipglobals.get_user_capabilities(self.request,
+                                                              self.response)      
     path = os.path.join(os.path.dirname(__file__), 'templates/%s' % html_page)
     self.response.out.write(template.render(path, template_values))
 
