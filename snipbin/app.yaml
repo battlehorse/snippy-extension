@@ -34,7 +34,7 @@ handlers:
   static_files: static/\1
   upload: static/(.*\.(gif|png|jpg|ico|crx))  
 
-- url: /(about|legal|extension|extwelcome)
+- url: /(about|legal|extension|extwelcome|credits)
   script: plainhtml.py
   
 - url: /extlogin

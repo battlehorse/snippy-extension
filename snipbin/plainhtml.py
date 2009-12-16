@@ -31,6 +31,12 @@ class LegalHandler(BaseHandler):
   
   def get(self):
     self.render_page('legal.html')
+    
+
+class CreditsHandler(BaseHandler):
+  
+  def get(self):
+    self.render_page('credits.html')
 
     
 class ExtensionHandler(BaseHandler):
@@ -53,6 +59,7 @@ class ExtensionLoginHandler(BaseHandler):
 application = webapp.WSGIApplication(
   [('/about', AboutHandler), 
    ('/legal', LegalHandler),
+   ('/credits', CreditsHandler),
    ('/extension', ExtensionHandler),
    ('/extwelcome', ExtensionWelcomeHandler),
    ('/extlogin', ExtensionLoginHandler)],
