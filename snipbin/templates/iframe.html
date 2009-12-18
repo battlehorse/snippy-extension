@@ -25,7 +25,7 @@
     }
   </style>
 </head>
-<body>
+<body onload="iframeResizePipe()">
   {% if error %}
     <h2>Error!</h2>
     <p class="error"> 
@@ -46,6 +46,21 @@
         {% endif %}
       </div>
     {% endfor %}
+    <iframe id="helpframe" src='' height='0' width='0' frameborder='0'></iframe>
+    <script type="text/javascript">
+      function iframeResizePipe()
+      {
+         // What's the page height?
+         var height = document.body.scrollHeight;
+
+         // Going to 'pipe' the data to the parent through the helpframe..
+         var pipe = document.getElementById('helpframe');
+
+         // Cachebuster a precaution here to stop browser caching interfering
+         pipe.src = 'http://{{ parent_host }}/helper?height='+height+'&cacheb='+Math.random();
+
+      }
+    </script>    
   {% endif %}
 </body>
 </html>

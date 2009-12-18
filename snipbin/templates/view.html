@@ -1,6 +1,14 @@
 {% extends "base.skel.html" %}
 {% block script %}
-  <script src="/js/autoHeight.js" type="text/javascript" charset="utf-8"></script>
+  <script type="text/javascript" charset="utf-8">
+    // Resize iframe to full height
+    function resizeIframe(height)
+    {
+      // "+10" is a general rule of thumb to allow for differences in
+      // IE & and FF height reporting, can be adjusted as required..
+      document.getElementById('snippet-iframe').height = parseInt(height)+10;
+    }    
+  </script>
 {% endblock %}
 {% block title %}{% if error %}Error!{% else %}{{ snippage.m.title|escape }}{% endif %}{% endblock %}
 {% block main %}
@@ -80,7 +88,7 @@
       </div>
       <div class="clear-both"></div>
     </div>
-    <iframe id="snippet-iframe" src="/inc?key={{ snippage.key }}" 
+    <iframe id="snippet-iframe" src="http://{{inc_host}}/inc?key={{ snippage.key }}" 
       width="100%" style="border: 0" frameborder="0" scrolling="no" class="autoHeight">
     </iframe>
     {% if is_owner and snippage.abuses_count %}

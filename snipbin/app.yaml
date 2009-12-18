@@ -17,6 +17,9 @@ handlers:
 - url: /inc
   script: view.py
   
+- url: /helper
+  script: view.py
+  
 - url: /test
   script: test/test.py
   login: admin
