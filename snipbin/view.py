@@ -42,7 +42,7 @@ class BaseViewHandler(webapp.RequestHandler):
             
     if not snippage.public:
       if not user or snippage.owner != user:
-        template_values['error'] = 'You do not have the righs to access this snippet.'
+        template_values['error'] = 'You do not have the rights to access this snippet.'
         self.respond(template_values)
         return None, None
         
