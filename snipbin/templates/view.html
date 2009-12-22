@@ -27,7 +27,14 @@
       {% endif %}
       <a href="/"><img src="goto.png" class="bottom" /> Public Snippets</a>
     </p>
-    <div class="clear-both"></div>  
+    <div class="clear-both"></div>
+    
+    {% if is_admin and not is_owner %}
+    <div class="adminconsole">
+      Owner email: <b>{{snippage.m.owner.email}}</b>.
+      This snippet is <b>{% if snippage.m.public %}public{% else %}private{% endif %}</b>.
+    </div>
+    {% endif %}
     
     <div id="{{ snippage.key }}" class="snippet">
       <!-- Flagged? {{ snippage.m.flagged }} -->
@@ -91,7 +98,7 @@
     <iframe id="snippet-iframe" src="http://{{inc_host}}/inc?key={{ snippage.key }}" 
       width="100%" style="border: 0" frameborder="0" scrolling="no" class="autoHeight">
     </iframe>
-    {% if is_owner and snippage.abuses_count %}
+    {% if is_owner or is_admin %}{% if snippage.abuses_count %}
       <h3>Abuse Reports</h3>
       <ul>
       {% for abuse in snippage.m.abuses %}
@@ -113,7 +120,7 @@
         </li>
       {% endfor %}
       </ul>
-    {% endif %}    
+    {% endif %}{% endif %}
     
     {% if logged_in %}
       <input type="hidden" id="xsrf_token" value="{{ xsrf_token }}">

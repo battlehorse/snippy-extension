@@ -8,7 +8,7 @@
   max-width: 1000px;
   
   -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
+  -moz-border-radius: 2px;  
   -webkit-box-shadow: 2px 2px 3px #aaa;
   border-top: 1px solid rgb(103, 140, 255);
   border-left: 1px solid rgb(103, 140, 255);    
@@ -26,6 +26,19 @@
 
 /*  79 125 254 -  51 111 246
               16 60 222  - 7 32 174 */
+              
+.admin .headerbar {
+  background: transparent url(../grad_admin.png) repeat-x top left;
+  border-top: 1px solid rgb(241, 67, 236);
+  border-left: 1px solid rgb(241, 67, 236);
+  border-right: 1x solid rgb(182, 0, 159);
+  border-bottom: 1x solid rgb(182, 0, 159);
+}
+
+/*
+241 67 236 -  246 51 224
+      222 17 181 - 182 0 159
+*/              
 
 .headerentry {
   display: inline;
@@ -58,6 +71,21 @@
   text-shadow: 1px 1px 1px rgb(23, 67, 207);
 }
 
+.admin .headerentry A, .admin .title A {
+  text-shadow: 1px 1px 1px rgb(125, 26, 125);
+}
+
+.admin .headerentry {
+  border-top: 1px solid rgb(182, 0, 159);
+  border-left: 1px solid rgb(182, 0, 159);
+  border-bottom: 1px solid rgb(241, 67, 236);
+  border-right: 1px solid rgb(241, 67, 236);
+}
+
+.admin .headerentry:hover {
+  background: transparent url(../grad_admin_light.png) repeat-x top left;
+}
+
 .logo {
   width: 128px;
   height: 128px;
@@ -79,6 +107,10 @@
   font-size: 15px;
   font-weight: bold;
   text-shadow: 1px 1px 1px rgb(23, 67, 207);
+}
+
+.admin .title H1 {
+  text-shadow: 1px 1px 1px rgb(125, 26, 125);
 }
 
 .main {
@@ -223,6 +255,16 @@ BODY {
 
 .footer P {
   margin: 0 0 5px 0;
+}
+
+.adminconsole {
+  background-color: rgb(255, 234, 255);
+  border: 1px solid #bbb;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  -moz-box-shadow: 1px 2px 2px rgb(230, 230, 230);
+  -webkit-box-shadow: 1px 2px 2px rgb(230, 230, 230);
+  margin-bottom: 0.5em;  
 }
 
 .main UL {

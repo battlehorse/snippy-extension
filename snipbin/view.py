@@ -36,6 +36,10 @@ class BaseViewHandler(webapp.RequestHandler):
       self.respond(template_values)
       return None, None
       
+    if users.is_current_user_admin():
+      # Admins have access to private snippets
+      return snippage, key
+            
     if not snippage.public:
       if not user or snippage.owner != user:
         template_values['error'] = 'You do not have the righs to access this snippet.'
