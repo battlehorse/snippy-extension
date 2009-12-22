@@ -43,3 +43,7 @@ handlers:
 - url: /extlogin
   script: plainhtml.py
   login: required
+  
+- url: /logout
+  script: logout.py
+  login: required

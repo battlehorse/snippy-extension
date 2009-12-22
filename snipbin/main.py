@@ -75,8 +75,8 @@ class PublicHandler(BaseHandler):
     return self.fetch_results(q, limit, offset)
 
   def get(self):
-    user, template_values = snipglobals.get_user_capabilities(self.request,
-                                                              self.response)
+    user, template_values = snipglobals.initialize_user(self.request,
+                                                        self.response)
     order, offset, limit = self.get_pagination('-views')    
     snippages, more, more_offset = self.get_public_snippets(
       order, offset, limit)
@@ -104,8 +104,8 @@ class PrivateHandler(BaseHandler):
     return self.fetch_results(q, limit, offset)
 
   def get(self):
-    user, template_values = snipglobals.get_user_capabilities(self.request,
-                                                              self.response)
+    user, template_values = snipglobals.initialize_user(self.request,
+                                                        self.response)
     if not user:
       self.redirect(users.create_login_url(self.request.uri))
       return

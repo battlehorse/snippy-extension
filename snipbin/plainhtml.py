@@ -15,8 +15,8 @@ import snipglobals
 class BaseHandler(webapp.RequestHandler):
   
   def render_page(self, html_page):
-    user, template_values = snipglobals.get_user_capabilities(self.request,
-                                                              self.response)      
+    user, template_values = snipglobals.initialize_user(self.request,
+                                                        self.response)      
     path = os.path.join(os.path.dirname(__file__), 'templates/%s' % html_page)
     self.response.out.write(template.render(path, template_values))
 
@@ -54,7 +54,6 @@ class ExtensionLoginHandler(BaseHandler):
 
   def get(self):
     self.render_page('extension_login.html')
-
     
 application = webapp.WSGIApplication(
   [('/about', AboutHandler), 

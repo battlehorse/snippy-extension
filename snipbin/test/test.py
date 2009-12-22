@@ -18,8 +18,8 @@ import snipglobals
 class TestHandler(webapp.RequestHandler):
 
   def get(self):
-    user, template_values = snipglobals.get_user_capabilities(self.request,
-                                                              self.response)        
+    user, template_values = snipglobals.initialize_user(self.request,
+                                                        self.response)        
     path = os.path.join(os.path.dirname(__file__), '../templates/test.html')
     self.response.out.write(template.render(path, template_values))    
 

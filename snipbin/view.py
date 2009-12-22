@@ -38,10 +38,12 @@ class BaseViewHandler(webapp.RequestHandler):
       
     if users.is_current_user_admin():
       # Admins have access to private snippets
+      logging.info('Admin access by %s to snippet %s' % (user, key))
       return snippage, key
-            
+    
     if not snippage.public:
       if not user or snippage.owner != user:
+        logging.error('Failed access to private snippet %s by %s' % (key, user))        
         template_values['error'] = 'You do not have the rights to access this snippet.'
         self.respond(template_values)
         return None, None
@@ -67,8 +69,8 @@ class ViewHandler(BaseViewHandler):
     snippage.put()
   
   def get(self):
-    user, template_values = snipglobals.get_user_capabilities(self.request,
-                                                              self.response)
+    user, template_values = snipglobals.initialize_user(self.request,
+                                                        self.response)
     snippage, key = self.get_snippage(user, template_values)
     if not snippage:
       return
@@ -100,7 +102,7 @@ class HelperHandler(BaseViewHandler):
 class IncludeHandler(BaseViewHandler):
   
   def get(self):
-    user, template_values = snipglobals.get_user_capabilities(
+    user, template_values = snipglobals.initialize_user(
         self.request, self.response, generate_xsrf=False)
     snippage, key = self.get_snippage(user, template_values)
     if not snippage:
@@ -125,24 +127,25 @@ class IncludeHandler(BaseViewHandler):
 #
 # - development (local machine)
 #   localhost:8080 for both domains.
-app_version_id = os.environ['CURRENT_VERSION_ID'].split('.')[0]
-applications = {
-  'snipbin.appspot.com': webapp.WSGIApplication(
-      [('/view', ViewHandler), ('/helper', HelperHandler)],
-      debug=snipglobals.debug),
-  'hosted.snipbin.appspot.com': webapp.WSGIApplication(
-      [('/inc', IncludeHandler)],
-      debug=snipglobals.debug),
-  '%s.latest.snipbin.appspot.com' % app_version_id: webapp.WSGIApplication(
-      [('/view', ViewHandler), ('/helper', HelperHandler)],
-      debug=snipglobals.debug),
-  'hosted.%s.latest.snipbin.appspot.com' % app_version_id: webapp.WSGIApplication(
-      [('/inc', IncludeHandler)],
-      debug=snipglobals.debug),
-  'localhost:8080': webapp.WSGIApplication(
-      [('/view', ViewHandler), ('/inc', IncludeHandler), ('/helper', HelperHandler)],
-      debug=snipglobals.debug),
-}
+if snipglobals.is_localhost():
+  domain = snipglobals.get_domain()
+  applications = {
+    domain: webapp.WSGIApplication(
+        [('/view', ViewHandler), ('/inc', IncludeHandler), ('/helper', HelperHandler)],
+        debug=snipglobals.debug),
+  }
+else:
+  domain = snipglobals.get_domain()
+  hosted_domain = snipglobals.get_hosted_domain()
+  applications = {
+    domain: webapp.WSGIApplication(
+        [('/view', ViewHandler), ('/helper', HelperHandler)],
+        debug=snipglobals.debug),
+    hosted_domain: webapp.WSGIApplication(
+        [('/inc', IncludeHandler)],
+        debug=snipglobals.debug),
+  }
+
 
 webapp.template.register_template_library('customfilters')
 
