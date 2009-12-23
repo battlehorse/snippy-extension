@@ -21,7 +21,7 @@ def initialize_user(request, response, generate_xsrf=True):
   if user:
     if generate_xsrf:
       xsrf_token = hashlib.md5('%s-%s' % (user.user_id(), random.random())).hexdigest()
-      response.headers.add_header('Set-Cookie', 'xsrf_token=%s' % xsrf_token)      
+      response.headers.add_header('Set-Cookie', 'xsrf_token=%s; HttpOnly' % xsrf_token)      
     else:
       xsrf_token = None    
   else:
@@ -58,14 +58,16 @@ def cookies_to_subdomain(cookies, request, response):
     cookie_value = request.cookies.get(cookie_name)
     if cookie_value:
       response.headers.add_header(
-        'Set-Cookie', '%s=%s; domain=.%s' % (cookie_name, cookie_value, get_domain()))
+        'Set-Cookie', '%s=%s; domain=.%s; HttpOnly' % 
+        (cookie_name, cookie_value, get_domain()))
 
 def delete_cookie(cookie_name, response, domain=None):
   if domain:
     response.headers.add_header(
         'Set-Cookie',
-        '%s=; expires=Thu, 01 Jan 1970 00:00:00 GMT; domain=%s' %
+        '%s=; expires=Thu, 01 Jan 1970 00:00:00 GMT; domain=%s; HttpOnly' %
         (cookie_name, get_domain()))
   else:
     response.headers.add_header(
-        'Set-Cookie', '%s=;expires=Thu, 01 Jan 1970 00:00:00 GMT' % cookie_name)
+        'Set-Cookie', '%s=;expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly' % 
+        cookie_name)
