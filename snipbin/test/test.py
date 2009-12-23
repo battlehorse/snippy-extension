@@ -3,9 +3,7 @@
 # Use of this source code is governed by the MIT License and Creative Commons
 # Attribution License 3.0. Both of them can be found in the LICENSE file.
 
-import hashlib
 import os.path
-import random
 
 from google.appengine.api import users
 from google.appengine.ext import webapp
