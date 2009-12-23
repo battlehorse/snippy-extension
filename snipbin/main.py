@@ -10,60 +10,12 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 
-import snipglobals
+import handlers
 import models
-import vo
+import snipglobals
 
 
-class BaseHandler(webapp.RequestHandler):
-  
-  def parse_order(self, order):
-    # allowed ordering is : 'title', 'views', 'created'
-    allowed_orders = set(['title', '-title', 'views', '-views',
-                          'created', '-created'])
-    if order in allowed_orders:
-      return order
-    else:
-      return '-views'
-
-  def parse_limit(self, limit):
-    parsed_limit = 10
-    try:
-      parsed_limit = int(limit)
-      parsed_limit = max(min(parsed_limit, 100), 1)
-    except ValueError:
-      pass
-    except TypeError:
-      pass
-    return parsed_limit
-    
-  def parse_offset(self, offset):
-    parsed_offset = 0
-    try:
-      parsed_offset = int(offset)
-      parsed_offset = max(min(parsed_offset, 1000), 0)
-    except ValueError:
-      pass
-    except TypeError:
-      pass
-    return parsed_offset
-    
-  def get_pagination(self, default_order):
-    order = self.parse_order(self.request.get('order', default_value=default_order))
-    offset = self.parse_offset(self.request.get('offset', default_value=0))
-    limit = self.parse_limit(self.request.get('limit', default_value=10))
-    return order, offset, limit
-    
-  def fetch_results(self, q, limit, offset):
-    results = [vo.SnipPageVO(snippage) for snippage
-      in q.fetch(limit=limit+1, offset=offset)]
-    
-    more = len(results) > limit
-    if more:
-      results = results[:limit]
-    return results, more, offset + len(results)
-    
-class PublicHandler(BaseHandler):
+class PublicHandler(handlers.BaseListHandler):
   
   def get_public_snippets(self, order="-views", offset=0, limit=10):
     q = models.SnipPage.all()
@@ -93,7 +45,7 @@ class PublicHandler(BaseHandler):
     self.response.out.write(template.render(path, template_values))
 
 
-class PrivateHandler(BaseHandler):
+class PrivateHandler(handlers.BaseListHandler):
 
   def get_private_snippets(self, order="-created", offset=0, limit=10):
     q = models.SnipPage.all()
