@@ -9,8 +9,11 @@ import random
 import re
 
 from google.appengine.api import users
+from google.appengine.ext import webapp
 
 debug=True
+
+webapp.template.register_template_library('customfilters')
 
 def initialize_user(request, response, generate_xsrf=True):
   if not is_subdomain():

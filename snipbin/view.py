@@ -145,8 +145,6 @@ else:
   }
 
 
-webapp.template.register_template_library('customfilters')
-
 def main():
   run_wsgi_app(applications[os.environ['HTTP_HOST']])
 

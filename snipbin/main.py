@@ -81,8 +81,6 @@ class PrivateHandler(handlers.BaseListHandler):
 application = webapp.WSGIApplication(
   [('/', PublicHandler), ('/my', PrivateHandler)],
   debug=snipglobals.debug)
-  
-webapp.template.register_template_library('customfilters')
 
 
 def main():
