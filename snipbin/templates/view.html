@@ -20,12 +20,12 @@
       {{ error }}
     </p>
   {% else %}
-    <h2><img src="view_icon.png" class="inline">{{ snippage.m.title|escape }}</h2>
+    <h2><img src="/view_icon.png" class="inline">{{ snippage.m.title|escape }}</h2>
     <p class="publicprivate">
       {% if logged_in %}
-        <a href="/my"><img src="goto.png" class="bottom" /> My Snippets</a><br />
+        <a href="/my"><img src="/goto.png" class="bottom" /> My Snippets</a><br />
       {% endif %}
-      <a href="/"><img src="goto.png" class="bottom" /> Public Snippets</a>
+      <a href="/"><img src="/goto.png" class="bottom" /> Public Snippets</a>
     </p>
     <div class="clear-both"></div>
     
@@ -49,38 +49,38 @@
           {% if is_owner %}
             <span class="public" {% if not snippage.m.public %}style="display:none"{% endif %} title="Public snippet. Click to make private.">
               Public
-              <img src="snippet_public.png" class="bottom" alt="Public snippet. Click to make private.">
+              <img src="/snippet_public.png" class="bottom" alt="Public snippet. Click to make private.">
             </span>
             <span class="private" {% if snippage.m.public %}style="display:none"{% endif %} title="Private snippet. Click to make public.">
               Private
-              <img src="snippet_private.png" class="bottom" alt="Private snippet. Click to make public.">
+              <img src="/snippet_private.png" class="bottom" alt="Private snippet. Click to make public.">
             </span>
             <span class="delete" title="Delete this snippet">
               Delete
-              <img src="snippet_delete.png" class="bottom" alt="Delete this snippet">
+              <img src="/snippet_delete.png" class="bottom" alt="Delete this snippet">
             </span>
           {% endif %}
         </form>
         
         <span>
-          <img src="snippet_views.png" class="bottom" title="Views" alt="Views" >
+          <img src="/snippet_views.png" class="bottom" title="Views" alt="Views" >
           <span class="views">{{ snippage.views_including_this }}</span> views
         </span>
         <span>
-          <img src="snippet_owner.png" class="bottom" title="Author" alt="Author">
+          <img src="/snippet_owner.png" class="bottom" title="Author" alt="Author">
           {{ snippage.m.owner.nickname }}
         </span>
         <span>
-          <img src="snippet_created.png" class="bottom" title="Creation Date" alt="Creation Date">
+          <img src="/snippet_created.png" class="bottom" title="Creation Date" alt="Creation Date">
           {{ snippage.m.created|naturalTimeDifference }}
         </span>
         <span>
-          <img src="snippet_num.png" class="bottom" title="Number of snippets" alt="Number of snippets">
+          <img src="/snippet_num.png" class="bottom" title="Number of snippets" alt="Number of snippets">
           {{ snippage.snippets_count }} fragments 
         </span>
         {% if is_owner and snippage.abuses_count %}
           <span>
-            <img src="snippet_abuses.png" class="bottom" title="Number of abuse reports" alt="Number of abuse reports">
+            <img src="/snippet_abuses.png" class="bottom" title="Number of abuse reports" alt="Number of abuse reports">
             {{ snippage.abuses_count }} abuse reports
           </span>
         {% endif %}
@@ -108,11 +108,11 @@
             <div class="meta">
               <span>
                 {{ abuse.reporter.nickname }}
-                <img src="snippet_owner.png" class="bottom" title="Reporter" alt="Reporter">
+                <img src="/snippet_owner.png" class="bottom" title="Reporter" alt="Reporter">
               </span><br />
               <span>
                 {{ abuse.created|naturalTimeDifference }}
-                <img src="snippet_created.png" class="bottom" title="Creation Date" alt="Creation Date">
+                <img src="/snippet_created.png" class="bottom" title="Creation Date" alt="Creation Date">
               </span><br />
             </div>
             <div class="clear-both"></div>

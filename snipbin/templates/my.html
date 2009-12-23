@@ -1,9 +1,9 @@
 {% extends "base.skel.html" %}
 {% block title %}Bits of knowledge{% endblock %}
 {% block main %}
-  <h2><img src="my_icon_small.png" class="inline"> Your Snippets</h2>
+  <h2><img src="/my_icon_small.png" class="inline"> Your Snippets</h2>
   <p class="publicprivate">
-    <a href="/"><img src="goto.png" class="bottom" />Public Snippets</a>
+    <a href="/"><img src="/goto.png" class="bottom" />Public Snippets</a>
   </p>
   <div class="clear-both"></div>
   {% if snippages %}
@@ -16,24 +16,24 @@
             <div class="meta">
               <span>
                 <span class="views">{{ snippage.m.views }}</span> views
-                <img src="snippet_views.png" class="bottom" title="Views" alt="Views" >
+                <img src="/snippet_views.png" class="bottom" title="Views" alt="Views" >
               </span><br />
               <span>
                 {{ snippage.m.owner.nickname }}
-                <img src="snippet_owner.png" class="bottom" title="Author" alt="Author">
+                <img src="/snippet_owner.png" class="bottom" title="Author" alt="Author">
               </span><br />
               <span>
                 {{ snippage.m.created|naturalTimeDifference }}
-                <img src="snippet_created.png" class="bottom" title="Creation Date" alt="Creation Date">
+                <img src="/snippet_created.png" class="bottom" title="Creation Date" alt="Creation Date">
               </span><br />
               <span>
                 {{ snippage.snippets_count }} fragments 
-                <img src="snippet_num.png" class="bottom" title="Number of snippets" alt="Number of snippets">
+                <img src="/snippet_num.png" class="bottom" title="Number of snippets" alt="Number of snippets">
               </span><br />
               {% if snippage.abuses_count %}
                 <span>
                   {{ snippage.abuses_count }} abuse reports
-                  <img src="snippet_abuses.png" class="bottom" title="Number of abuse reports" alt="Number of abuse reports">
+                  <img src="/snippet_abuses.png" class="bottom" title="Number of abuse reports" alt="Number of abuse reports">
                 </span><br />
               {% endif %}
             </div><div class="actions">
@@ -43,16 +43,16 @@
                 <p>
                   <span class="public" {% if not snippage.m.public %}style="display:none"{% endif %} title="Public snippet. Click to make private.">
                     Public
-                    <img src="snippet_public.png" class="bottom" alt="Public snippet. Click to make private.">
+                    <img src="/snippet_public.png" class="bottom" alt="Public snippet. Click to make private.">
                   </span>
                   <span class="private" {% if snippage.m.public %}style="display:none"{% endif %} title="Private snippet. Click to make public.">
                     Private
-                    <img src="snippet_private.png" class="bottom" alt="Private snippet. Click to make public.">
+                    <img src="/snippet_private.png" class="bottom" alt="Private snippet. Click to make public.">
                   </span>
                 </p><p>
                 <span class="delete" title="Delete this snippet">
                   Delete
-                  <img src="snippet_delete.png" class="bottom" alt="Delete this snippet">
+                  <img src="/snippet_delete.png" class="bottom" alt="Delete this snippet">
                 </span>
                 </p>
                 

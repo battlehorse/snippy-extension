@@ -1,12 +1,12 @@
 {% extends "base.skel.html" %}
 {% block title %}Bits of knowledge{% endblock %}
 {% block main %}
-  <h2><img src="public_icon_small.png" class="inline"> Public Snippets</h2>
+  <h2><img src="/public_icon_small.png" class="inline"> Public Snippets</h2>
   <p class="publicprivate">
     {% if logged_in %}
-      <a href="/my"><img src="goto.png" class="bottom" /> My Snippets</a> 
+      <a href="/my"><img src="/goto.png" class="bottom" /> My Snippets</a> 
     {% else %}
-      <a href="/my"><img src="goto.png" class="bottom" /> Login</a> 
+      <a href="/my"><img src="/goto.png" class="bottom" /> Login</a> 
     {% endif %}
   </p>
   <div class="clear-both"></div>
@@ -20,19 +20,19 @@
           <div class="meta">
             <span>
               <span class="views">{{ snippage.m.views }}</span> views
-              <img src="snippet_views.png" class="bottom" title="Views" alt="Views" >
+              <img src="/snippet_views.png" class="bottom" title="Views" alt="Views" >
             </span><br />
             <span>
               {{ snippage.m.owner.nickname }}
-              <img src="snippet_owner.png" class="bottom" title="Author" alt="Author">
+              <img src="/snippet_owner.png" class="bottom" title="Author" alt="Author">
             </span><br />
             <span>
               {{ snippage.m.created|naturalTimeDifference }}
-              <img src="snippet_created.png" class="bottom" title="Creation Date" alt="Creation Date">
+              <img src="/snippet_created.png" class="bottom" title="Creation Date" alt="Creation Date">
             </span><br />
             <span>
               {{ snippage.snippets_count }} fragments 
-              <img src="snippet_num.png" class="bottom" title="Number of snippets" alt="Number of snippets">
+              <img src="/snippet_num.png" class="bottom" title="Number of snippets" alt="Number of snippets">
             </span><br />
             <form class="snippet-form">
               <input type="hidden" name="key" value="{{ snippage.key }}">
