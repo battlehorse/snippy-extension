@@ -23,6 +23,7 @@ class BaseViewHandler(webapp.RequestHandler):
     key = self.request.get('key')
     if not key:
       template_values['error'] = 'Invalid snippet key.'
+      template_values['title'] = 'Error!'
       self.respond(template_values)
       return None, None
     
@@ -31,6 +32,7 @@ class BaseViewHandler(webapp.RequestHandler):
       snippage = db.get(key)
     except db.BadKeyError:
       template_values['error'] = 'Invalid snippet key.'
+      template_values['title'] = 'Error!'
       self.respond(template_values)
       return None, None
       
@@ -43,12 +45,14 @@ class BaseViewHandler(webapp.RequestHandler):
       if not user or snippage.owner != user:
         logging.error('Failed access to private snippet %s by %s' % (key, user))        
         template_values['error'] = 'You do not have the rights to access this snippet.'
+        template_values['title'] = 'Error!'
         self.respond(template_values)
         return None, None
         
     if snippage.public and snippage.flagged:
       if not user or snippage.owner != user:
         template_values['error'] = 'This page has been flagged as offensive and removed from public view.'
+        template_values['title'] = 'Error!'
         self.respond(template_values)
         return None, None
     
@@ -85,6 +89,9 @@ class ViewHandler(BaseViewHandler):
       'error': False,
       'snippage': vo.SnipPageVO(snippage),
       'inc_host': inc_host,
+
+      'title_img': '/view_icon.png',
+      'title': snippage.title,
     })    
     path = os.path.join(os.path.dirname(__file__), 'templates/view.html')
     self.response.out.write(template.render(path, template_values))

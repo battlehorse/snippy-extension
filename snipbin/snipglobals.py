@@ -14,6 +14,7 @@ from google.appengine.ext import webapp
 debug=True
 
 webapp.template.register_template_library('customfilters')
+webapp.template.register_template_library('customtags')
 
 def initialize_user(request, response, generate_xsrf=True):
   if not is_subdomain():

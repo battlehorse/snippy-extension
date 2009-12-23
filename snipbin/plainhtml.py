@@ -14,9 +14,10 @@ import snipglobals
 
 class BaseHandler(webapp.RequestHandler):
   
-  def render_page(self, html_page):
+  def render_page(self, html_page, title):
     user, template_values = snipglobals.initialize_user(self.request,
                                                         self.response)      
+    template_values['title'] = title
     path = os.path.join(os.path.dirname(__file__), 'templates/%s' % html_page)
     self.response.out.write(template.render(path, template_values))
 
@@ -24,36 +25,36 @@ class BaseHandler(webapp.RequestHandler):
 class AboutHandler(BaseHandler):
   
   def get(self):
-    self.render_page('about.html')
+    self.render_page('about.html', title='What is SnipBin?')
 
 
 class LegalHandler(BaseHandler):
   
   def get(self):
-    self.render_page('legal.html')
+    self.render_page('legal.html', title='Terms and Conditions of Usage')
     
 
 class CreditsHandler(BaseHandler):
   
   def get(self):
-    self.render_page('credits.html')
+    self.render_page('credits.html', title='Credits')
 
     
 class ExtensionHandler(BaseHandler):
 
   def get(self):
-    self.render_page('extension.html')
+    self.render_page('extension.html', title='Chrome Extension')
     
 
 class ExtensionWelcomeHandler(BaseHandler):
   
   def get(self):
-    self.render_page('extension_welcome.html')
+    self.render_page('extension_welcome.html', title='Welcome to SnipBin')
 
 class ExtensionLoginHandler(BaseHandler):
 
   def get(self):
-    self.render_page('extension_login.html')
+    self.render_page('extension_login.html', title='Welcome to SnipBin')
     
 application = webapp.WSGIApplication(
   [('/about', AboutHandler), 

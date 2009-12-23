@@ -13,14 +13,12 @@
 {% block title %}{% if error %}Error!{% else %}{{ snippage.m.title|escape }}{% endif %}{% endblock %}
 {% block main %}
   {% if error %}
-    <h2>Error!</h2>
     <div class="clear-both"></div>
     <p class="error"> 
       There was a problem accessing this snippet:<br />
       {{ error }}
     </p>
   {% else %}
-    <h2><img src="/view_icon.png" class="inline">{{ snippage.m.title|escape }}</h2>
     <p class="publicprivate">
       {% if logged_in %}
         <a href="/my"><img src="/goto.png" class="bottom" /> My Snippets</a><br />
