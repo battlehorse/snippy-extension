@@ -1,0 +1,13 @@
+{% if fliplinks %}
+  <div class="publicprivate">
+    {% if fliplink_public %}
+      <p><a href="/"><img src="/goto.png" class="bottom" />Public Snippets</a></p>
+    {% endif %}
+    {% if fliplink_my and logged_in %}
+      <p><a href="/my"><img src="/goto.png" class="bottom" /> My Snippets</a></p>
+    {% endif %}
+    {% if fliplink_login and not logged_in %}
+      <p><a href="/my"><img src="/goto.png" class="bottom" /> Login</a></p>
+    {% endif %} 
+  </div>
+{% endif %}

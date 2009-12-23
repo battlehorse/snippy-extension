@@ -92,6 +92,7 @@ class ViewHandler(BaseViewHandler):
 
       'title_img': '/view_icon.png',
       'title': snippage.title,
+      'fliplinks': ['my', 'public'],
     })    
     path = os.path.join(os.path.dirname(__file__), 'templates/view.html')
     self.response.out.write(template.render(path, template_values))

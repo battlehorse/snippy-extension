@@ -1,14 +1,6 @@
 {% extends "base.skel.html" %}
 {% block title %}Bits of knowledge{% endblock %}
 {% block main %}
-  <p class="publicprivate">
-    {% if logged_in %}
-      <a href="/my"><img src="/goto.png" class="bottom" /> My Snippets</a> 
-    {% else %}
-      <a href="/my"><img src="/goto.png" class="bottom" /> Login</a> 
-    {% endif %}
-  </p>
-  <div class="clear-both"></div>
   {% include "ordering.inc.html" %}
   {% if snippages %}
     <ul>

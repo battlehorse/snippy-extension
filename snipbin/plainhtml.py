@@ -14,10 +14,14 @@ import snipglobals
 
 class BaseHandler(webapp.RequestHandler):
   
-  def render_page(self, html_page, title):
+  def render_page(self, html_page, title, fliplinks=None):
     user, template_values = snipglobals.initialize_user(self.request,
                                                         self.response)      
     template_values['title'] = title
+    if fliplinks is None:
+      template_values['fliplinks'] = ['public']
+    else:
+      template_values['fliplinks'] = fliplinks
     path = os.path.join(os.path.dirname(__file__), 'templates/%s' % html_page)
     self.response.out.write(template.render(path, template_values))
 
@@ -49,12 +53,16 @@ class ExtensionHandler(BaseHandler):
 class ExtensionWelcomeHandler(BaseHandler):
   
   def get(self):
-    self.render_page('extension_welcome.html', title='Welcome to SnipBin')
+    self.render_page('extension_welcome.html', 
+                     title='Welcome to SnipBin',
+                     fliplinks=[])
 
 class ExtensionLoginHandler(BaseHandler):
 
   def get(self):
-    self.render_page('extension_login.html', title='Welcome to SnipBin')
+    self.render_page('extension_login.html',
+                     title='Welcome to SnipBin',
+                     fliplinks=['login', 'my'])
     
 application = webapp.WSGIApplication(
   [('/about', AboutHandler), 

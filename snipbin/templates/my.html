@@ -1,10 +1,6 @@
 {% extends "base.skel.html" %}
 {% block title %}Bits of knowledge{% endblock %}
 {% block main %}
-  <p class="publicprivate">
-    <a href="/"><img src="/goto.png" class="bottom" />Public Snippets</a>
-  </p>
-  <div class="clear-both"></div>
   {% if snippages %}
     {% include "ordering.inc.html" %}
     <ul>

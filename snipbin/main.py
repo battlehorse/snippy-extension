@@ -43,6 +43,7 @@ class PublicHandler(handlers.BaseListHandler):
       
       'title_img': '/public_icon_small.png',
       'title': 'Public Snippets',
+      'fliplinks': ['my', 'login'],
     })    
     path = os.path.join(os.path.dirname(__file__), 'templates/public.html')
     self.response.out.write(template.render(path, template_values))
@@ -78,7 +79,8 @@ class PrivateHandler(handlers.BaseListHandler):
       'pagination_uri': '/my',
 
       'title_img': '/my_icon_small.png',
-      'title': 'Your Snippets',  
+      'title': 'Your Snippets',
+      'fliplinks': ['public'],
     })
     path = os.path.join(os.path.dirname(__file__), 'templates/my.html')
     self.response.out.write(template.render(path, template_values))    

@@ -18,15 +18,7 @@
       There was a problem accessing this snippet:<br />
       {{ error }}
     </p>
-  {% else %}
-    <p class="publicprivate">
-      {% if logged_in %}
-        <a href="/my"><img src="/goto.png" class="bottom" /> My Snippets</a><br />
-      {% endif %}
-      <a href="/"><img src="/goto.png" class="bottom" /> Public Snippets</a>
-    </p>
-    <div class="clear-both"></div>
-    
+  {% else %}    
     {% if is_admin and not is_owner %}
     <div class="adminconsole">
       Owner email: <b>{{snippage.m.owner.email}}</b>.

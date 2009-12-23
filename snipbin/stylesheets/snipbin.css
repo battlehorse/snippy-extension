@@ -148,6 +148,11 @@
   -webkit-border-bottom-left-radius: 3px;  
 }
 
+.publicprivate P {
+  margin: 0;
+  padding: 0;
+}
+
 .publicprivate:hover {
   background-color: #ddd;
   border: 1px solid #ccc;
