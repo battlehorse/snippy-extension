@@ -6,58 +6,8 @@
     <ul>
     {% for snippage in snippages %}
       <li>
-          <div id="{{ snippage.key }}" class="snippet">
-          <a class="viewitem" href="/view?key={{ snippage.key }}">{{ snippage.m.title|escape }}</a>
-            <div class="meta">
-              <span>
-                <span class="views">{{ snippage.m.views }}</span> views
-                <img src="/snippet_views.png" class="bottom" title="Views" alt="Views" >
-              </span><br />
-              <span>
-                {{ snippage.m.owner.nickname }}
-                <img src="/snippet_owner.png" class="bottom" title="Author" alt="Author">
-              </span><br />
-              <span>
-                {{ snippage.m.created|naturalTimeDifference }}
-                <img src="/snippet_created.png" class="bottom" title="Creation Date" alt="Creation Date">
-              </span><br />
-              <span>
-                {{ snippage.snippets_count }} fragments 
-                <img src="/snippet_num.png" class="bottom" title="Number of snippets" alt="Number of snippets">
-              </span><br />
-              {% if snippage.abuses_count %}
-                <span>
-                  {{ snippage.abuses_count }} abuse reports
-                  <img src="/snippet_abuses.png" class="bottom" title="Number of abuse reports" alt="Number of abuse reports">
-                </span><br />
-              {% endif %}
-            </div><div class="actions">
-              <!-- Flagged? {{ snippage.m.flagged }} -->
-              <!-- Abuses? {{ snippage.abuses_count }} -->
-              <form class="snippet-form">
-                <p>
-                  <span class="public" {% if not snippage.m.public %}style="display:none"{% endif %} title="Public snippet. Click to make private.">
-                    Public
-                    <img src="/snippet_public.png" class="bottom" alt="Public snippet. Click to make private.">
-                  </span>
-                  <span class="private" {% if snippage.m.public %}style="display:none"{% endif %} title="Private snippet. Click to make public.">
-                    Private
-                    <img src="/snippet_private.png" class="bottom" alt="Private snippet. Click to make public.">
-                  </span>
-                </p><p>
-                <span class="delete" title="Delete this snippet">
-                  Delete
-                  <img src="/snippet_delete.png" class="bottom" alt="Delete this snippet">
-                </span>
-                </p>
-                
-                <input type="hidden" name="key" value="{{ snippage.key }}">
-                <input type="hidden" name="public" value="{{ snippage.m.public }}">
-              </form>
-            </div>
-            <div class="clear-both"></div>
-          </div>
-        </li>
+        {% show_snippage snippage "show_abuses|edit_public|edit_delete" %}
+      </li>
     {% endfor %}
     </ul>
     {% include "pagination.inc.html" %}
@@ -76,53 +26,4 @@
     </ul>
   {% endif %}
   <input type="hidden" id="xsrf_token" value="{{ xsrf_token }}">
-  <script>
-    $(document).ready(function() {
-      $(".public, .private").click(function() {
-        var form = $(this).closest(".snippet-form");
-        var key = $("input[name='key']", form).val();
-        var pub = $("input[name='public']", form).val() == 'True';
-        var data = {
-          'key': key,
-          'public': !pub,
-          'xsrf_token': $('#xsrf_token').val()
-        };
-        $.post('/api/togglepublic', {'payload': $.toJSON(data)}, function(data, textStatus) {
-          if (data.status == 'ok') {
-            if (pub) {
-              // Was public, turned private
-              $('#' + key).find('.public').fadeOut("fast", function() {
-                $('#' + key).find('.private').fadeIn("fast");
-              });
-            } else  {
-              // Was privte, turned public
-              $('#' + key).find('.private').fadeOut("fast", function() {
-                $('#' + key).find('.public').fadeIn("fast");
-              });
-            }
-            $('#' + key).find("input[name='public']").val(pub ? "False" : "True")
-          }
-        }, 'json');
-        return false;
-      });
-      $(".delete").click(function() {
-        var form = $(this).closest(".snippet-form");
-        var key = $("input[name='key']", form).val();
-        var data = {
-          'key': key,
-          'xsrf_token': $('#xsrf_token').val()
-        }
-        if (confirm('Do you want to delete this item?')) {
-          $.post('/api/delete', {'payload': $.toJSON(data)}, function(data, textStatus) {
-            if (data.status == 'ok') {
-              $('#' + key).closest('li').fadeOut('fast', function() {
-                $(this).remove();
-              });
-            }
-          }, 'json');
-        }
-        return false;
-      });
-    });
-  </script>
 {% endblock %}
