@@ -45,7 +45,7 @@ $(document).ready(function() {
   } else {
     $(".abuse").click(function() {
       var container = $("<div></div>");
-      $("<p>You must be logged in to submit abuse reports.</p>").appendTo(container);
+      $("<p>You must log in to submit abuse reports.</p>").appendTo(container);
       var okButton = $("<button>Ok</button>").appendTo(container);
       var boxy = new Boxy(container, {title: "Report Abuse", draggable: false, modal: true});
       okButton.click(function() {
