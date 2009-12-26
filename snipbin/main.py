@@ -39,7 +39,6 @@ class PublicHandler(handlers.BaseListHandler):
       'more_offset': more_offset,
       'limit': limit,
       'order': order,
-      'pagination_uri': '/',
       
       'title_img': '/public_icon_small.png',
       'title': 'Public Snippets',
@@ -76,7 +75,6 @@ class PrivateHandler(handlers.BaseListHandler):
       'more_offset': more_offset,
       'limit': limit,
       'order': order,
-      'pagination_uri': '/my',
 
       'title_img': '/my_icon_small.png',
       'title': 'Your Snippets',
