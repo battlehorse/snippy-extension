@@ -23,7 +23,7 @@ class LogoutHandler(webapp.RequestHandler):
     snipglobals.delete_cookie('xsrf_token', self.response)
     snipglobals.delete_cookie('ACSID', self.response,
                               '.%s' % snipglobals.get_domain())
-    path = os.path.join(os.path.dirname(__file__), 'templates/logout.html')
+    path = os.path.join(os.path.dirname(__file__), '../../templates/logout.html')
     self.response.out.write(template.render(path, template_values))
 
 

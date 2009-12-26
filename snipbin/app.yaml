@@ -5,31 +5,31 @@ api_version: 1
 
 handlers:
 - url: /
-  script: main.py
+  script: py/handlers/main.py
   
 - url: /my
-  script: main.py
+  script: py/handlers/main.py
   login: required
   
 - url: /view
-  script: view.py
+  script: py/handlers/view.py
   
 - url: /inc
-  script: view.py
+  script: py/handlers/view.py
   
 - url: /helper
-  script: view.py
+  script: py/handlers/view.py
   
 - url: /test
   script: test/test.py
   login: admin
   
 - url: /admin/.*
-  script: admin.py
+  script: py/handlers/admin.py
   login: admin
   
 - url: /api/.*
-  script: api.py
+  script: py/handlers/api.py
   
 - url: /stylesheets
   static_dir: stylesheets
@@ -42,12 +42,12 @@ handlers:
   upload: static/(.*\.(gif|png|jpg|ico|txt))  
 
 - url: /(about|legal|extension|extwelcome|credits)
-  script: plainhtml.py
+  script: py/handlers/plainhtml.py
   
 - url: /extlogin
-  script: plainhtml.py
+  script: py/handlers/plainhtml.py
   login: required
   
 - url: /logout
-  script: logout.py
+  script: py/handlers/logout.py
   login: required

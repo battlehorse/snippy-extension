@@ -22,7 +22,7 @@ class BaseHandler(webapp.RequestHandler):
       template_values['fliplinks'] = ['public']
     else:
       template_values['fliplinks'] = fliplinks
-    path = os.path.join(os.path.dirname(__file__), 'templates/%s' % html_page)
+    path = os.path.join(os.path.dirname(__file__), '../../templates/%s' % html_page)
     self.response.out.write(template.render(path, template_values))
 
 

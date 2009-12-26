@@ -10,7 +10,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 
-import handlers
+from py.handlers import handlers
 import models
 import snipglobals
 
@@ -44,7 +44,7 @@ class PublicHandler(handlers.BaseListHandler):
       'title': 'Public Snippets',
       'fliplinks': ['my', 'login'],
     })    
-    path = os.path.join(os.path.dirname(__file__), 'templates/public.html')
+    path = os.path.join(os.path.dirname(__file__), '../../templates/public.html')
     self.response.out.write(template.render(path, template_values))
 
 
@@ -80,7 +80,7 @@ class PrivateHandler(handlers.BaseListHandler):
       'title': 'Your Snippets',
       'fliplinks': ['public'],
     })
-    path = os.path.join(os.path.dirname(__file__), 'templates/my.html')
+    path = os.path.join(os.path.dirname(__file__), '../../templates/my.html')
     self.response.out.write(template.render(path, template_values))    
     
 
