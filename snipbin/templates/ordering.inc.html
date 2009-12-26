@@ -1,8 +1,8 @@
 <p class="ordering">
   Order by:
-  <a href="?limit={{ limit }}&order=title" {% ifequal order "title" %} class="current" {% endifequal %}>Title A-Z</a>
-  <a href="?limit={{ limit }}&order=-title" {% ifequal order "-title" %} class="current" {% endifequal %}>Title Z-A</a>
-  <a href="?limit={{ limit }}&order=-created" {% ifequal order "-created" %} class="current" {% endifequal %}>Most recent</a>
-  <a href="?limit={{ limit }}&order=created" {% ifequal order "created" %} class="current" {% endifequal %}>Oldest</a>
-  <a href="?limit={{ limit }}&order=-views" {% ifequal order "-views" %} class="current" {% endifequal %}>Most Views</a>
+  <a href="?limit={{ limit }}&order=title{{ extra_params }}" {% ifequal order "title" %} class="current" {% endifequal %}>Title A-Z</a>
+  <a href="?limit={{ limit }}&order=-title{{ extra_params }}" {% ifequal order "-title" %} class="current" {% endifequal %}>Title Z-A</a>
+  <a href="?limit={{ limit }}&order=-created{{ extra_params }}" {% ifequal order "-created" %} class="current" {% endifequal %}>Most recent</a>
+  <a href="?limit={{ limit }}&order=created{{ extra_params }}" {% ifequal order "created" %} class="current" {% endifequal %}>Oldest</a>
+  <a href="?limit={{ limit }}&order=-views{{ extra_params }}" {% ifequal order "-views" %} class="current" {% endifequal %}>Most Views</a>
 </p>

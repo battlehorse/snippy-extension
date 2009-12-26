@@ -14,7 +14,9 @@
 {% block main %}
   {% if is_admin and not is_owner %}
   <div class="adminconsole">
-    Owner email: <b>{{snippage.m.owner.email}}</b>.
+    Owner email: <b><a href="/admin/user?email={{snippage.m.owner.email}}">
+      {{snippage.m.owner.email}}
+    </a></b>.
     This snippet is <b>{% if snippage.m.public %}public{% else %}private{% endif %}</b>.
   </div>
   {% endif %}
@@ -26,10 +28,10 @@
       <form class="snippet-form">
         <input type="hidden" name="key" value="{{ snippage.key }}">
         <input type="hidden" name="public" value="{{ snippage.m.public }}">
-        {% if not is_owner %}
+        {% if not is_owner or is_admin %}
           <a href="#" class="abuse">Report abuse</a>
         {% endif %}
-        {% if is_owner %}
+        {% if is_owner or is_admin %}
           <span class="public" {% if not snippage.m.public %}style="display:none"{% endif %} title="Public snippet. Click to make private.">
             Public
             <img src="/snippet_public.png" class="bottom" alt="Public snippet. Click to make private.">

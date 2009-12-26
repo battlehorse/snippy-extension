@@ -165,7 +165,7 @@ class TogglePublic(ApiBase):
       self.respond_error('invalid_key')
       return
     
-    if snippage.owner != user:
+    if snippage.owner != user and not users.is_current_user_admin():
       self.respond_error('no_auth')
       return
       
@@ -241,7 +241,7 @@ class Delete(ApiBase):
       self.respond_error('invalid_key')
       return
     
-    if snippage.owner != user:
+    if snippage.owner != user and not users.is_current_user_admin():
       self.respond_error('no_auth')
       return
     

@@ -1,0 +1,27 @@
+{% extends "base.skel.html" %}
+{% block title %}Bits of knowledge{% endblock %}
+{% block main %}
+  {% if snippages %}
+    {% include "ordering.inc.html" %}
+    <ul>
+    {% for snippage in snippages %}
+      <li>
+        {% show_snippage snippage "show_abuses|edit_abuses|edit_public|edit_delete" %}
+      </li>
+    {% endfor %}
+    </ul>
+    {% include "pagination.inc.html" %}
+  {% else %}
+    {% if email %}
+      <p>User <strong>{{ email }}</strong> does not have any snippets,
+        or does not exist.
+      </p>
+    {% else %}
+      <form action="/admin/user" method="GET">
+        <label for="email">Email Lookup:</label>
+        <input type="text" size="50" name="email" id="email">
+        <input type="submit" value="Go">
+      </form>
+    {% endif %}
+  {% endif %}
+{% endblock %}

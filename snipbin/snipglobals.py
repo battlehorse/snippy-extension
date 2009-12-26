@@ -25,7 +25,7 @@ def initialize_user(request, response, generate_xsrf=True):
   if user:
     if generate_xsrf:
       xsrf_token = hashlib.md5('%s-%s' % (user.user_id(), random.random())).hexdigest()
-      response.headers.add_header('Set-Cookie', 'xsrf_token=%s; HttpOnly' % xsrf_token)      
+      response.headers.add_header('Set-Cookie', 'xsrf_token=%s; path=/; HttpOnly' % xsrf_token)      
     else:
       xsrf_token = None    
   else:

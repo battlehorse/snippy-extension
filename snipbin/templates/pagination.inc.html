@@ -1,10 +1,14 @@
 {% if prev or more %}
   <p class="pagination">
   {% if prev %}
-    <a href="?offset={{ prev_offset }}&limit={{ limit }}&order={{ order }}">Prev page</a>
+    <a href="?offset={{ prev_offset }}&limit={{ limit }}&order={{ order }}{{ extra_params }}">
+      Prev page
+    </a>
   {% endif %}
   {% if more %}
-    <a href="?offset={{ more_offset }}&limit={{ limit }}&order={{ order }}">Next page</a>
+    <a href="?offset={{ more_offset }}&limit={{ limit }}&order={{ order }}{{ extra_params }}">
+      Next page
+    </a>
   {% endif %}
   </p>
 {% endif %}

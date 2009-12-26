@@ -9,5 +9,8 @@
     {% if fliplink_login and not logged_in %}
       <p><a href="/my"><img src="/goto.png" class="bottom" /> Login</a></p>
     {% endif %} 
+    {% if is_admin %}
+      <p><a href="/admin/user"><img src="/goto_admin.png" class="bottom" />Go To User</a></p>
+    {% endif %}
   </div>
 {% endif %}

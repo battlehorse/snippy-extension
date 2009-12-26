@@ -24,6 +24,10 @@ handlers:
   script: test/test.py
   login: admin
   
+- url: /admin/.*
+  script: admin.py
+  login: admin
+  
 - url: /api/.*
   script: api.py
   
