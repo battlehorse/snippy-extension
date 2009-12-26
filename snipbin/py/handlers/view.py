@@ -13,9 +13,9 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 
-import snipglobals
-import models
-import vo
+from py import snipglobals
+from py import models
+from py import vo
 
 class BaseViewHandler(webapp.RequestHandler):
   

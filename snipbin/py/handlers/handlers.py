@@ -5,7 +5,7 @@
 
 from google.appengine.ext import webapp
 
-import vo
+from py import vo
 
 class BaseListHandler(webapp.RequestHandler):
   

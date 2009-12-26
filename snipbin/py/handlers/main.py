@@ -11,8 +11,8 @@ from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 
 from py.handlers import handlers
-import models
-import snipglobals
+from py import models
+from py import snipglobals
 
 
 class PublicHandler(handlers.BaseListHandler):

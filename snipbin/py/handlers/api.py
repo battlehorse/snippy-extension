@@ -15,8 +15,8 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 
 from lib.BeautifulSoup import BeautifulSoup
-import models
-import snipglobals
+from py import models
+from py import snipglobals
 
 #TODO(battlehorse): should save SnipPage + Snippets in a transaction?
 #TODO(battlehorse): string properties to be trimmed at 500 chars
