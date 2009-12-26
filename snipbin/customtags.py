@@ -25,9 +25,11 @@ def show_snippage(snippage, capabilities):
   template_values.update(
     (capability, True) for capability in capabilities.split('|'))
   return template_values
-  
+
+
 def show_abuses(snippage):
   return {'snippage': snippage}
+
 
 register = webapp.template.create_template_register()
 register.inclusion_tag('tags/show_title.inc.html', takes_context=True)(show_title)
