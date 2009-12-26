@@ -1,7 +1,7 @@
 {% extends "skel/base.skel.html" %}
 {% block title %}Bits of knowledge{% endblock %}
 {% block main %}
-  {% include "ordering.inc.html" %}
+  {% include "inc/ordering.inc.html" %}
   {% if snippages %}
     <ul>
       {% for snippage in snippages %}
@@ -10,7 +10,7 @@
         </li>
       {% endfor %}
     </ul>
-    {% include "pagination.inc.html" %}
+    {% include "inc/pagination.inc.html" %}
   {% else %}
     No public snippets ?!
   {% endif %}

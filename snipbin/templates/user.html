@@ -2,7 +2,7 @@
 {% block title %}Bits of knowledge{% endblock %}
 {% block main %}
   {% if snippages %}
-    {% include "ordering.inc.html" %}
+    {% include "inc/ordering.inc.html" %}
     <ul>
     {% for snippage in snippages %}
       <li>
@@ -10,7 +10,7 @@
       </li>
     {% endfor %}
     </ul>
-    {% include "pagination.inc.html" %}
+    {% include "inc/pagination.inc.html" %}
   {% else %}
     {% if email %}
       <p>User <strong>{{ email }}</strong> does not have any snippets,
