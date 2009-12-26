@@ -82,6 +82,7 @@ $(document).ready(function() {
     return false;
   });
   $(".delete").click(function() {
+    var is_list = $(this).hasClass("deletelist");
     var form = $(this).closest(".snippet-form");
     var key = $("input[name='key']", form).val();
     var data = {
@@ -91,9 +92,16 @@ $(document).ready(function() {
     if (confirm('Do you want to delete this item?')) {
       $.post('/api/delete', {'payload': $.toJSON(data)}, function(data, textStatus) {
         if (data.status == 'ok') {
-          $('#' + key).closest('li').fadeOut('fast', function() {
-            $(this).remove();
-          });
+          if (is_list) {
+            // We're deleting a snippet from a list.
+            $('#' + key).closest('li').fadeOut('fast', function() {
+              $(this).remove();
+            });
+          } else {
+            // We're deleting a snippet from its view page. Redirect to the 
+            // list page.
+            document.location.href = "/my"
+          }
         }
       }, 'json');
     }

@@ -75,27 +75,29 @@ class ViewHandler(BaseViewHandler):
                                                         self.response)
     snippage, key = self.get_snippage(user, template_values)
     if not snippage:
-      return
-    template_values['is_owner'] = user and user == snippage.owner
-    
-    http_host = os.environ['HTTP_HOST']
-    if http_host == 'localhost:8080':  # this is needed for local development.
-      inc_host = http_host
+      path = os.path.join(os.path.dirname(__file__), 'templates/error.html')
+      self.response.out.write(template.render(path, template_values))      
     else:
-      inc_host = 'hosted.%s' % http_host
+      template_values['is_owner'] = user and user == snippage.owner
     
-    db.run_in_transaction(self.increment_views, key)
-    template_values.update({
-      'error': False,
-      'snippage': vo.SnipPageVO(snippage),
-      'inc_host': inc_host,
+      http_host = os.environ['HTTP_HOST']
+      if http_host == 'localhost:8080':  # this is needed for local development.
+        inc_host = http_host
+      else:
+        inc_host = 'hosted.%s' % http_host
+    
+      db.run_in_transaction(self.increment_views, key)
+      template_values.update({
+        'error': False,
+        'snippage': vo.SnipPageVO(snippage),
+        'inc_host': inc_host,
 
-      'title_img': '/view_icon.png',
-      'title': snippage.title,
-      'fliplinks': ['my', 'public'],
-    })    
-    path = os.path.join(os.path.dirname(__file__), 'templates/view.html')
-    self.response.out.write(template.render(path, template_values))
+        'title_img': '/view_icon.png',
+        'title': snippage.title,
+        'fliplinks': ['my', 'public'],
+      })    
+      path = os.path.join(os.path.dirname(__file__), 'templates/view.html')
+      self.response.out.write(template.render(path, template_values))
 
 
 class HelperHandler(BaseViewHandler):

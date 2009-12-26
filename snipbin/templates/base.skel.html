@@ -56,7 +56,10 @@
     </p>
     {% show_title %}
     {% show_fliplinks %}
-    <div class="clear-both"></div>    
+    <div class="clear-both"></div>
+    {% if xsrf_token %}
+      <input type="hidden" id="xsrf_token" value="{{ xsrf_token }}">
+    {% endif %}
     {% block main %}{% endblock %}
   </div>
   <div class="main footer">
