@@ -19,12 +19,12 @@ class Snippet(db.Model):
   master = db.ReferenceProperty(SnipPage, collection_name='snippets')
   content = db.TextProperty()
   url = db.StringProperty()
-  comment = db.StringProperty()
+  comment = db.StringProperty(multiline=True)
   
 
 class AbuseReport(db.Model):
   master = db.ReferenceProperty(SnipPage, collection_name='abuses')
-  message =  db.StringProperty()
+  message =  db.StringProperty(multiline=True)
   reporter = db.UserProperty()
   created = db.DateTimeProperty(auto_now_add=True)
   resolved = db.DateTimeProperty()

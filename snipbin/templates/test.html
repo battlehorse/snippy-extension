@@ -146,7 +146,7 @@
         $('<div>' +
           'Content: <textarea rows="5" cols="40"></textarea><br />' +
           'Url: <input type="text"><br />' +
-          'Comment: <input type="text"><br />' +
+          'Comment: <textarea rows="5" cols="40"></textarea><br />' +
         '</div>').appendTo($('#upload_snippets'));
         return false;
       });
@@ -157,9 +157,9 @@
         data.snippets = []
         $('#upload_snippets DIV').each(function() {
           var snippet = {}
-          snippet.content = $('textarea', this).val();
+          snippet.content = $('textarea:first', this).val();
           snippet.url = $('input:first', this).val();
-          snippet.comment = $('input:last', this).val();
+          snippet.comment = $('textarea:last', this).val();
           data.snippets[data.snippets.length] = snippet
         });
         json_call('POST', '/api/upload', $.toJSON(data));

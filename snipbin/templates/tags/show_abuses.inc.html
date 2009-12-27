@@ -3,7 +3,6 @@
 {% for abuse in snippage.m.abuses %}
   <li>
     <div class="snippet">
-    {{ abuse.message|escape }}
       <div class="meta">
         <span>
           {{ abuse.reporter.nickname }}
@@ -14,6 +13,7 @@
           <img src="/snippet_created.png" class="bottom" title="Creation Date" alt="Creation Date">
         </span><br />
       </div>
+      {{ abuse.message|escape|linebreaksbr }}
       <div class="clear-both"></div>
     </div>
   </li>

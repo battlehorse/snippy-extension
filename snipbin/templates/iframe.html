@@ -41,7 +41,7 @@
         <div style="clear: both"></div>
         {% if snippet.comment %}
           <div class="snippet-extra">
-            Comment: {{ snippet.comment|escape}}
+            Comment: {{ snippet.comment|escape|linebreaksbr}}
           </div>
         {% endif %}
       </div>
