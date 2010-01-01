@@ -10,11 +10,12 @@ import re
 
 from google.appengine.api import users
 from google.appengine.ext import webapp
+from google.appengine.ext.webapp import template
 
 debug=True
 
-webapp.template.register_template_library('py.customfilters')
-webapp.template.register_template_library('py.customtags')
+template.register_template_library('py.customfilters')
+template.register_template_library('py.customtags')
 
 def initialize_user(request, response, generate_xsrf=True):
   if not is_subdomain():
