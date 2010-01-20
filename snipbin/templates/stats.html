@@ -1,0 +1,21 @@
+{% extends "skel/base.skel.html" %}
+{% block title %}Stats{% endblock %}
+{% block main %}
+  {% if global_stat %}
+    Total bytes stored: {{ global_stat.bytes }} <br />
+    Total entities stored: {{ global_stat.count }} <br />
+    When: {{ global_stat.timestamp }} <br />
+  {% endif %}
+  {% for kind in kinds %}
+    name: {{ kind.kind_name }} <br />
+    bytes: {{ kind.bytes }}<br />
+    count: {{ kind.count }}<br />
+  {% endfor %}
+  
+  {% for kind_name in kind_names %}
+    kind name: {{ kind_name.kind_name }} <br />
+    property name: {{kind_name.property_name}} <br />
+    bytes: {{ kind_name.bytes }}<br />
+    count: {{ kind_name.count }}<br />
+  {% endfor %}
+{% endblock %}
