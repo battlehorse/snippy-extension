@@ -2,13 +2,13 @@
   "name": "Snippy",
   "version": "0.2.1",
   "icons": {
-    "16": "icon16.png",
-    "32": "icon32.png",
-    "48": "icon48.png",
-    "128": "icon128.png"
+    "16": "img/icon16.png",
+    "32": "img/icon32.png",
+    "48": "img/icon48.png",
+    "128": "img/icon128.png"
   },
   "browser_action": {
-    "default_icon": "browser_action.png",
+    "default_icon": "img/browser_action.png",
     "default_title": "Snippy",
     "popup": "popup.html"
   },
@@ -16,7 +16,7 @@
     {
       "matches": ["http://*/*" ],
       "css": [],
-      "js": ["jquery-1.4.min.js", "snippy.js"],
+      "js": ["lib/jquery-1.4.min.js", "js/snippy.js"],
       "run_at": "document_end",
       "all_frames": false
     }

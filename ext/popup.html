@@ -69,17 +69,17 @@
   </script>
 </head>
 <body>
-  <button id="snip_button" disabled="disabled" onclick="toggle()" style="width: 100px"><img src="snipit.png"><span id="snip_text">Not ready</span></button>
+  <button id="snip_button" disabled="disabled" onclick="toggle()" style="width: 100px"><img src="img/snipit.png"><span id="snip_text">Not ready</span></button>
   <p id="not_ready_alert" style="display:block">
     Waiting for page to complete loading...
   </p>
-  <a href="#" onclick="showDump()"><img src="showdump.png" style="border: 0">Show snippets</a>
+  <a href="#" onclick="showDump()"><img src="img/showdump.png" style="border: 0">Show snippets</a>
   <p>
-    <a href="#" onclick="clearCopy()"><img src="clearsnippets.png" style="border: 0">Clear snippets</a><br />
+    <a href="#" onclick="clearCopy()"><img src="img/clearsnippets.png" style="border: 0">Clear snippets</a><br />
   </p>
   <p>
-    <a href="#" onclick="about()"><img src="about.png" style="border: 0">About</a><br />
-    <a href="#" onclick="bug()"><img src="bug.png" style="border: 0">Report bug</a><br />
+    <a href="#" onclick="about()"><img src="img/about.png" style="border: 0">About</a><br />
+    <a href="#" onclick="bug()"><img src="img/bug.png" style="border: 0">Report bug</a><br />
   </p>
   <script>
     var cur_tab_url = chrome.extension.getBackgroundPage().CurrentTabUrl();

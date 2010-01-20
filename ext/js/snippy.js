@@ -23,7 +23,7 @@ $(document).ready(function() {
           });
     $("<div style='font-size: 11px; font-family: sans-serif'>Move your mouse over the page and click on interesting elements to save them as snippets. Click Done once finished.</div>").appendTo(tooltip_div);
     var tooltip_button = $("<button style='width: 100px'></button>").
-        html("<img src='" + chrome.extension.getURL("snipit.png") + "' style='vertical-align: bottom-text'><span>Done</span>");
+        html("<img src='" + chrome.extension.getURL("img/snipit.png") + "' style='vertical-align: bottom-text'><span>Done</span>");
     tooltip_button.appendTo(tooltip_div);
     tooltip_button.click(function() {
         chrome.extension.sendRequest({'toggle': true}, function(response) {});
