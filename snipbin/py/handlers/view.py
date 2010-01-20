@@ -83,8 +83,14 @@ class ViewHandler(BaseViewHandler):
       inc_host = http_host
     else:
       inc_host = 'hosted.%s' % http_host
-  
-    db.run_in_transaction(self.increment_views, key)
+    
+    if not users.is_current_user_admin():
+      db.run_in_transaction(self.increment_views, key)
+      snippage.views += 1
+    elif user == snippage.owner:  # admin, but looking at its own pages.
+      db.run_in_transaction(self.increment_views, key)
+      snippage.views += 1
+    
     template_values.update({
       'error': False,
       'snippage': vo.SnipPageVO(snippage),
