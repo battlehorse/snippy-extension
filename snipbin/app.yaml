@@ -20,10 +20,6 @@ handlers:
 - url: /helper
   script: py/handlers/view.py
   
-- url: /stats
-  script: py/handlers/stats.py
-  login: admin
-  
 - url: /test
   script: test/test.py
   login: admin
