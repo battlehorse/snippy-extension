@@ -255,6 +255,30 @@
       });
     });
   </script>
+  
+  <div class="section">
+    <h3>Server errors</h3>
+    <button id="server_error_upload_too_large">Upload too big</button>
+  </div>
+  <script>
+    $(document).ready(function() {
+      $('#server_error_upload_too_large').click(function() {
+        var big_payload = [];
+        for (var i = 0; i < 200000; i++) {
+          big_payload.push('123456890');
+        }
+        var data = {
+          'title': 'Upload too large',
+          'snippets': [
+            {
+              'content': big_payload.join(' ')
+            },
+          ]
+        };
+        json_call('POST', '/api/upload', $.toJSON(data));   
+      });
+    });
+  </script>
 
 </body>
 </html>

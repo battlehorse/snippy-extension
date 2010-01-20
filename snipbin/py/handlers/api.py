@@ -5,6 +5,7 @@
 
 import base64
 import datetime
+import logging
 import re
 
 from django.utils import simplejson
@@ -12,6 +13,7 @@ from google.appengine.api import users
 from google.appengine.ext import db
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
+from google.appengine.runtime import apiproxy_errors
 
 from lib.BeautifulSoup import BeautifulSoup
 from py import models
@@ -61,7 +63,14 @@ class ApiBase(webapp.RequestHandler):
     if extra_info:
       resp.update(extra_info)
     self.respond(resp)
-
+    
+  def handle_exception(self, exception, debug_mode):
+    logging.exception('API Exception: %s' % exception)
+    self.response.clear();
+    if isinstance(exception, apiproxy_errors.RequestTooLargeError):
+      self.respond_error('request_too_large')
+    else:
+      self.respond_error('server_error')
 
 class Upload(ApiBase):
   
