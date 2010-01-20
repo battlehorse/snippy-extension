@@ -76,7 +76,8 @@ class Upload(ApiBase):
   
   def sanitize_contents(self, contents):
     soup = BeautifulSoup(contents)
-    [script.extract() for script in soup.findAll('script')]
+    for tagname in ['script', 'meta', 'head', 'link']:
+      [tag.extract() for tag in soup.findAll(tagname)]
     
     attr_re = re.compile('^on.*', re.I)
     for tag in soup.findAll():
@@ -85,6 +86,8 @@ class Upload(ApiBase):
           del tag[attr]
     for tag in soup.findAll(attrs={'href': re.compile(r'^\s*javascript:.*', re.I)}):
       del tag['href']
+    for tag in soup.findAll(attrs={'src': re.compile(r'^\s*javascript:.*', re.I)}):
+      del tag['src']
       
     sanitized_contents = soup.renderContents()
     return sanitized_contents

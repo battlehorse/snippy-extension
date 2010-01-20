@@ -177,6 +177,8 @@
     <button id="upload_invalid_json">Invalid Json</button>
     <button id="upload_with_javascript">Javascript code and events</button>
     <button id="upload_with_javascript_url">Javascript url</button>
+    <button id="upload_with_encoded_javascript_href">Encoded Javascript HREF</button><br />
+    More javascript XSS cases can be found at <a href="http://ha.ckers.org/xss.html">http://ha.ckers.org/xss.html</a>.
   </div>
   <script>
     $(document).ready(function() {
@@ -253,6 +255,20 @@
         };
         json_call('POST', '/api/upload', $.toJSON(data));        
       });
+      $('#upload_with_encoded_javascript_href').click(function() {
+        var data = {
+          'title': 'Encoded Javascript HREF',
+          'snippets': [
+            {
+              'content': '<a href=\"j&#X41vascript:alert(\'hacked\')\">' +
+                         'should not trigger an alert</a>',
+              'url': 'http://www.google.com',
+              'comment': 'A Js comment'
+            }
+          ]
+        };
+        json_call('POST', '/api/upload', $.toJSON(data));
+      })
     });
   </script>
   
