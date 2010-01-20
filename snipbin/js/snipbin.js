@@ -70,7 +70,7 @@ $(document).ready(function() {
             $('#' + key).find('.private').fadeIn("fast");
           });
         } else  {
-          // Was privte, turned public
+          // Was private, turned public
           $('#' + key).find('.private').fadeOut("fast", function() {
             $('#' + key).find('.public').fadeIn("fast");
           });
