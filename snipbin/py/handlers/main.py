@@ -62,7 +62,7 @@ class PrivateHandler(handlers.BaseListHandler):
     if not user:
       self.redirect(users.create_login_url(self.request.uri))
       return
-
+    
     order, offset, limit = self.get_pagination('-created')
     snippages, more, more_offset = self.get_private_snippets(
       order, offset, limit)

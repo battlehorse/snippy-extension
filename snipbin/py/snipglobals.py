@@ -12,13 +12,15 @@ from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 
-debug=True
+from py import autoretry
 
+debug=False
+autoretry.autoretry_datastore_timeouts()
 template.register_template_library('py.customfilters')
 template.register_template_library('py.customtags')
 
-def initialize_user(request, response, generate_xsrf=True):
-  if not is_subdomain():
+def initialize_user(request, response, generate_xsrf=True, propagate_cookies=True):
+  if propagate_cookies and not is_subdomain():
     cookies_to_subdomain(['ACSID'], request, response)
   
   template_values = {}

@@ -250,7 +250,8 @@ BODY {
   margin: 0 0 0.2em 0;
 }
 
-.blurb {
+.blurb,
+.error {
   font-size: 12px;
 }
 

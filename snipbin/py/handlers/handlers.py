@@ -3,11 +3,50 @@
 # Use of this source code is governed by the MIT License and Creative Commons
 # Attribution License 3.0. Both of them can be found in the LICENSE file.
 
-from google.appengine.ext import webapp
+import logging
+import os
+import os.path
 
+from google.appengine.api import datastore_errors
+from google.appengine.ext import webapp
+from google.appengine.ext.webapp import template
+
+from py import snipglobals
 from py import vo
 
-class BaseListHandler(webapp.RequestHandler):
+class ErrorHandler(webapp.RequestHandler):
+  
+  def handle_user_error(self, user_message, context=None):
+    """Handles 'expected' errors, such as invalid parameters from the user."""
+    logging.error('User error: %s, context: %s' % (user_message, context))
+    self._respond_with_error(user_message)
+  
+  def handle_exception(self, exception, debug_mode):
+    """Handles unexpected exceptions, such as datastore timeouts."""
+    if debug_mode:
+      super(ErrorHandler, self).handle_exception(exception, debug_mode)
+    else:
+      logging.exception('Exception: %s' % exception)
+      if isinstance(exception, datastore_errors.Timeout):
+        # Custom message for datastore timeouts
+        self._respond_with_error('This operation is taking longer than usual. '
+                                 'Please try again in a few seconds.')
+      else:
+        self._respond_with_error('An unexpected error occurred. '
+                                 'Please try again in a few seconds.')
+
+  def _respond_with_error(self, user_message):
+    _, template_values = snipglobals.initialize_user(
+      self.request, self.response, generate_xsrf=False, propagate_cookies=False)
+    template_values.update({
+      'error': user_message,
+      'title': 'Error!',
+    })
+    path = os.path.join(os.path.dirname(__file__), '../../templates/error.html')
+    self.response.out.write(template.render(path, template_values))
+
+
+class BaseListHandler(ErrorHandler):
   
   def parse_order(self, order):
     # allowed ordering is : 'title', 'views', 'created'

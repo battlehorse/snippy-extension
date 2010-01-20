@@ -7,33 +7,32 @@ import logging
 import os
 import os.path
 
-from google.appengine.ext import db
 from google.appengine.api import users
+from google.appengine.ext import db
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 
+from py.handlers import handlers
 from py import snipglobals
 from py import models
 from py import vo
 
-class BaseViewHandler(webapp.RequestHandler):
+class BaseViewHandler(handlers.ErrorHandler):
   
   def get_snippage(self, user, template_values):
     key = self.request.get('key')
     if not key:
-      template_values['error'] = 'Invalid snippet key.'
-      template_values['title'] = 'Error!'
-      self.respond(template_values)
+      self.handle_user_error('The snippet key you provided is not valid.',
+                             {'key': key})
       return None, None
     
     snippage = None
     try:  
       snippage = db.get(key)
     except db.BadKeyError:
-      template_values['error'] = 'Invalid snippet key.'
-      template_values['title'] = 'Error!'
-      self.respond(template_values)
+      self.handle_user_error('The snippet key you provided is not valid.',
+                             {'key': key})
       return None, None
       
     if users.is_current_user_admin():
@@ -43,24 +42,19 @@ class BaseViewHandler(webapp.RequestHandler):
     
     if not snippage.public:
       if not user or snippage.owner != user:
-        logging.error('Failed access to private snippet %s by %s' % (key, user))        
-        template_values['error'] = 'You do not have the rights to access this snippet.'
-        template_values['title'] = 'Error!'
-        self.respond(template_values)
+        self.handle_user_error(
+            'You do not have the rights to access this snippet.',
+            {'key': key, 'user': user})
         return None, None
         
     if snippage.public and snippage.flagged:
       if not user or snippage.owner != user:
-        template_values['error'] = 'This page has been flagged as offensive and removed from public view.'
-        template_values['title'] = 'Error!'
-        self.respond(template_values)
+        self.handle_user_error(
+            'This page has been flagged as offensive and removed from public view.',
+            {'key': key})
         return None, None
     
     return snippage, key
-    
-  def respond(self, template_values):
-    path = os.path.join(os.path.dirname(__file__), '../../templates/error.html')
-    self.response.out.write(template.render(path, template_values))
 
 
 class ViewHandler(BaseViewHandler):
@@ -77,7 +71,7 @@ class ViewHandler(BaseViewHandler):
     if not snippage:
       return
     template_values['is_owner'] = user and user == snippage.owner
-  
+    
     http_host = os.environ['HTTP_HOST']
     if http_host == 'localhost:8080':  # this is needed for local development.
       inc_host = http_host
