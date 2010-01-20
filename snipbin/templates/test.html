@@ -170,8 +170,9 @@
   
   <div class="section">
     <h3>Upload fixtures</h3>
-    <button id="upload_good">Create a good snippet</button>
-    <button id="upload_no_title">Create a good snippet with default title</button>
+    <button id="upload_good">A good snippet</button>
+    <button id="upload_no_title">A good snippet with default title</button>
+    <button id="upload_fancy_chars">A good snippet with Japanese chars</button><br />
     <button id="upload_no_payload">No payload</button>
     <button id="upload_no_snippets">No snippets</button>
     <button id="upload_invalid_json">Invalid Json</button>
@@ -208,6 +209,19 @@
               'content': '<div>Good content</div>',
               'url': 'http://www.google.com',
               'comment': 'A good comment'
+            }
+          ]
+        };
+        json_call('POST', '/api/upload', $.toJSON(data));
+      });
+      $('#upload_fancy_chars').click(function() {
+        var data = {
+          'title': 'ウィキペディアにようこそ',
+          'snippets': [
+            {
+              'content': 'ウィキペディアにようこそ',
+              'url': 'http://ja.wikipedia.org/wiki/メインページ',
+              'comment': 'ウィキペディアにようこそ'
             }
           ]
         };

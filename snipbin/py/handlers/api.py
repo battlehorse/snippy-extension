@@ -97,6 +97,22 @@ class Upload(ApiBase):
     if javascript_re.match(url.strip()):
       return ''
     return url
+    
+  def store_snippage(self, owner, snippage_title, snippets):
+    snippage = models.SnipPage(owner=owner, views=0, public=False, 
+                               flagged=False, title=snippage_title)
+    snippage.put()
+    
+    for snippet_contents in snippets:
+      snippet = models.Snippet(parent=snippage,
+                               content=snippet_contents['content'])
+      if snippet_contents['url']:
+        snippet.url = snippet_contents['url']
+      if snippet_contents['comment']:
+        snippet.comment = snippet_contents['comment']
+      snippet.master = snippage
+      snippet.put()
+    return str(snippage.key())
   
   def post(self):
     user = self.check_user_login()
@@ -116,25 +132,26 @@ class Upload(ApiBase):
     # if b64_screenshot:
     #   snippage.screenshot = base64.b64decode(b64_screenshot)
 
-    snippage = models.SnipPage(owner=user, views=0, public=False, flagged=False)
     title = (payload.get('title') or 
             '%s %s' % (user.nickname(), datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
-    snippage.title = title.encode('utf-8', 'ignore').decode('utf-8', 'ignore')
-    snippage.put()
-
+    snippage_title = title.encode('utf-8', 'ignore').decode('utf-8', 'ignore')
+    snippets = []
     for json_snippet in json_snippets:
       content = self.sanitize_contents(json_snippet.get('content', '').encode('utf-8', 'ignore'))
       url = self.sanitize_url(json_snippet.get('url', '').encode('utf-8', 'ignore'))
-      comment = json_snippet.get('comment', '').encode('utf-8', 'ignore')
-      snippet = models.Snippet(content=content.decode('utf-8', 'ignore'))
       if url:
-        snippet.url = url.decode('utf-8', 'ignore')
+        url = url.decode('utf-8', 'ignore')
+      comment = json_snippet.get('comment', '').encode('utf-8', 'ignore')
       if comment:
-        snippet.comment = comment.decode('utf-8', 'ignore')
-      snippet.master = snippage
-      snippet.put()
+        comment = comment.decode('utf-8', 'ignore')
 
-    self.respond_ok({'key': str(snippage.key())})
+      snippets.append({
+        'content': content.decode('utf-8', 'ignore'),
+        'url': url,
+        'comment': comment,
+      })
+    new_key = db.run_in_transaction(self.store_snippage, user, snippage_title, snippets)
+    self.respond_ok({'key': new_key})
 
 
 class Login(ApiBase):
