@@ -108,6 +108,7 @@ class HelperHandler(BaseViewHandler):
 class IncludeHandler(BaseViewHandler):
   
   def get(self):
+    self.set_error_template_file('../../templates/iframe.html')
     user, template_values = snipglobals.initialize_user(
         self.request, self.response, generate_xsrf=False)
     snippage, key = self.get_snippage(user, template_values)

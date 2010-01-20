@@ -16,6 +16,13 @@ from py import vo
 
 class ErrorHandler(webapp.RequestHandler):
   
+  def __init__(self):
+    super(ErrorHandler, self).__init__()
+    self._error_template_file = '../../templates/error.html'
+    
+  def set_error_template_file(self, error_template_file):
+    self._error_template_file = error_template_file
+  
   def handle_user_error(self, user_message, context=None):
     """Handles 'expected' errors, such as invalid parameters from the user."""
     logging.error('User error: %s, context: %s' % (user_message, context))
@@ -42,7 +49,7 @@ class ErrorHandler(webapp.RequestHandler):
       'error': user_message,
       'title': 'Error!',
     })
-    path = os.path.join(os.path.dirname(__file__), '../../templates/error.html')
+    path = os.path.join(os.path.dirname(__file__), self._error_template_file)
     self.response.out.write(template.render(path, template_values))
 
 
