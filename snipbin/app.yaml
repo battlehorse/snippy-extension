@@ -1,5 +1,5 @@
 application: snipbin
-version: 4
+version: 5
 runtime: python
 api_version: 1
 
@@ -19,6 +19,10 @@ handlers:
   
 - url: /helper
   script: py/handlers/view.py
+  
+- url: /stats
+  script: py/handlers/stats.py
+  login: admin
   
 - url: /test
   script: test/test.py
