@@ -4,7 +4,6 @@
 # Attribution License 3.0. Both of them can be found in the LICENSE file.
 
 import base64
-import logging
 import datetime
 import re
 
