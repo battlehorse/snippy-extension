@@ -4,15 +4,14 @@ $(document).ready(function() {
       var link = this;
       var form = $(this).closest(".snippet-form");
       var key = $("input[name='key']", form).val();
-      var textarea = $("<textarea rows='10' cols='50'></textarea>");
-      var container = $("<div></div>");
+      var textarea = $("<textarea />", {rows:'10', cols:'50'});
+      var container = $("<div/>");
       $("<p>Please give us some details about this abuse report.</p>").appendTo(container);
       textarea.appendTo(container);
       var okButton = $("<button>Submit</button>");
       var cancelButton = $("<button>Cancel</button>");
-      var feedback = $("<span></span>");
-      var buttonDiv = $("<div></div>");
-      buttonDiv.append(cancelButton).append(okButton).append(feedback).appendTo(container);
+      var feedback = $("<span/>");
+      $("<div/>").append(cancelButton).append(okButton).append(feedback).appendTo(container);
       var boxy = new Boxy(container, {title: "Report Abuse", draggable: false, modal: true});
       cancelButton.click(function() {
         boxy.hideAndUnload();
@@ -44,7 +43,7 @@ $(document).ready(function() {
     });
   } else {
     $(".abuse").click(function() {
-      var container = $("<div></div>");
+      var container = $("<div/>");
       $("<p>You must log in to submit abuse reports.</p>").appendTo(container);
       var okButton = $("<button>Ok</button>").appendTo(container);
       var boxy = new Boxy(container, {title: "Report Abuse", draggable: false, modal: true});
