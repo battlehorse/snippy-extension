@@ -96,7 +96,7 @@ chrome.extension.onRequest.addListener(
       $("tr").addClass('snippy-block');
       $("table").addClass('snippy-block');
       //$('.snippy-block').addClass('passed');
-      $().mousemove(function(evt) {
+      $(document).mousemove(function(evt) {
           if (is_animating) {
             return;
           }
@@ -140,7 +140,7 @@ chrome.extension.onRequest.addListener(
 
 
     } else {
-      $().unbind('mousemove');
+      $(document).unbind('mousemove');
       $("p").removeClass('snippy-block');
       $("div").removeClass('snippy-block');
       $("li").removeClass('snippy-block');
