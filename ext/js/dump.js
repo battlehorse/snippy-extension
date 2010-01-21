@@ -18,15 +18,21 @@ var defaultSnippageTitle = 'My snippets (click here to change the title)';
 
 
 /*
+  Hostname of the SnipBin backend where snippets can be uploaded.
+*/
+var snipbin_backend = 'http://snipbin.appspot.com';
+
+
+/*
   Prepare the dump page for display: event handlers, incoming messages and
   layout.
 */
 $(document).ready(function() {
   // Wire up event handlers.
-  $('.snipbin-title').live("click", handleTitleEvents);
+  $('.snippage-title').live("click", handleTitleEvents);
   $('.snippet-comment').live('click', handleCommentEvents);
-  $('#snipbin-share').click(handleShareEvents);
-  
+  $('#share-on-snipbin').click(handleShareEvents);
+
   // Handle messages coming from the background page.
   chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
     if (request.reload) {
@@ -34,7 +40,7 @@ $(document).ready(function() {
     }
     sendResponse({});
   });
-  
+
   // Do the initial layout
   doLayout();
 });
@@ -46,18 +52,35 @@ $(document).ready(function() {
 */
 function doLayout() {
   // clear the current display.
-  $('#snipbin-dump').empty();
-  $('#snipbin-message').text('');
-  
+  $('#snippet-dump').empty();
+  $('#snippet-message').text('');
+
   // grab the latest snippage.
   snippage = chrome.extension.getBackgroundPage().getSnipPage();
-  
-  // re-rendere the page.
-  $('.snipbin-title').text(snippage.title || defaultSnippageTitle);
+
+  // re-render the page.
+  $('.snippage-title').text(snippage.title || defaultSnippageTitle);
   for (var i = 0; i < snippage.snippets.length; i++) {
     var snippet = snippage.snippets[i];
     createSnippetBox(snippage, snippet);
   }
+
+  if (snippage.snippets.length == 0) {
+    // no snippetse yet. Render a placeholder.
+    createSnippetPlaceholder();
+  }
+}
+
+
+/*
+  Renders a placeholder to display when there are no snippets yet.
+*/
+function createSnippetPlaceholder() {
+  var snippet_container = $("<div/>", {class: 'snippet-container'});
+  $('<p />', {class: 'snippet-paragraph snippet-no-snippet-placeholder'}).
+      text('You haven\'t saved any snippet yet. Go grab some!').
+      appendTo(snippet_container);
+  snippet_container.appendTo('#snippet-dump');
 }
 
 
@@ -65,31 +88,61 @@ function doLayout() {
   Renders a single snippet.
 */
 function createSnippetBox(snippage, snippet) {
-  var snippet_container = $("<div class='snippet-container'></div>");
-  $("<div></div>").html(snippet.content).appendTo(snippet_container);
+  var snippet_container = $("<div/>", {class: 'snippet-container'});
 
-  var snippet_controls = $("<div class='snipbin-controls'></div>");
+  // Discard icon.
+  $("<div/>", {
+      class: 'snippet-discard',
+      click: function() {
+        if (confirm("Delete this snippet?")) {
+          var idx = $('.snippet-container').index(snippet_container);
+          snippet_container.remove();
+          snippage.snippets.splice(idx, 1);
+          chrome.extension.getBackgroundPage().updateBadgeText();
+          chrome.extension.getBackgroundPage().updateLocalStorage();
+          if (snippage.snippets.length == 0) {
+            // we removed all the snippets
+            createSnippetPlaceholder();
+          }
+        }
+      }}).appendTo(snippet_container);
+
+  // Snippet contents.
+  $("<div/>", {class: 'snippet-contents'}).html(snippet.content).
+      appendTo(snippet_container);
+
+  // Controls box.
+  var snippet_controls = $("<div/>", {class: 'snippet-controls'});
   snippet_controls.appendTo(snippet_container);
 
-  var snippet_controls_comment = $("<div></div>").appendTo(snippet_controls);
-  if (snippet.comment && snippet.comment.length) { 
-    $("<div class='snippet-comment'></div>").text(snippet.comment).
-      appendTo(snippet_controls_comment);
-  } else {
-    $("<a href='#'>Add a comment</a>").click(handleCommentEvents).appendTo(snippet_controls_comment);
-  }
+  // Source line.
+  var snippet_from = $("<div/>", {class: 'snippet-from'}).append("From:");
+  $("<a></a>", {href: snippet.url, target: '_blank'}).text(snippet.url).
+      appendTo(snippet_from);
+  snippet_from.appendTo(snippet_controls);
 
-  $("<button>Discard</button>").appendTo(snippet_controls).click(function() {
-    var idx = $('.snippet-container').index(snippet_container);
-    snippet_container.remove();
-    snippage.snippets.splice(idx, 1);
-    chrome.extension.getBackgroundPage().updateBadgeText();
-    chrome.extension.getBackgroundPage().updateLocalStorage();
-  });
-  $("<span style='margin-left: 0.2em'>This snippet comes from:</span>").appendTo(snippet_controls);
-  $("<a></a>").attr('href', snippet.url).attr('target', '_blank').text(snippet.url).
-    appendTo(snippet_controls);
-  snippet_container.appendTo('#snipbin-dump');
+  // Comment box.
+  var snippet_controls_comment = $("<div/>", {class: 'snippet-comment-box'}).
+      appendTo(snippet_controls);
+  createCommentBox(snippet_controls_comment, snippet.comment);
+
+  snippet_container.appendTo('#snippet-dump');
+}
+
+
+/*
+  Renders the comments' box of a single snippet.
+*/
+function createCommentBox(container, comment_text) {
+  container.empty();
+  if (comment_text && comment_text) {
+    // TODO(battlehorse): comment text should have an nl2br applied to it.
+    $("<div />", {class: 'snippet-comment'}).text(comment_text).
+      appendTo(container);
+  } else {
+    $("<a />", {href: '#', class: 'snippet-comment'}).text("Add a comment").
+        click(handleCommentEvents).appendTo(container);
+  }
 }
 
 
@@ -98,22 +151,20 @@ function createSnippetBox(snippage, snippet) {
 */
 function handleCommentEvents() {
   var text = $(this).text();
-  var comment_box = $("<div></div>");
-  var textarea = $("<textarea rows='5' cols='50'></textarea>").text(text).appendTo(comment_box);
-  var save_comment = $("<button>Save</button>").appendTo(comment_box);
-  $(this).replaceWith(comment_box);
-  textarea.focus();
-  textarea.select();
+  var comment_edit_box = $("<div />");
+  var textarea = $("<textarea rows='5' cols='50'></textarea>").text(text).
+      appendTo(comment_edit_box);
+  var save_comment = $("<button>Save</button>").appendTo(comment_edit_box);
+  $(this).replaceWith(comment_edit_box);
+  textarea.focus().select();
   save_comment.click(function() {
     var comment_text = textarea.val();
     var snippet_container = $(this).closest('.snippet-container');
     var idx = $('.snippet-container').index(snippet_container);
-
-    // TODO(battlehorse): comment text should have an nl2br applied to it.
-    var new_comment_box = $("<div class='snippet-comment'></div>").text(comment_text);
-    comment_box.replaceWith(new_comment_box);
     snippage.snippets[idx].comment = comment_text;
     chrome.extension.getBackgroundPage().updateLocalStorage();
+
+    createCommentBox($(this).closest('.snippet-comment-box'), comment_text);
   });
   return false;
 }
@@ -124,28 +175,40 @@ function handleCommentEvents() {
 */
 function handleTitleEvents() {
   var cur_title = $(this).text();
-  var text_input = $('<input type="text" class="snipbin-title-input" size="50">');
+  var text_input = $('<input type="text" class="snippage-title-input" size="50">');
   $(this).replaceWith(text_input);
-  text_input.val(cur_title);
-  text_input.focus();
-  text_input.select();
+  text_input.val(cur_title).focus().select();
   $(text_input).keydown(function(evt) {
-    if (evt.which == 13) { 
-      var new_title = $("<h1 class='snipbin-title'></h1>").text($(this).val());
-      $(this).replaceWith(new_title);
-      snippage.title = $(this).val();
-      chrome.extension.getBackgroundPage().updateLocalStorage();
-    } else if (evt.which == 27) {
-      var new_title = $("<h1 class='snipbin-title'></h1>").text(cur_title);
-      $(this).replaceWith(new_title);
-    }
+      var new_title = $(this).val();
+      if (evt.which == 13 && new_title.length) {
+        createTitle($(this), new_title);
+        snippage.title = new_title;
+        chrome.extension.getBackgroundPage().updateLocalStorage();
+      } else if (evt.which == 27) {
+        createTitle($(this), cur_title);
+      }
   });
   $(text_input).blur(function() {
-    var new_title = $("<h1 class='snipbin-title'></h1>").text($(this).val());
-    $(this).replaceWith(new_title);
-    snippage.title = $(this).val();
-    chrome.extension.getBackgroundPage().updateLocalStorage();
+      var new_title = $(this).val();
+      if (new_title.length) {
+        createTitle($(this), new_title);
+        if (new_title != defaultSnippageTitle) {
+          snippage.title = new_title;
+          chrome.extension.getBackgroundPage().updateLocalStorage();
+        }
+      } else {
+        createTitle($(this), cur_title);
+      }
   });
+}
+
+
+/*
+  Creates a new header with the snippage header.
+*/
+function createTitle(element_to_replace, title_text) {
+  var new_header = $("<h1 class='snippage-title'></h1>").text(title_text);
+  element_to_replace.replaceWith(new_header);
 }
 
 
@@ -153,31 +216,67 @@ function handleTitleEvents() {
   Handles user requests to share this snippage online.
 */
 function handleShareEvents() {
+   // Check whether the snippage is well-formed and within upload limits.
+   if (!checkSnippageForUpload()) {
+     return;
+   }
    // Check if we are logged in on snipbin
-   $.getJSON('http://snipbin.appspot.com/api/loginstatus',
+   $.getJSON(snipbin_backend + '/api/loginstatus',
      function(data, textStatus) {
        if (textStatus != 'success') {
-         alert('Communication problem with the remote server:' + textStatus);         
-       } else {
-         if (data.status == 'not_logged_in') {
-           $('#snipbin-message').html("Please <a href='http://snipbin.appspot.com/extwelcome' target='_blank'>login on SnipBin</a> first and then try again.");
-         } else {
-           $('#snipbin-message').html("Uploading...");
-           var payload = snippage;
-           $.post('http://snipbin.appspot.com/api/upload',
-             {'payload': $.toJSON(payload)}, function(data, textStatus) {
-               if (textStatus != 'success') {
-                 alert('Communication problem with the remote server:' + textStatus);
-               } else {
-                 if (data.status == 'ok') {
-                   $('#snipbin-message').html('Upload successful. <a target="_blank" href="http://snipbin.appspot.com/view?key=' + data.key + '">View your item</a>');
-                 } else {
-                   $('#snipbin-message').html('Upload failed: ' + data.status);
-                 }
-               }
-             }, 'json');
-         }
+         publishMessage('Communication problem with the remote server:' + textStatus);
+         return;
        }
+       if (data.status == 'not_logged_in') {
+         publishMessage("Please <a href='" + snipbin_backend + "/extwelcome' target='_blank'>login on SnipBin</a> first and then try again.");
+         return;
+       }
+
+       // We're logged in, proceed with the upload
+       $('#snippet-message').html("Uploading...");
+       var payload = snippage;
+       $.post(
+         snipbin_backend + '/api/upload',
+         {'payload': $.toJSON(payload)}, function(data, textStatus) {
+           if (textStatus != 'success') {
+             publishMessage('Communication problem with the remote server:' + textStatus);
+             return;
+           }
+           if (data.status == 'ok') {
+             publishMessage('Upload successful. <a target="_blank" href="' + snipbin_backend + '/view?key=' + data.key + '">View your item</a>');
+             return;
+           }
+           if (data.status == 'request_too_large') {
+             publishMessage('Sorry, your snippets are too big. You can upload up to <b>1Mb</b> to SnipBin.');
+             return;
+           }
+           if (data.status == 'no_snippets') {
+             publishMessage('You must have at least one snippet before uploading!');
+             return;
+           }
+           // generic server error.
+           publishMessage('Upload failed. Please try again in a few seconds (' + data.status + ').');
+         }, 'json');
      });
-  
+}
+
+function checkSnippageForUpload() {
+  if (snippage.snippets.length == 0) {
+    publishMessage('You must have at least one snippet before uploading!');
+    return false;
+  }
+  var payload = $.toJSON(snippage);
+  if (payload.length > 1024*1024) {
+    var size = (payload.length / (1024*1024)).toFixed(2);
+    publishMessage('Sorry, your snippets are too big. ' +
+                   'You can upload up to <b>1Mb</b> to SnipBin '+
+                   '(your snippets are approximately <b>' + size + 'Mb</b>).');
+    return false;
+  }
+
+  return true;
+}
+
+function publishMessage(message) {
+  $('#snippet-message').html(message);
 }

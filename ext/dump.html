@@ -5,98 +5,140 @@
   <script src="lib/jquery.json-2.2.min.js"></script>
   <script src="js/dump.js"></script>
   <style>
-    .snippet-container {
-      border: 1px solid black;
-      -webkit-border-radius: 5px;
-      -webkit-box-shadow: 5px 5px 5px #aaa;
-      padding: 0.3em;
-      margin: 0.3em;
-      clear: both;
+    BODY {
+      background-color: rgb(240, 240, 240);
+      background-image: url(img/backgrad.png), url(img/paper_pile_2.jpg);
+      background-repeat: repeat-x, no-repeat;
+      background-position: top left, bottom right;
     }
 
-    h1.snipbin-title {
+    /* page header */
+    h1.snippage-title {
       font-size: 20px;
-      margin: 0.5em;
-      padding: 0.2em;
       border: 1px solid white;
-      width: 90%;
       font-family: sans-serif;
+      text-align: center;
+      padding: 0.2em 0;
+      margin: 0.5em auto;
     }
 
-    .snippet-comment {
-      font-size: 12px;
-      font-family: sans-serif;
-      width: 90%;
-      margin: 0.2em 0;
-      border: 1px solid #eee;
-    }
-
-    h1.snipbin-title:hover, .snippet-comment:hover {
+    h1.snippage-title:hover,
+    DIV.snippet-comment:hover {
       cursor: pointer;
       background-color: #e3e9ff;
       border: 1px solid #68e;
       -webkit-border-radius: 3px;
     }
 
-    .snipbin-title-input {
-      font-size: 24px;
-      margin: 0.2em;
-      padding: 0.5em;
-      border: 1px solid black;
-      width: 90%;
+    .snippage-title-input {
+      font-size: 22px;
+      font-weight: bold;
+      padding: 0.2em 0;
+      border: 1px solid #68e;
+      width: 100%;
+      margin: 0.5em auto;
+      text-align: center;
     }
 
-    .snipbin-paragraph {
+    /* paragraphs */
+    .snippet-paragraph {
       font-size: 11px;
       font-family: sans-serif;
+      margin-top: 0;
+      margin-bottom: 0;
     }
 
-    .snipbin-share {
-      background-color: #e3e9ff;
-      border: 1px solid #68e;
+    .snippet-no-snippet-placeholder {
+      text-align: center;
+      margin: 1em auto;
+    }
+
+    /* container styles */
+    .snippet-container,
+    .snippage-header {
+      background-color: #fff;
+      border: 1px solid #aaa;
       -webkit-border-radius: 3px;
-      padding: 0 0.2em;
+      -webkit-box-shadow: 3px 3px 3px rgb(210, 210, 210);
+      padding: 0.3em;
+      margin: 0.3em;
+      clear: both;
     }
 
-    .snipbin-controls {
-      background-color: #eee;
-      border: 1px solid #999;
+    /* snippet styles */
+    .snippet-discard {
+      width: 24px;
+      height: 24px;
+      background: url('img/dump_trash.png');
+      float: right;
+    }
+
+    .snippet-discard:hover {
+      background: url('img/dump_trash_hover.png');
+      cursor: pointer;
+    }
+
+    .snippet-contents {
+      min-height: 26px;
+    }
+
+    .snippet-controls {
+      background-color: rgb(242, 248, 255);
+      border: 1px solid rgb(192, 218, 255);
       -webkit-border-radius: 2px;
-      padding: 0 0.2em;
+      padding: 0.2em;
+      margin-top: 0.2em;
       font-size: 11px;
       font-family: sans-serif;
       clear: both;
     }
-    
+
+    .snippet-from {
+      margin-left: 0.2em;
+      padding-left: 20px;
+      min-height: 16px;
+      background: url('img/dump_source.png') no-repeat top left;
+    }
+
+    .snippet-comment-box {
+      background: url('img/dump_comment.png') no-repeat top left;
+      padding-left: 18px;
+      margin-left: 0.2em;
+      min-height: 16px;
+    }
+
+    .snippet-comment {
+      font-size: 11px;
+      font-family: sans-serif;
+      width: 90%;
+      margin: 0.2em 0;
+      padding-left: 2px;
+      border: 1px solid rgb(242, 248, 255);
+    }    
   </style>
 </head>
 <body>
-<div id="snipbin-header">
-  <p class="snipbin-paragraph">
-    This page contains all the snippets you have collected so far.
-    From this page you can remove snippets you no longer want and add comments to them.
-  <br />
-    You can safely close the browser and you'll find all the information saved here the next
-    time you start Chrome.
+<div class="snippage-header">
+  <p class="snippet-paragraph">
+    Review all the snippets you have collected so far.
   </p>
+  <h1 class="snippage-title"></h1>
 
-  <div class="snipbin-share">
-  <p class="snipbin-paragraph">
-    Have you collected some useful snippets and you want to have them ready wherever you are?
-    Do you want to share the snippets you collected with other people in the world?
-  <br />
-    You can store your snippets online and (if you want to) make them public to the world, by clicking
-    the <b>Save Online</b> button. Snippets are sent to
-    <a href="http://snipbin.appspot.com" target="_blank">SnipBin</a>,
-    where you can browse, delete and share them.
-  </p>
-  <p class="snipbin-paragraph">
-    <button id="snipbin-share">Save this snippet online on <b>SnipBin</b></button>
-    <span id="snipbin-message" class="snipbin-paragraph"></span>
+  <div class="snippet-share">
+  <p class="snippet-paragraph">
+    <span style="vertical-align:middle">
+      <img src="img/share.png" style="vertical-align:middle">Save this snippets online to:
+    </span>
+    <span style="display: inline-block; vertical-align:middle">
+      <button id="share-on-snipbin">
+        <img src="img/icon16.png"><b>SnipBin</b>
+      </button><br />
+      <a href="http://snipbin.appspot.com/about" target="_blank">Learn more</a>
+    </span>
+    <span id="snippet-message" style="vertical-align: middle" class="snippet-paragraph"></span>
   </p>
   </div>
 </div>
-<h1 class="snipbin-title"></h1>
-<div id="snipbin-dump"></div>
+<div id="snippet-dump"></div>
 </body>
 </html>

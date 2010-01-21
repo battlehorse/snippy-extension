@@ -23,7 +23,7 @@ var cur_tab_url;
 /*
   Mapping of tab ids to snippy activation statuses.
   Keeps track of which tabs are currently showing the snippy capture UI.
-  
+
   It may contain some stale ids, since we don't cleanup this structure
   when the user closes tabs and opens new ones.
 */
@@ -56,7 +56,7 @@ function init() {
    title: '',
    snippets: []
   };
-  
+
   var stored_page = localStorage.getItem('snippage');
   if (stored_page) {
     snippage = $.evalJSON(stored_page);
@@ -66,7 +66,7 @@ function init() {
     cur_tab_url = tab.url;
     cur_tab_id = tab.id;
   });
-  
+
   addEventListeners();
 }
 
@@ -74,7 +74,7 @@ function init() {
   Register listeners for all the Chrome events we need.
 */
 function addEventListeners() {
-  
+
   // When the user closes a tab, verify if he's closing the 'dump' tab. If
   // so, null our reference.
   chrome.tabs.onRemoved.addListener(function(tab_id) {
@@ -106,7 +106,7 @@ function addEventListeners() {
       console.log("Readiness of " + tab_id + " is 'complete'");
       readiness[tab_id] = "ready";
     }
-    
+
     // TODO(battlehorse): is this really needed? I can't remember...
     chrome.tabs.get(tab_id, function(tab) {
       cur_tab_url = tab.url;
@@ -136,7 +136,7 @@ function addEventListeners() {
       }
       sendResponse({});
     }
-  );  
+  );
 }
 
 
@@ -149,9 +149,11 @@ function toggle() {
     if (activation[tab.id]) {
       activation[tab.id] = false;
       chrome.tabs.sendRequest(tab.id, {'activate': false}, function(response) {});
+      console.log('Deactivating on ' + tab.id);
     } else {
       activation[tab.id] = true;
       chrome.tabs.sendRequest(tab.id, {'activate': true}, function(response) {});
+      console.log('Activating on ' + tab.id);
     }
   });
 }
@@ -165,6 +167,7 @@ function toggleOff() {
     if (activation[tab.id]) {
       activation[tab.id] = false;
       chrome.tabs.sendRequest(tab.id, {'activate': false}, function(response) {});
+      console.log('Deactivating on ' + tab.id);
     }
   });
 }
@@ -265,4 +268,3 @@ function CurrentTabReadiness() {
 function CurrentTabUrl() {
   return cur_tab_url;
 }
-
