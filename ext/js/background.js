@@ -180,7 +180,6 @@ function showDump() {
     chrome.tabs.update(dump_tab_id, { selected: true });
   } else {
     chrome.tabs.create({"url": "dump.html"}, function(tab) {
-      tab.title = "Your snippets";
       dump_tab_id = tab.id;
     });
   }
