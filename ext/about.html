@@ -5,41 +5,90 @@
     * {
       font-family: sans-serif;
     }
+
+    BODY {
+      background-color: rgb(240, 240, 240);
+      background-image: url(img/backgrad.png), url(img/paper_pile_2.jpg);
+      background-repeat: repeat-x, no-repeat;
+      background-position: top left, bottom right;
+    }
+
+    .main {
+      background: #fff url('img/icon128.png') no-repeat top right;
+      background-color: #fff;
+      border: 1px solid #aaa;
+      -webkit-border-radius: 3px;
+      -webkit-box-shadow: 3px 3px 3px rgb(210, 210, 210);
+      padding: 0.3em;
+      margin: 0.3em;
+    }
+    
+    H1 {
+      margin: 0.2em;
+    }
+    
+    P {
+      width: 80%;
+      font-size: 12px;
+      text-align: justify;
+    }
   </style>
 </head>
 <body>
-<h1>About Snippy</h1>
+  <div class="main">
+    <h1>About Snippy</h1>
 
-<p>
-<b>Snippy</b> is a Chrome Extension that allows you to save important snippets you find online.
-Be it a new laptop or book you just spotted on Amazon, a set of interesting Tweets, a Wikipedia excerpt or
-even some citations from PubMed, use <b>Snippy</b> to collect them all.
-</p>
+    <p>
+    <b>Snippy</b> is a Chrome Extension that allows you to save important 
+    snippets you find online. Be it a new laptop or book you just spotted on 
+    Amazon, a set of interesting Tweets, a Wikipedia excerpt or
+    even some citations from PubMed, use <b>Snippy</b> to collect them all.
+    </p>
 
-<p>
-Just go to a webpage of your choice and activate <b>Snippy</b> clicking the icon in the toolbar and then the <i>Snip it!</i>
-button. Then move your mouse over items you find interesting and click them. They will be immediately stored in your snippets!
-</p>
+    <p>
+    Just go to a webpage of your choice and activate <b>Snippy</b> clicking the
+    icon in the toolbar and then the <i>Snip it!</i> button. Then move your mouse
+    over items you find interesting and click them. They will be immediately
+    stored in your snippets!
+    </p>
 
-<p>
-Click the toolbar icon again and now choose <i>Show snippets</i> to review what you have collected so far. Snippets are automatically
-saved locally in your browser, so you won't lose them when you close Chrome.
-</p>
+    <p>
+    Click the toolbar icon again and now choose <i>Show snippets</i> to review
+    what you have collected so far. Snippets are automatically
+    saved locally in your browser, so you won't lose them when you close Chrome.
+    </p>
 
-<p>
-If you want, you can also save your snippets online (via <a href="http://snipbin.appspot.com">SnipBin</a>) and share them with the world.
-You'll find all the instructions in the <i>Show snippets</i> page.
-</p>
+    <p>
+    If you want, you can also save your snippets online
+    (via <a target="_blank" href="http://snipbin.appspot.com">SnipBin</a>) and share them with
+    the world.
+    </p>
 
-<h2>Upcoming features</h2>
-<ul>
-  <li>Upload snippets to Google Docs</li>
-  <li>Have multiple open snippet pages, instead of just one.</li>
-  <li>Be able to edit snippets after you have uploaded them on SnipBin</li>
-  <li>Customized snippet grabbing for popular webpages (e.g. Wikipedia, Flickr )</li>
-  <li>Improved reporting of pages that cannot be grabbed properly</li>
-  <li>Offer the possibility to grab snippets as images instead of text</li>
-  <li>Snippets reordering in the <i>Show snippets</i> page.</li>
-</ul>
+    <div style="text-align:center">
+      <object width="425" height="344">
+        <param name="movie" value="http://www.youtube.com/v/sIIPuAoxvWQ&hl=en_US&fs=1&"></param>
+        <param name="allowFullScreen" value="true"></param>
+        <param name="allowscriptaccess" value="always"></param>
+        <embed src="http://www.youtube.com/v/sIIPuAoxvWQ&hl=en_US&fs=1&" 
+          type="application/x-shockwave-flash" allowscriptaccess="always" 
+          allowfullscreen="true" width="425" height="344"></embed>
+      </object>
+    </div>
+
+    <h3>Additional information</h3>
+    <p>
+      Do you want to learn more about Snippy?
+      Check the <a target="_blank" href="http://code.google.com/p/snippy-extension/wiki/UserGuide">online user guide</a>.
+    </p>
+    <p>
+      Fancy contributing to the Snippy development, either via ideas, suggestions
+      or actual coding? Be sure to check the
+      <a target="_blank" href="http://code.google.com/p/snippy-extension/wiki/Contributors">Snippy Contributors</a> page.
+    </p>
+    <p>
+      Or maybe you just want to check what the 
+      <a target="_blank" href="http://code.google.com/p/snippy-extension/issues/list?can=2&q=type:enhancement&colspec=ID+Type+Status+Priority+Milestone+Owner+Summary&cells=tiles">upcoming features</a> are.
+    </p>
+  </div>
 </body>
 </html>

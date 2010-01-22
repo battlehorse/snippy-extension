@@ -5,34 +5,98 @@
     * {
       font-family: sans-serif;
     }
+
+    BODY {
+      background-color: rgb(240, 240, 240);
+      background-image: url(img/backgrad.png), url(img/paper_pile_2.jpg);
+      background-repeat: repeat-x, no-repeat;
+      background-position: top left, bottom right;
+    }
+
+    .main {
+      background: #fff url('img/icon128.png') no-repeat top right;
+      background-color: #fff;
+      border: 1px solid #aaa;
+      -webkit-border-radius: 3px;
+      -webkit-box-shadow: 3px 3px 3px rgb(210, 210, 210);
+      padding: 0.3em;
+      margin: 0.3em;
+    }
+    
+    H1 {
+      margin: 0.2em;
+    }
+    
+    P, UL {
+      width: 80%;
+      font-size: 12px;
+      text-align: justify;
+    }
   </style>
 </head>
 <body>
-<h1>Snippy Bugs</h1>
-<p>
-  This page is (not) intentionally left blank. I'll update with information on how to report bugs (especially
-  about pages where snippet grabbing is difficult) as soon as possible.
-</p>
-<h2>Known bugs</h2>
-<p>
-  <b>When I click the <i>Snip it</i> button nothing happens!</b>
-</p>
-<p>
-  Make sure the webpage you want to grab snippets from if fully loaded. Snippy won't start working until the page finished loading.
-  Wait for the little spinning icon (which is displayed in the tab title while a page loads) to go away before activating snippy. 
-</p>
-<p>
-  Also note that Snippy is enabled only for unsecured webpages (pages that are not served with the https protocol). It won't work,
-  for instance, on your bank account internet portal.
-</p>
+  <div class="main">
+    <h1>Report a Snippy bug</h1>
 
-<p>
- <b>Snippy grabbed some content, but it's no longer there and/or is not available to others I've shared it with</b>
-</p>
-<p>
-  Snippy copies the contents of the page you're looking at as they are. In particular, it hotlinks all the external resources, such as images.
-  Contents that live in protected areas opened only to you (such as your personal mail or your Facebook profile) may not be available to
-  other people (or even to you when you log out of such websites) after you've grabbed them with Snippy.
-</p>
+    <p>Have you found a bug in Snippy? Did Snippy fail to grab the contents you
+      wanted properly? Tell us, so we can fix it.
+    </p>
+
+    <p>
+      Click the following links depending on the issue you are experiencing
+      (the bug tracking software requires you to log in to your Google account):
+    </p>
+    <ul>
+      <li>
+        <a target="_blank" href="http://code.google.com/p/snippy-extension/issues/entry?template=Snippy%20Grab%20issue">
+          Aw, I grabbed some contents, but the snippet looks weird
+        </a>  (not properly formatted, misaligned, with wrong or missing parts, etc ...)
+      </li>
+      <li>
+        <a target="_blank" href="http://code.google.com/p/snippy-extension/issues/entry">
+          Aw, I experienced a Snippy bug which is not related to the grabbing quality
+        </a>.
+      </li>
+    </ul>
+
+    <p>Be kind, please check among the
+      <a target="_blank" href="http://code.google.com/p/snippy-extension/issues/list">open issues</a>
+      whether your bug has already been submitted by someone else.
+    </p>
+
+    <h3>Known limitations</h3>
+    <h5>
+      Snippy doesn't capture videos, applets and other rich content.
+    </h5>
+    <p>
+      Snippy tries its best to capture all the contents you have choosen, but
+      it is still unable to capture content provided by embedded plugins, such
+      as flash animations, videos, applets and some other kinds of rich
+      content.
+    </p>
+    
+    <h5>
+      Snippy is not enabled for some websites.
+    </h5>
+    <p>
+      For security reasons, Snippy is not enabled for secured webpages (pages
+      that are served with the <tt>https</tt> protocol), and a few other minor
+      cases (local content, non-http URIs). It won't probably work,
+      for instance, on your bank account internet portal.
+    </p>
+
+    <h5>
+     Snippy grabbed some content, but it's no longer there and/or is not
+       available to others I've shared it with.
+    </h5>
+    <p>
+      Snippy copies the contents of the page you're looking at as they are.
+      In particular, it hotlinks all the external resources, such as images.
+      Contents that live in protected areas available only to you
+      (such as your personal mail or your Facebook profile) may not be available
+      to other people (or even to you when you log out of such websites) when
+      you grab them with Snippy.
+    </p>
+  </div>
 </body>
 </html>
