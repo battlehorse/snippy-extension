@@ -14,16 +14,19 @@ var is_animating = false;
 */
 var sel_overlay;
 
+
 /*
   Pointer to the HTML element which contains the in-page tooltip popup.
 */
 var tooltip_box;
+
 
 /*
   Pointer to the HTML element that represents the currently selected block,
   i.e. the one that will be copied on user click.
 */
 var cur_enclosing_block;
+
 
 /*
   List of elements that the selection overlay can focus on.
@@ -36,6 +39,14 @@ $(document).ready(function() {
     // Create snippy controls
     createTooltipBox();
 
+    // A 0-width div to contain the snippy selection overlay before it's
+    // triggered for the first time.
+    var initial_div = $("<div />", {id: 'snippy-initial'}).css({
+      'width': '0',
+      'height': '0',
+      'border': '0'
+    }).appendTo(document.body);
+
     sel_overlay = $("<div />", {id: 'snippy-overlay'}).css({
       'backgroundColor': 'blue',
       'opacity': '0.1',
@@ -47,20 +58,11 @@ $(document).ready(function() {
       'left': '0',
       'width': '100px',
       'height': '100px'
-    }).click(overlayClicked).get(0);
-
-    // A 0-width div to contain the snippy selection overlay before it's
-    // triggered for the first time.
-    var initial_div = $("<div />", {id: 'snippy-initial'}).css({
-      'width': '0',
-      'height': '0',
-      'border': '0'
-    }).appendTo(document.body);
+    }).click(overlayClicked).appendTo(initial_div).get(0);
 
     // Initially set the current enclosing block to the initial div.
     cur_enclosing_block = initial_div.get(0);
-    cur_enclosing_block.appendChild(sel_overlay);
-    
+
     // Listen to messages coming from the background page. The only expected
     // message is to activate/deactivate the content grabber.
     chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
