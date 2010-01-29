@@ -23,15 +23,9 @@ var tooltip_box;
 
 /*
   Pointer to the HTML element that represents the currently selected block,
-  i.e. the one that will be copied on user click.
+  i.e. the one the overlay was created from.
 */
 var cur_enclosing_block;
-
-
-/*
-  List of elements that the selection overlay can focus on.
-*/
-var selectable_elements = ["p", "div", "li", "ul", "ol", "td", "tr", "table"];
 
 
 // Wire everything up.
@@ -72,9 +66,9 @@ $(document).ready(function() {
         show(sel_overlay, '10000');
 
         // Tag selectable elements
-        for (var i = 0; i < selectable_elements.length; i++) {
-          $(selectable_elements[i]).addClass('snippy-block');
-        }
+        jQuery.each(SELECTABLE_TAGS, function(i, tagName) {
+          $(tagName).addClass('snippy-block');
+        });
 
         // Start listening to mouse movement events.
         $(document).mousemove(handleMouseMovement);
@@ -83,9 +77,9 @@ $(document).ready(function() {
         $(document).unbind('mousemove');
 
         // untag elements
-        for (var i = 0; i < selectable_elements.length; i++) {
-          $(selectable_elements[i]).removeClass('snippy-block');
-        }
+        jQuery.each(SELECTABLE_TAGS, function(i, tagName) {
+          $(tagName).removeClass('snippy-block');
+        });
 
         // hide controls
         hide(sel_overlay, '-10000');
@@ -124,7 +118,8 @@ function handleMouseMovement(evt) {
       // We need to manually search for the source of the event, which
       // is underneath it.
       var inner_block = cur_enclosing_block;
-      $('.snippy-block', cur_enclosing_block).each(function() {
+      var sel_el = asSelectable(cur_enclosing_block);
+      $('.snippy-block', sel_el.searchDomain(cur_enclosing_block)).each(function() {
           var top = $(this).offset().top;
           var left = $(this).offset().left;
           var right = left + $(this).width();
@@ -135,13 +130,16 @@ function handleMouseMovement(evt) {
           }
         });
       cur_enclosing_block = inner_block;
-      reposition_overlay(100);
+      var bounding_box = sel_el.overlayBoundingBox(cur_enclosing_block);
+      reposition_overlay(100, bounding_box);
     } else {
       // The mouse is elsewhere, possibly over a selectable element.
       var enclosing_block = $(evt.target).closest('.snippy-block');
       if (enclosing_block && enclosing_block.length > 0) {
         cur_enclosing_block = enclosing_block.get(0);
-        reposition_overlay(100);
+        var sel_el = asSelectable(cur_enclosing_block);
+        var bounding_box = sel_el.overlayBoundingBox(cur_enclosing_block);
+        reposition_overlay(100, bounding_box);
       }
     }
 }
@@ -158,8 +156,16 @@ function handleMouseMovement(evt) {
   Then, all sort of relative links and anchors are 
 */
 function overlayClicked() {
-  var clone = $(cur_enclosing_block).clone().get(0);
-  recursiveRebaseStyles(cur_enclosing_block, clone);
+  var sel_el = asSelectable(cur_enclosing_block);
+  var copy_els = sel_el.clippableElements(cur_enclosing_block).get();
+  var clones = $(copy_els).clone().get();
+  for (var i = 0; i < copy_els.length; i++) {
+    recursiveRebaseStyles(copy_els[i], clones[i]);
+  }
+  var clone;
+  if (clones.length > 1) {
+    clone = $("<div/>").append(clones).get(0);
+  }
   rebaseLinks(clone);
   rebaseImages(clone);
   removeScripts(clone);
@@ -265,17 +271,18 @@ function removeScripts(el) {
   Moves the selectin overlay over the cur_enclosing_block, optionally using an
   animation.
 */
-function reposition_overlay(duration) {
-  var top = $(cur_enclosing_block).offset().top;
-  var left = $(cur_enclosing_block).offset().left;
-  var w = $(cur_enclosing_block).width();
-  var h = $(cur_enclosing_block).height();
-
+function reposition_overlay(duration, bounding_box) {
   if (duration == 0) {
-    $(sel_overlay).css({top: top, left: left, width: w, height: h});
+    $(sel_overlay).css({top: bounding_box.top,
+                        left: bounding_box.left,
+                        width: bounding_box.w,
+                        height: bounding_box.h});
   } else {
     is_animating = true;
-    $(sel_overlay).animate({top: top, left: left, width: w, height: h},
+    $(sel_overlay).animate({top: bounding_box.top,
+                            left: bounding_box.left,
+                            width: bounding_box.w,
+                            height: bounding_box.h},
       duration, "swing", function() {
         is_animating = false;
       }
