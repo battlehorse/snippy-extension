@@ -165,6 +165,8 @@ function overlayClicked() {
   var clone;
   if (clones.length > 1) {
     clone = $("<div/>").append(clones).get(0);
+  } else {
+    clone = clones[0];
   }
   rebaseLinks(clone);
   rebaseImages(clone);
