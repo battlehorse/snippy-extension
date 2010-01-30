@@ -7,31 +7,116 @@
     }
 
     P {
-      border-top: 1px solid black;
       padding-top: 0.2em;
     }
 
     #not_ready_alert {
       border-top: 0;
-      border-bottom: 1px solid black;
       margin: 0 0 0.5em 0;
     }
 
     IMG {
       vertical-align: text-bottom;
     }
+
+    .action {
+      background: transparent url(img/grad.png) repeat-x top left;
+      width: 120px;
+      height: 22px;
+    
+      -webkit-border-radius: 2px;
+      -moz-border-radius: 2px;
+      -webkit-box-shadow: 2px 2px 3px #aaa;
+      border-top: 1px solid rgb(103, 140, 255);
+      border-left: 1px solid rgb(103, 140, 255);    
+      border-right: 1x solid rgb(7, 32, 174);
+      border-bottom: 1x solid rgb(7, 32, 174);    
+    
+      text-align: center;
+      padding: 0.3em;
+      margin-bottom: 0.5em;
+    }
+
+    .action:hover {
+      background: transparent url(img/grad_light.png) repeat-x top left;
+      cursor: pointer;
+    }
+
+
+    .actionmono {
+      background: transparent url(img/grad_mono.png) repeat-x top left;
+      width: 120px;
+      height: 22px;
+    
+      -webkit-border-radius: 2px;
+      -moz-border-radius: 2px;
+      -webkit-box-shadow: 2px 2px 3px #aaa;
+      border-top: 1px solid #ccc;
+      border-left: 1px solid #ccc;
+      border-right: 1x solid #666;
+      border-bottom: 1x solid #666;
+    
+      text-align: center;
+      padding: 0.3em 0;
+    }
+
+    .action SPAN, .actionmono SPAN {
+      font-size: 14px;
+      font-weight: bold;
+      color: white;
+      text-decoration: none;
+    }
+
+    .box,
+    .hoverbox {
+      background-color: #fff;
+      width: 120px;
+      border: 1px solid #aaa;
+      -webkit-border-radius: 3px;
+      -webkit-box-shadow: 2px 2px 2px #ddd;
+      padding: 0.3em;
+      margin: 0.3em 0;
+    }
+
+    .hoverbox:hover {
+      background-color: #eee;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .box IMG,
+    .hoverbox IMG {
+      vertical-align: middle;
+    }
+
+    .box A,
+    .hoverbox A {
+      color: #000;
+      text-decoration: none;
+    }
+
+    .box A:hover,
+    .hoverbox A:hover {
+      text-decoration: underline;
+    }
+
   </style>
   <script>
+    var ready = false;
     function toggle() {
-      chrome.extension.getBackgroundPage().toggle();
-      window.close();
+      if (ready) {
+        chrome.extension.getBackgroundPage().toggle();
+        window.close();
+      }
     }
+
     function showDump() {
       chrome.extension.getBackgroundPage().toggleOff();
       chrome.extension.getBackgroundPage().showDump();
       window.close();
       return false;
     }
+
     function clearCopy() {
       chrome.extension.getBackgroundPage().clearCopy();
       window.close();
@@ -50,37 +135,51 @@
       return false;
     }
 
+    function whatsnew() {
+      chrome.extension.getBackgroundPage().whatsnew();
+      window.close();
+      return false;
+    }
+
+    
     function checkReadyness() {
       var ready_status = chrome.extension.getBackgroundPage().CurrentTabReadiness();
       if (ready_status == "unknown") {
         document.getElementById("not_ready_alert").innerHTML = "Please reload the page.";
-        document.getElementById("snip_button").disabled = true;
+        ready = false;
         setTimeout("checkReadyness()", 100);
       } else if (ready_status == "ready") {
-        document.getElementById("snip_button").disabled = false;
-        document.getElementById("snip_text").innerHTML = "Snip it!";
+        ready = true;
+        document.getElementById("snip_button").className = "action";
+        document.getElementById("snip_text").innerHTML = "Click to Snip!";
         document.getElementById("not_ready_alert").style.display = "none";
       } else {  // loading
         document.getElementById("not_ready_alert").innerHTML = "Waiting for page to complete loading...";
-        document.getElementById("snip_button").disabled = true;
+        ready = false;
         setTimeout("checkReadyness()", 100);
       } 
     }
   </script>
 </head>
 <body>
-  <button id="snip_button" disabled="disabled" onclick="toggle()" style="width: 100px"><img src="img/snipit.png"><span id="snip_text">Not ready</span></button>
+  <div class="actionmono" id="snip_button" onclick="toggle()">
+    <span id="snip_text" >Not ready</span>
+  </div>
   <p id="not_ready_alert" style="display:block">
     Waiting for page to complete loading...
   </p>
-  <a href="#" onclick="showDump()"><img src="img/showdump.png" style="border: 0">Show snippets</a>
-  <p>
-    <a href="#" onclick="clearCopy()"><img src="img/clearsnippets.png" style="border: 0">Clear snippets</a><br />
-  </p>
-  <p>
-    <a href="#" onclick="about()"><img src="img/about.png" style="border: 0">About</a><br />
+
+  <div class="hoverbox" onclick="showDump()">
+    <a href="#"><img src="img/showdump.png" style="border: 0">Show snippets</a>
+  </div>
+  <div class="hoverbox" onclick="clearCopy()">
+    <a href="#"><img src="img/clearsnippets.png" style="border: 0">Clear snippets</a>
+  </div>
+  <div class="box">
+    <a href="#" onclick="about()"><img src="img/about.png" style="border: 0">About <b>Snippy</b></a><br />
     <a href="#" onclick="bug()"><img src="img/bug.png" style="border: 0">Report bug</a><br />
-  </p>
+    <a href="#" onclick="whatsnew()"><img src="img/whatsnew.png" style="border: 0">What's new?</a>
+  </div>
   <script>
     var cur_tab_url = chrome.extension.getBackgroundPage().CurrentTabUrl();
     if (/https:/.test(cur_tab_url)) {

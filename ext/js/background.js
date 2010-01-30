@@ -236,6 +236,13 @@ function bug() {
   chrome.tabs.create({"url": "bug.html"});
 }
 
+/*
+  Shows the changelog page.
+*/
+function whatsnew() {
+  chrome.tabs.create({"url": "http://code.google.com/p/snippy-extension/wiki/ExtensionWhatsNew"});
+}
+
 
 /*
   Updates the badge text to reflect the number of current snippets.
