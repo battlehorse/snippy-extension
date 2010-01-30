@@ -73,6 +73,10 @@
       float: right;
     }
 
+    .snippet-discard-all {
+      float: right;
+    }
+
     .snippet-discard:hover {
       background: url('img/dump_trash_hover.png');
       cursor: pointer;
@@ -125,18 +129,23 @@
   <h1 class="snippage-title"></h1>
 
   <div class="snippet-share">
-  <p class="snippet-paragraph">
-    <span style="vertical-align:middle">
-      <img src="img/share.png" style="vertical-align:middle">Save this snippets online to:
-    </span>
-    <span style="display: inline-block; vertical-align:middle">
-      <button id="share-on-snipbin">
-        <img src="img/icon16.png"><b>SnipBin</b>
-      </button><br />
-      <a href="http://snipbin.appspot.com/about" target="_blank">Learn more</a>
-    </span>
-    <span id="snippet-message" style="vertical-align: middle" class="snippet-paragraph"></span>
-  </p>
+    <div class="snippet-discard-all snippet-paragraph">
+      <a href="#">
+        Clear all snippets
+      </a>
+    </div>
+    <p class="snippet-paragraph">
+      <span style="vertical-align:middle">
+        <img src="img/share.png" style="vertical-align:middle">Save this snippets online to:
+      </span>
+      <span style="display: inline-block; vertical-align:middle">
+        <button id="share-on-snipbin">
+          <img src="img/icon16.png"><b>SnipBin</b>
+        </button><br />
+        <a href="http://snipbin.appspot.com/about" target="_blank">Learn more</a>
+      </span>
+      <span id="snippet-message" style="vertical-align: middle" class="snippet-paragraph"></span>
+    </p>
   </div>
 </div>
 <div id="snippet-dump"></div>

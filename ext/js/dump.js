@@ -32,6 +32,7 @@ $(document).ready(function() {
   $('.snippage-title').live("click", handleTitleEvents);
   $('.snippet-comment').live('click', handleCommentEvents);
   $('#share-on-snipbin').click(handleShareEvents);
+  $('.snippet-discard-all').click(handleDiscardAll);
 
   // Handle messages coming from the background page.
   chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
@@ -167,6 +168,19 @@ function handleCommentEvents() {
     createCommentBox($(this).closest('.snippet-comment-box'), comment_text);
   });
   return false;
+}
+
+/*
+  Handles user requests to discard all snippets.
+*/
+function handleDiscardAll() {
+  if (snippage.snippets.length > 0 && confirm("Delete all snippets?")) {
+    $('.snippet-container').remove();
+    snippage.snippets = [];
+    chrome.extension.getBackgroundPage().updateBadgeText();
+    chrome.extension.getBackgroundPage().updateLocalStorage();
+    createSnippetPlaceholder();
+  }  
 }
 
 
