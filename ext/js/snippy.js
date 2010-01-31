@@ -316,33 +316,59 @@ function createTooltipBox() {
   // Help blurb.
   $("<div />").css({
     'font-size': '11px',
-    'font-family': 'sans-serif'
-  }).text(
-    'Move your mouse over the page and click on interesting elements to save ' +
-    'them as snippets. Click Done once finished.'
+    'font-family': 'sans-serif',
+    'color': 'black',
+    'text-align': 'left'
+  }).html(
+    '<b>Move</b> your mouse, and <b>click</b> on interesting elements to save ' +
+    'them as snippets.'
   ).appendTo(tooltip_box);
 
   // Snip-it button.
-  var tooltip_button = $("<button />", {
-    style: 'width: 100px',
+  var tooltip_button = $("<div />", {
     click: function() {
       chrome.extension.sendRequest({'toggle': true}, function(response) {});
     }
-    }).appendTo(tooltip_box);
+  }).css({
+    background: 'transparent url(' + 
+                chrome.extension.getURL('img/grad.png') + 
+                ') repeat-x top left',
+    width: '120px',
+    height: '22px',
+    'border-radius': '2px',
+    'border-top': '1px solid rgb(103, 140, 255)',
+    'border-left': '1px solid rgb(103, 140, 255)',   
+    'border-right': '1x solid rgb(7, 32, 174)',
+    'border-bottom': '1x solid rgb(7, 32, 174)',
+    'text-align': 'center',
+    'padding': '0.3em',
+    'margin-bottom': '0.5em',
+    'font-size': '14px',
+    'font-weight': 'bold',
+    'color': 'white',
+    'text-decoration': 'none',
+    'cursor': 'pointer'
+  }).css('-webkit-box-shadow', '2px 2px 3px #aaa').appendTo(tooltip_box);
+
+  // Button image and text.
   $("<img />", {
     src: chrome.extension.getURL("img/snipit.png"),
-    style: 'vertical-align: bottom-text'
+    style: 'vertical-align: bottom-text; padding-right: 5px; display: inline'
     }).appendTo(tooltip_button);
   $("<span />").text("Done").appendTo(tooltip_button);
 
   // Direct link to dump page.
-  $("<br />").appendTo(tooltip_box);
   $("<a />", {
     href: '#',
-    style: 'font-size: 11px; font-family: sans-serif',
     click: function() {
       chrome.extension.sendRequest({'showdump': true}, function(response) {});
     }
+  }).css({
+    'font-size': '11px',
+    'font-family': 'sans-serif',
+    'color': 'blue',
+    'font-weight': 'normal',
+    'text-align': 'left'
   }).text('Show current snippets').appendTo(tooltip_box);
 
   tooltip_box = tooltip_box.get(0);
