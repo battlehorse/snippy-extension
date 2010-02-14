@@ -3,6 +3,11 @@
   <title>Your Snippets</title>
   <script src="lib/jquery-1.4.min.js"></script>
   <script src="lib/jquery.json-2.2.min.js"></script>
+  <script>
+    // Create the backends namespace
+    var backends = {};
+  </script>
+  <script src="js/backends/snipbin.js"></script>
   <script src="js/dump.js"></script>
   <style>
     BODY {
@@ -118,7 +123,7 @@
       margin: 0.2em 0;
       padding-left: 2px;
       border: 1px solid rgb(242, 248, 255);
-    }    
+    }
   </style>
 </head>
 <body>
@@ -138,12 +143,7 @@
       <span style="vertical-align:middle">
         <img src="img/share.png" style="vertical-align:middle">Save this snippets online to:
       </span>
-      <span style="display: inline-block; vertical-align:middle">
-        <button id="share-on-snipbin">
-          <img src="img/icon16.png"><b>SnipBin</b>
-        </button><br />
-        <a href="http://snipbin.appspot.com/about" target="_blank">Learn more</a>
-      </span>
+      <span id="snippet-backends"></span>
       <span id="snippet-message" style="vertical-align: middle" class="snippet-paragraph"></span>
     </p>
   </div>

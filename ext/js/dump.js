@@ -18,9 +18,9 @@ var defaultSnippageTitle = 'My snippets (click here to change the title)';
 
 
 /*
-  Hostname of the SnipBin backend where snippets can be uploaded.
+  List of backends where snippets can be uploaded to.
 */
-var snipbin_backend = 'http://snipbin.appspot.com';
+var backendsList = [];
 
 
 /*
@@ -31,7 +31,6 @@ $(document).ready(function() {
   // Wire up event handlers.
   $('.snippage-title').live("click", handleTitleEvents);
   $('.snippet-comment').live('click', handleCommentEvents);
-  $('#share-on-snipbin').click(handleShareEvents);
   $('.snippet-discard-all').click(handleDiscardAll);
 
   // Handle messages coming from the background page.
@@ -42,9 +41,40 @@ $(document).ready(function() {
     sendResponse({});
   });
 
+  // Populate the list of supported backends
+  $.each(backends, function(backend, ctor) {
+    backendsList.push(new ctor());
+  });
+
+  // Create upload buttons for all the backends we have.
+  createBackendButtons();
+
   // Do the initial layout
   doLayout();
 });
+
+/*
+  Creates an upload button for each supported backend. Each button includes a name,
+  an icon, and an about link to learn more about the specific backend.
+*/
+function createBackendButtons() {
+  $.each(backendsList, function(backend, impl) {
+    var backendBox = $('<span />').css({
+      'display': 'inline-block',
+      'vertical-align': 'middle'
+    });
+    $('<button />').
+      append($('<img />', {src: impl.icon()})).
+      append($('<b/>').text(impl.name())).
+      click(function() {
+        impl.upload(snippage, publishMessage);
+      }).appendTo(backendBox);
+    $('<br />').appendTo(backendBox);
+    $('<a />', {href: impl.aboutLink(), target: '_blank'}).text('Learn More').
+      appendTo(backendBox);
+    $('#snippet-backends').append(backendBox);
+  });
+}
 
 
 /*
@@ -180,7 +210,7 @@ function handleDiscardAll() {
     chrome.extension.getBackgroundPage().updateBadgeText();
     chrome.extension.getBackgroundPage().updateLocalStorage();
     createSnippetPlaceholder();
-  }  
+  }
 }
 
 
@@ -225,71 +255,6 @@ function createTitle(element_to_replace, title_text) {
   element_to_replace.replaceWith(new_header);
 }
 
-
-/*
-  Handles user requests to share this snippage online.
-*/
-function handleShareEvents() {
-   // Check whether the snippage is well-formed and within upload limits.
-   if (!checkSnippageForUpload()) {
-     return;
-   }
-   // Check if we are logged in on snipbin
-   $.getJSON(snipbin_backend + '/api/loginstatus',
-     function(data, textStatus) {
-       if (textStatus != 'success') {
-         publishMessage('Communication problem with the remote server:' + textStatus);
-         return;
-       }
-       if (data.status == 'not_logged_in') {
-         publishMessage("Please <a href='" + snipbin_backend + "/extwelcome' target='_blank'>login on SnipBin</a> first and then try again.");
-         return;
-       }
-
-       // We're logged in, proceed with the upload
-       $('#snippet-message').html("Uploading...");
-       var payload = snippage;
-       $.post(
-         snipbin_backend + '/api/upload',
-         {'payload': $.toJSON(payload)}, function(data, textStatus) {
-           if (textStatus != 'success') {
-             publishMessage('Communication problem with the remote server:' + textStatus);
-             return;
-           }
-           if (data.status == 'ok') {
-             publishMessage('Upload successful. <a target="_blank" href="' + snipbin_backend + '/view?key=' + data.key + '">View your item</a>');
-             return;
-           }
-           if (data.status == 'request_too_large') {
-             publishMessage('Sorry, your snippets are too big. You can upload up to <b>1Mb</b> to SnipBin.');
-             return;
-           }
-           if (data.status == 'no_snippets') {
-             publishMessage('You must have at least one snippet before uploading!');
-             return;
-           }
-           // generic server error.
-           publishMessage('Upload failed. Please try again in a few seconds (' + data.status + ').');
-         }, 'json');
-     });
-}
-
-function checkSnippageForUpload() {
-  if (snippage.snippets.length == 0) {
-    publishMessage('You must have at least one snippet before uploading!');
-    return false;
-  }
-  var payload = $.toJSON(snippage);
-  if (payload.length > 1024*1024) {
-    var size = (payload.length / (1024*1024)).toFixed(2);
-    publishMessage('Sorry, your snippets are too big. ' +
-                   'You can upload up to <b>1Mb</b> to SnipBin '+
-                   '(your snippets are approximately <b>' + size + 'Mb</b>).');
-    return false;
-  }
-
-  return true;
-}
 
 function publishMessage(message) {
   $('#snippet-message').html(message);
