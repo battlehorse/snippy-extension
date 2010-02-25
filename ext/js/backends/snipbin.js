@@ -102,6 +102,4 @@ backends.Snipbin.prototype.checkSnippageForUpload_ = function(snippage, pubMsgCa
   }
 
   return true;
-}
-
-
+};
