@@ -40,12 +40,14 @@ backends.Snipbin.prototype.upload = function(snippage, pubMsgCallback) {
   $.getJSON(this.snipbin_host_ + '/api/loginstatus',
     jQuery.proxy(function(data, textStatus) {
       if (textStatus != 'success') {
-        pubMsgCallback('Communication problem with the remote server:' + textStatus);
+        pubMsgCallback('Communication problem with the remote server:' +
+                       textStatus);
         return;
       }
       if (data.status == 'not_logged_in') {
         pubMsgCallback(
-          "Please <a href='" + this.snipbin_host_ + "/extwelcome' target='_blank'>" +
+          "Please " +
+            "<a href='" + this.snipbin_host_ + "/extwelcome' target='_blank'>" +
             "login on SnipBin</a> first and then try again.");
         return;
       }
@@ -58,14 +60,15 @@ backends.Snipbin.prototype.upload = function(snippage, pubMsgCallback) {
         {'payload': $.toJSON(payload)},
         jQuery.proxy(function(data, textStatus) {
           if (textStatus != 'success') {
-            pubMsgCallback('Communication problem with the remote server:' + textStatus);
+            pubMsgCallback('Communication problem with the remote server:' +
+                           textStatus);
             return;
           }
           if (data.status == 'ok') {
             pubMsgCallback(
               'Upload successful. ' +
-              '<a target="_blank" href="' + this.snipbin_host_ + '/view?key=' + data.key + '">' +
-              'View your item</a>');
+              '<a target="_blank" href="' + this.snipbin_host_ + '/view?key=' +
+              data.key + '">' + 'View your item</a>');
             return;
           }
           if (data.status == 'request_too_large') {
@@ -74,7 +77,8 @@ backends.Snipbin.prototype.upload = function(snippage, pubMsgCallback) {
             return;
           }
           if (data.status == 'no_snippets') {
-            pubMsgCallback('You must have at least one snippet before uploading!');
+            pubMsgCallback('You must have at least one snippet before ' +
+                           'uploading!');
             return;
           }
           // generic server error.
@@ -87,7 +91,8 @@ backends.Snipbin.prototype.upload = function(snippage, pubMsgCallback) {
 /*
   Checks whether a snippage is suitable for upload on SnipBin.
 */
-backends.Snipbin.prototype.checkSnippageForUpload_ = function(snippage, pubMsgCallback) {
+backends.Snipbin.prototype.checkSnippageForUpload_ = function(snippage,
+                                                              pubMsgCallback) {
   if (snippage.snippets.length == 0) {
     pubMsgCallback('You must have at least one snippet before uploading!');
     return false;
