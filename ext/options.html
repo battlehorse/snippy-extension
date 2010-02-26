@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Snippy Options</title>
+  <script src="lib/jquery-1.4.min.js"></script>
+  <script src="js/options.js"></script>
+  <style>
+    * {
+      font-family: sans-serif;
+    }
+
+    BODY {
+      background-color: rgb(240, 240, 240);
+      background-image: url(img/backgrad.png), url(img/paper_pile_2.jpg);
+      background-repeat: repeat-x, no-repeat;
+      background-position: top left, bottom right;
+    }
+
+    .main {
+      background: #fff url('img/icon128.png') no-repeat top right;
+      background-color: #fff;
+      border: 1px solid #aaa;
+      -webkit-border-radius: 3px;
+      -webkit-box-shadow: 3px 3px 3px rgb(210, 210, 210);
+      padding: 0.3em;
+      margin: 0.3em;
+    }
+
+    H1 {
+      margin: 0.2em;
+    }
+
+    H2 {
+      font-size: 1.2em;
+    }
+
+    P {
+      width: 80%;
+      font-size: 12px;
+      text-align: justify;
+    }
+
+    .hint {
+      font-size: 10px;
+      color: #666;
+      max-width: 500px;
+      margin: 0;
+    }
+
+    TD {
+     font-size: 12px;
+    }
+
+    TR {
+      vertical-align: top;
+      border-bottom: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+  <div class="main">
+    <h1>Snippy Options</h1>
+
+    <p>
+      Use this page to tweak and configure the Snippy Chrome extension.
+    </p>
+
+    <h2>Google Docs Integration</h2>
+    <table>
+      <tr>
+        <td>
+          Revoke Snippy permission to access your Google Docs:
+          <p class="hint">Snippy will ask for permissions next time you try to
+            upload your snippets to Google Docs.</p>
+        </td>
+        <td>
+          <button id="snippy-docs-oauth-token">Loading current settings...</button>
+        </td>
+      </tr>
+    </table>
+  </div>
+</body>
+</html>
