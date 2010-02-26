@@ -84,7 +84,11 @@ function createBackendButtons() {
 function doLayout() {
   // clear the current display.
   $('#snippet-dump').empty();
-  $('#snippet-message').text('');
+  if (!$('#snippet-message').hasClass('snippet-persistent')) {
+    $('#snippet-message').text('');
+  } else {
+    $('#snippet-message').removeClass('snippet-persistent');
+  }
 
   // grab the latest snippage.
   snippage = chrome.extension.getBackgroundPage().getSnipPage();
@@ -260,6 +264,11 @@ function createTitle(element_to_replace, title_text) {
   A callback that will be passed to upload backends for them to signal events
   to the user. Accepts plain strings, DOM elements or JQuery instances.
 */
-function publishMessage(message) {
+function publishMessage(message, opt_persistent) {
   $('#snippet-message').empty().append(message);
+  if (opt_persistent) {
+    $('#snippet-message').addClass('snippet-persistent');
+  } else {
+    $('#snippet-message').removeClass('snippet-persistent');
+  }
 }

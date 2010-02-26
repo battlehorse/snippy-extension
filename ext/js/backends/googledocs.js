@@ -45,7 +45,8 @@ backends.GoogleDocs.prototype.upload = function(snippage, pubMsgCallback) {
       href: '#',
       click: function() {
         oauth.authorize(function() {
-          pubMsgCallback('authorized, thanks!');
+          pubMsgCallback('You can now upload your snippets.', true);
+          chrome.extension.getBackgroundPage().showDump();
         });
         return false;
       }
@@ -122,12 +123,14 @@ backends.GoogleDocs.prototype.uploadDocument_ = function(oauth,
         if (docurl) {
           pubMsgCallback(
             'Upload successful. ' +
-            '<a target="_blank" href="' + docurl + '">' + 'View your item</a>');
+            '<a target="_blank" href="' + docurl + '">' + 'View your item</a>',
+            true);
         } else {
           pubMsgCallback(
             'Upload successful. Go to ' +
             '<a target="_blank" href="http://docs.google.com">Google Docs</a>' +
-            ' to view your item.');
+            ' to view your item.',
+            true);
         }
       }
     });
