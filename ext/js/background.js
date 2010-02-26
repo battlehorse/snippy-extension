@@ -40,12 +40,21 @@ var activation = {};
 */
 var readiness = {};
 
+/*
+  ChromeExOAuth singleton instance to interact with Google services.
+
+  TODO: This is currently bound to a single scope (Google Docs) for the moment.
+  Will likely require refactoring whenever we'll need to talk to multiple
+  Google services.
+*/
+var oauth;
+
 /* Gentlemen, start your engines ... */
 init();
 
 
 /*
-  Load a snippage saved in a previous session from localStorage. If not found, 
+  Load a snippage saved in a previous session from localStorage. If not found,
   create an empty one. Then:
   - Update the badget text,
   - figure out the tab we're currently on,
@@ -107,10 +116,12 @@ function addEventListeners() {
       readiness[tab_id] = "ready";
     }
 
-    // TODO(battlehorse): is this really needed? I can't remember...
-    chrome.tabs.get(tab_id, function(tab) {
-      cur_tab_url = tab.url;
-    });
+    // Update the current tab url when the user changes the URL from the
+    // location bar.
+    if (change_info.url) {
+      console.log("chage_info.url for id " + tab_id + ": " + change_info.url);
+      cur_tab_url = change_info.url;
+    }
   });
 
   // Handle messages coming from the injected Snippy content script.
@@ -274,4 +285,28 @@ function CurrentTabReadiness() {
 */
 function CurrentTabUrl() {
   return cur_tab_url;
+}
+
+/*
+  Returns an initialized ChromeExOAuth instance, creating a new one if needed.
+  The instance takes care of persisting itself on localStorage, so we don't need
+  to do it here.
+
+  TODO: The OAuth instance we create is a non-registered one which is only
+  allowed to talk to Google Docs. This will need refactoring when we'll need to
+  talk to multiple OAuth backends.
+*/
+function getOAuth() {
+  if (!oauth) {
+    var oauth = ChromeExOAuth.initBackgroundPage({
+      'request_url' : 'https://www.google.com/accounts/OAuthGetRequestToken',
+      'authorize_url' : 'https://www.google.com/accounts/OAuthAuthorizeToken',
+      'access_url' : 'https://www.google.com/accounts/OAuthGetAccessToken',
+      'consumer_key' : 'anonymous',
+      'consumer_secret' : 'anonymous',
+      'scope' : 'http://docs.google.com/feeds/',
+      'app_name' : 'Snippy Chrome extension'
+    });
+  }
+  return oauth;
 }

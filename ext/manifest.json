@@ -22,5 +22,12 @@
     }
   ],
   "background_page": "background.html",
-  "permissions": [ "tabs", "http://snipbin.appspot.com/" ]
+  "permissions": [
+    "tabs",
+    "http://snipbin.appspot.com/",
+    "http://docs.google.com/feeds/*",
+    "https://www.google.com/accounts/OAuthGetRequestToken",
+    "https://www.google.com/accounts/OAuthAuthorizeToken",
+    "https://www.google.com/accounts/OAuthGetAccessToken"
+   ]
 }

@@ -256,6 +256,10 @@ function createTitle(element_to_replace, title_text) {
 }
 
 
+/*
+  A callback that will be passed to upload backends for them to signal events
+  to the user. Accepts plain strings, DOM elements or JQuery instances.
+*/
 function publishMessage(message) {
-  $('#snippet-message').html(message);
+  $('#snippet-message').empty().append(message);
 }
