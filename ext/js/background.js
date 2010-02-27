@@ -3,6 +3,18 @@
 // Attribution License 3.0. Both of them can be found in the LICENSE file.
 
 /*
+  Keeps tracks of the current extension version, and the version last seen in
+  this installation (as persisted in localStorage). We use these information
+  to figure out if the extension got recently updated, so we can show
+  first-activation announcements to the user.
+  
+  Be sure to update the cur_app_version whenever manifest.json is affected
+  (and the user must be notified of significant changes occurred).
+*/
+var cur_app_version = "0.2.6";
+var last_seen_app_version = null;
+
+/*
   A snippage is the container for all the snippets the user has collected so
   far, and it's synced to localStorage.
 */
@@ -77,6 +89,14 @@ function init() {
   });
 
   addEventListeners();
+
+  // Read the most recent application version from localStorage. If it appears
+  // to be older, it means a new version of Snippy just got installed, and we
+  // display a special badge.
+  last_seen_app_version = localStorage.getItem('last_seen_app_version');
+  if (isFirstActivationOrNewRelease()) {
+    updateBadgeText({'new_version': true});
+  }
 }
 
 /*
@@ -251,14 +271,48 @@ function bug() {
   Shows the changelog page.
 */
 function whatsnew() {
-  chrome.tabs.create({"url": "http://code.google.com/p/snippy-extension/wiki/ExtensionWhatsNew"});
+  chrome.tabs.create({"url": "http://code.google.com/p/snippy-extension/" +
+                             "wiki/ExtensionWhatsNew"});
 }
 
 
 /*
-  Updates the badge text to reflect the number of current snippets.
+  Checks whether this is the first activation of the extension, or the first
+  activation after an update.
 */
-function updateBadgeText() {
+function isFirstActivationOrNewRelease() {
+  return typeof last_seen_app_version == 'undefined' ||
+    last_seen_app_version != cur_app_version;
+}
+
+/*
+  Updates the version number persisted in localStorage, to dismiss further
+  first-activation screens and announcements. Removes the special badge if
+  needed.
+*/
+function updateLastSeenAppVersion() {
+  localStorage.setItem('last_seen_app_version', cur_app_version);
+  last_seen_app_version = cur_app_version;
+  updateBadgeText();
+}
+
+/*
+  Updates the badge text to reflect the number of current snippets, or to
+  highlight particular events.
+
+  Use flags in opt_params to define which particular events are to be
+  shown in the badge.
+*/
+function updateBadgeText(opt_params) {
+  params = opt_params || {};
+  if (params.new_version) {
+    chrome.browserAction.setBadgeText({'text': 'New'});
+    chrome.browserAction.setBadgeBackgroundColor({'color': [255, 0, 255, 255]});
+    return;
+  }
+
+  // default badge (number of snippets)
+  chrome.browserAction.setBadgeBackgroundColor({'color': [255, 0, 0, 0]});
   if (snippage.snippets.length == 0) {
     chrome.browserAction.setBadgeText({'text': ''});
   } else {

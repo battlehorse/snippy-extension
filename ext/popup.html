@@ -23,18 +23,20 @@
       background: transparent url(img/grad.png) repeat-x top left;
       width: 120px;
       height: 22px;
-    
+
       -webkit-border-radius: 2px;
       -moz-border-radius: 2px;
       -webkit-box-shadow: 2px 2px 3px #aaa;
       border-top: 1px solid rgb(103, 140, 255);
-      border-left: 1px solid rgb(103, 140, 255);    
+      border-left: 1px solid rgb(103, 140, 255);
       border-right: 1x solid rgb(7, 32, 174);
-      border-bottom: 1x solid rgb(7, 32, 174);    
-    
+      border-bottom: 1x solid rgb(7, 32, 174);
+
       text-align: center;
       padding: 0.3em;
       margin-bottom: 0.5em;
+
+      color: #fff;
     }
 
     .action:hover {
@@ -47,7 +49,7 @@
       background: transparent url(img/grad_mono.png) repeat-x top left;
       width: 120px;
       height: 22px;
-    
+
       -webkit-border-radius: 2px;
       -moz-border-radius: 2px;
       -webkit-box-shadow: 2px 2px 3px #aaa;
@@ -55,7 +57,7 @@
       border-left: 1px solid #ccc;
       border-right: 1x solid #666;
       border-bottom: 1x solid #666;
-    
+
       text-align: center;
       padding: 0.3em 0;
     }
@@ -100,95 +102,79 @@
       text-decoration: underline;
     }
 
+    #update_notifications {
+      width: 260px;
+    }
+
+    #update_notifications .header {
+      font-size: 1.4em;
+      margin: 0;
+    }
+
+    #update_notifications A.dismiss {
+      color: #666;
+    }
+
+    #update_notifications A.prominent {
+      color: black;
+      text-decoration: none;
+      font-size: 1.2em;
+      line-height: 2em;
+    }
+
+    #update_notifications A.prominent:hover {
+      text-decoration:underline;
+    }
   </style>
-  <script>
-    var ready = false;
-    function toggle() {
-      if (ready) {
-        chrome.extension.getBackgroundPage().toggle();
-        window.close();
-      }
-    }
-
-    function showDump() {
-      chrome.extension.getBackgroundPage().toggleOff();
-      chrome.extension.getBackgroundPage().showDump();
-      window.close();
-      return false;
-    }
-
-    function clearCopy() {
-      chrome.extension.getBackgroundPage().clearCopy();
-      window.close();
-      return false;
-    }
-
-    function about() {
-      chrome.extension.getBackgroundPage().about();
-      window.close();
-      return false;
-    }
-
-    function bug() {
-      chrome.extension.getBackgroundPage().bug();
-      window.close();
-      return false;
-    }
-
-    function whatsnew() {
-      chrome.extension.getBackgroundPage().whatsnew();
-      window.close();
-      return false;
-    }
-
-    
-    function checkReadyness() {
-      var ready_status = chrome.extension.getBackgroundPage().CurrentTabReadiness();
-      if (ready_status == "unknown") {
-        document.getElementById("not_ready_alert").innerHTML = "Please reload the page.";
-        ready = false;
-        setTimeout("checkReadyness()", 100);
-      } else if (ready_status == "ready") {
-        ready = true;
-        document.getElementById("snip_button").className = "action";
-        document.getElementById("snip_text").innerHTML = "Click to Snip!";
-        document.getElementById("not_ready_alert").style.display = "none";
-      } else {  // loading
-        document.getElementById("not_ready_alert").innerHTML = "Waiting for page to complete loading...";
-        ready = false;
-        setTimeout("checkReadyness()", 100);
-      } 
-    }
-  </script>
+  <script src="js/popup.js"></script>
 </head>
-<body>
-  <div class="actionmono" id="snip_button" onclick="toggle()">
-    <span id="snip_text" >Not ready</span>
-  </div>
-  <p id="not_ready_alert" style="display:block">
-    Waiting for page to complete loading...
-  </p>
+<body onload="loaded()">
+  <div id="standard_actions">
+    <div class="actionmono" id="snip_button" onclick="toggle()">
+      <span id="snip_text" >Not ready</span>
+    </div>
+    <p id="not_ready_alert" style="display:block">
+      Waiting for page to complete loading...
+    </p>
 
-  <div class="hoverbox" onclick="showDump()">
-    <a href="#"><img src="img/showdump.png" style="border: 0">Show snippets</a>
+    <div class="hoverbox" onclick="showDump()">
+      <a href="#"><img src="img/showdump.png" style="border: 0">Show snippets</a>
+    </div>
+    <div class="hoverbox" onclick="clearCopy()">
+      <a href="#"><img src="img/clearsnippets.png" style="border: 0">
+        Clear snippets
+      </a>
+    </div>
+    <div class="box">
+      <a href="#" onclick="about()"><img src="img/about.png" style="border: 0">
+        About <b>Snippy</b></a><br />
+      <a href="#" onclick="bug()"><img src="img/bug.png" style="border: 0">
+        Report bug</a><br />
+      <a href="#" onclick="whatsnew()">
+        <img src="img/whatsnew.png" style="border: 0">
+        What's new?</a>
+    </div>
   </div>
-  <div class="hoverbox" onclick="clearCopy()">
-    <a href="#"><img src="img/clearsnippets.png" style="border: 0">Clear snippets</a>
+  <div id="update_notifications" style="display: none">
+    <p class="header">
+      <img src="img/icon32.png" style="vertical-align: middle;">
+      Snippy has new features for you!
+    </p>
+    <p style="padding-left: 32px">
+      <a href="#" class="prominent" onclick="whatsnew_and_disable_update()">
+        <img src="img/whatsnew.png" style="border: 0">
+        What's changed?
+      </a><br />
+      <a href="#" class="prominent" onclick="about_and_disable_update()">
+        <img src="img/about.png" style="border: 0">
+        I'm a new user. What is <b>Snippy</b>?
+      </a>
+    </p>
+    <p>
+      <a href="#" class="dismiss" onclick="dismiss_update_popup()">
+        Dismiss this message
+      </a>
+    </p>
   </div>
-  <div class="box">
-    <a href="#" onclick="about()"><img src="img/about.png" style="border: 0">About <b>Snippy</b></a><br />
-    <a href="#" onclick="bug()"><img src="img/bug.png" style="border: 0">Report bug</a><br />
-    <a href="#" onclick="whatsnew()"><img src="img/whatsnew.png" style="border: 0">What's new?</a>
-  </div>
-  <script>
-    var cur_tab_url = chrome.extension.getBackgroundPage().CurrentTabUrl();
-    if (/https:/.test(cur_tab_url)) {
-      document.getElementById("not_ready_alert").innerHTML = "You can't grab snippets from secure webpages.";
-    } else if (!/http:/.test(cur_tab_url)) {
-      document.getElementById("not_ready_alert").innerHTML = "You can't grab snippets from this page.";
-    } else {  // http
-      checkReadyness();
-    }
-  </script>
 </body>
 </html>
