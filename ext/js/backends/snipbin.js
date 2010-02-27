@@ -68,7 +68,7 @@ backends.Snipbin.prototype.upload = function(snippage, pubMsgCallback) {
             pubMsgCallback(
               'Upload successful. ' +
               '<a target="_blank" href="' + this.snipbin_host_ + '/view?key=' +
-              data.key + '">' + 'View your item</a>', true);
+             data.key + '">' + 'View your item</a>', true);
             return;
           }
           if (data.status == 'request_too_large') {
