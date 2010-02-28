@@ -11,7 +11,7 @@
   Be sure to update the cur_app_version whenever manifest.json is affected
   (and the user must be notified of significant changes occurred).
 */
-var cur_app_version = "0.2.6";
+var cur_app_version = "0.3.0";
 var last_seen_app_version = null;
 
 /*
