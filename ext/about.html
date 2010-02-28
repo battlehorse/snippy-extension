@@ -32,13 +32,27 @@
       font-size: 12px;
       text-align: justify;
     }
+    
+    P.intro {
+      font-size: 14px;
+      color: #0F6CD6;
+    }
+    
+    IMG.inline {
+      display: inline;
+      vertical-align: middle;
+    }
   </style>
 </head>
 <body>
   <div class="main">
     <h1>About Snippy</h1>
-
     <p>
+      Jump to: <a href="#video">Video Demo</a>,
+      <a href="#additional_info">Additional Info</a>
+    </p>
+
+    <p class="intro">
     <b>Snippy</b> is a Chrome Extension that allows you to save important 
     snippets you find online. Be it a new laptop or book you just spotted on 
     Amazon, a set of interesting Tweets, a Wikipedia excerpt or
@@ -47,10 +61,15 @@
 
     <p>
     Just go to a webpage of your choice and activate <b>Snippy</b> clicking the
-    icon in the toolbar and then the <i>Snip it!</i> button. Then move your mouse
+    icon (<img src="img/snipit.png">) in the toolbar and then the 
+    <i>Click to Snip!</i> button. Then move your mouse
     over items you find interesting and click them. They will be immediately
     stored in your snippets!
     </p>
+    
+    <div style="text-align:center">
+      <img src="img/promo/about/selection_sample.png">
+    </div>
 
     <p>
     Click the toolbar icon again and now choose <i>Show snippets</i> to review
@@ -60,25 +79,29 @@
 
     <p>
     If you want, you can also save your snippets online
-    (via <a target="_blank" href="http://snipbin.appspot.com">SnipBin</a>) and share them with
-    the world.
+    (to <b><a target="_blank" href="http://snipbin.appspot.com">SnipBin</a></b>
+    or <b><a target="_blank" href="http://docs.google.com">Google Docs</a></b>)
+    and share them with the world.
     </p>
 
+    <h3><a name="video">Video Demo</a></h3>
     <div style="text-align:center">
       <object width="425" height="344">
-        <param name="movie" value="http://www.youtube.com/v/sIIPuAoxvWQ&hl=en_US&fs=1&"></param>
+        <param name="movie" value="http://www.youtube.com/v/has--i79q3k&hl=en_US&fs=1&hd=1"></param>
         <param name="allowFullScreen" value="true"></param>
         <param name="allowscriptaccess" value="always"></param>
-        <embed src="http://www.youtube.com/v/sIIPuAoxvWQ&hl=en_US&fs=1&" 
+        <embed src="http://www.youtube.com/v/has--i79q3k&hl=en_US&fs=1&hd=1"
           type="application/x-shockwave-flash" allowscriptaccess="always" 
-          allowfullscreen="true" width="425" height="344"></embed>
+          allowfullscreen="true" width="425" height="344">
+        </embed>
       </object>
     </div>
 
-    <h3>Additional information</h3>
+    <h3><a name="additional_info">Additional information</a></h3>
     <p>
       Do you want to learn more about Snippy?
-      Check the <a target="_blank" href="http://code.google.com/p/snippy-extension/wiki/UserGuide">online user guide</a>.
+      Check the <a href="whatsnew.html" target="_blank">latest features</a>
+      or the <a target="_blank" href="http://code.google.com/p/snippy-extension/wiki/UserGuide">online user guide</a>.
     </p>
     <p>
       Fancy contributing to the Snippy development, either via ideas, suggestions
