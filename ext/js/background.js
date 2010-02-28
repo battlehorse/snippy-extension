@@ -271,8 +271,7 @@ function bug() {
   Shows the changelog page.
 */
 function whatsnew() {
-  chrome.tabs.create({"url": "http://code.google.com/p/snippy-extension/" +
-                             "wiki/ExtensionWhatsNew"});
+  chrome.tabs.create({"url": "whatsnew.html"});
 }
 
 
