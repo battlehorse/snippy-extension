@@ -28,10 +28,22 @@ var tooltip_box;
 var cur_enclosing_block;
 
 
+/*
+  Detects whether the modifier key (ctrl or command depending on the platform)
+  is currently pressed or not.
+  Used to detect composite keypresses such as Ctrl+<key>
+*/
+var modifier_activated = false;
+var modifier_key;
+
+
 // Wire everything up.
 $(document).ready(function() {
     // Create snippy controls
     createTooltipBox();
+
+    // Start listening for activations via keyboard shortcuts
+    createKeyboardShortcuts();
 
     // A 0-width div to contain the snippy selection overlay before it's
     // triggered for the first time.
@@ -71,10 +83,14 @@ $(document).ready(function() {
         });
 
         // Start listening to mouse movement events.
-        $(document).mousemove(handleMouseMovement);
+        $(document).bind('mousemove.snippy', handleMouseMovement);
+
+        // Start listening to key cancel events.
+        $(document).bind('keydown.snippy', handleCancelEvents);
       } else {
-        // Stop listening to mouse movements
-        $(document).unbind('mousemove');
+        // Stop listening to mouse movements and key cancel events.
+        $(document).unbind('mousemove.snippy');
+        $(document).unbind('keydown.snippy');
 
         // untag elements
         jQuery.each(SELECTABLE_TAGS, function(i, tagName) {
@@ -86,7 +102,7 @@ $(document).ready(function() {
         hide(tooltip_box, '-20000');
       }
       sendResponse({});
-    });    
+    });
 
     // Notify the extension that the page has been instrumented and
     // snippy is ready to be activated.
@@ -97,12 +113,22 @@ $(document).ready(function() {
 
 
 function show(element, zIndex) {
-  $(element).css({'zIndex': zIndex, 'visibility': 'visible'});  
+  $(element).css({'zIndex': zIndex, 'visibility': 'visible'});
 }
 
 
 function hide(element, zIndex) {
   $(element).css({'zIndex': zIndex, 'visibility': 'hidden'});
+}
+
+
+/*
+  Handles user requests to dismiss Snippy selection via keyboard shortcuts.
+*/
+function handleCancelEvents(evt) {
+  if (evt.which == 27) {  // ESC key
+    chrome.extension.sendRequest({'toggle': true}, function(response) {});
+  }
 }
 
 
@@ -148,12 +174,12 @@ function handleMouseMovement(evt) {
 /*
   When the overlay is clicked, we clone the selected contents and save them
   as a snippet.
-  
+
   A bit of preprocessing occurs at this step: First, all the selected elements
   are cloned while preserving their computed style (to guarantee a snippet
   as similar to the original content as possible).
 
-  Then, all sort of relative links and anchors are 
+  Then, all sort of relative links and anchors are
 */
 function overlayClicked() {
   var sel_el = asSelectable(cur_enclosing_block);
@@ -294,6 +320,28 @@ function reposition_overlay(duration, bounding_box) {
 
 
 /*
+  Create keyboard shortcuts to activate and use Snippy via the keyboard.
+*/
+function createKeyboardShortcuts() {
+  if (navigator.platform.indexOf("Mac") == -1) {
+    // Win or Linux, use ctrl.
+    modifier_key = 17;
+  } else {
+    modifier_key = 18;  // Mac, use 'command'.
+  }
+
+  $(document).keyup(function(evt) {
+    if (evt.which == modifier_key) modifier_activated = false;
+  }).keydown(function(evt) {
+    if (evt.which == modifier_key) modifier_activated = true;
+    if (modifier_activated && evt.which == 32) {  // 'space' key
+      chrome.extension.sendRequest({'toggle': true}, function(response) {});
+    }
+  });
+}
+
+
+/*
   Creates the contents of the in-page tooltip popup, displayed whenever Snippy
   activates.
 */
@@ -330,14 +378,14 @@ function createTooltipBox() {
       chrome.extension.sendRequest({'toggle': true}, function(response) {});
     }
   }).css({
-    background: 'transparent url(' + 
-                chrome.extension.getURL('img/grad.png') + 
+    background: 'transparent url(' +
+                chrome.extension.getURL('img/grad.png') +
                 ') repeat-x top left',
     width: '120px',
     height: '22px',
     'border-radius': '2px',
     'border-top': '1px solid rgb(103, 140, 255)',
-    'border-left': '1px solid rgb(103, 140, 255)',   
+    'border-left': '1px solid rgb(103, 140, 255)',
     'border-right': '1x solid rgb(7, 32, 174)',
     'border-bottom': '1x solid rgb(7, 32, 174)',
     'text-align': 'center',
